@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ASSENT AGENCIA — Mais Clientes no Seu Bairro</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #111111;
+  --surface: #1a1a1a;
+  --surface2: #222222;
+  --gold: #F5A623;
+  --gold-dark: #E09820;
+  --gold-footer: #B8841C;
+  --gold-glow: rgba(245,166,35,0.18);
+  --white: #FFFFFF;
+  --light-bg: #F0F0EC;
+  --muted: #777777;
+  --border: rgba(255,255,255,0.07);
+  --wa: #25D366;
+  --heading: 'Montserrat', sans-serif;
+  --body: 'Inter', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:var(--body);overflow-x:hidden;line-height:1.6;}
+
+/* ─── UTILS ─── */
+.container{max-width:1140px;margin:0 auto;padding:0 24px;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);color:var(--gold);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;border-radius:100px;}
+.badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold);display:block;box-shadow:0 0 8px var(--gold);}
+.highlight{color:var(--gold);}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:17px 34px;border-radius:50px;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;transition:all .25s ease;border:none;font-family:var(--heading);letter-spacing:.06em;text-transform:uppercase;}
+.btn-primary{background:var(--gold);color:#111;box-shadow:0 0 40px rgba(245,166,35,0.3);}
+.btn-primary:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:0 0 60px rgba(245,166,35,0.45);}
+.btn-secondary{background:transparent;color:var(--white);border:1.5px solid var(--border);}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.04);}
+.btn svg{width:18px;height:18px;flex-shrink:0;}
+.section-title{font-family:var(--heading);font-size:clamp(1.7rem,3.5vw,2.8rem);font-weight:800;line-height:1.15;letter-spacing:-.02em;}
+.section-sub{color:var(--muted);font-size:1rem;max-width:560px;line-height:1.75;}
+.divider{width:56px;height:3px;background:var(--gold);border-radius:4px;margin:18px 0;}
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 0;transition:all .3s ease;}
+nav.scrolled{background:rgba(17,17,17,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:var(--heading);font-size:1.15rem;font-weight:800;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:10px;letter-spacing:-.01em;}
+.logo span{color:var(--gold);}
+.logo-dot{width:9px;height:9px;background:var(--gold);border-radius:50%;box-shadow:0 0 12px var(--gold);}
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;transition:color .2s;}
+.nav-links a:hover{color:var(--white);}
+.nav-cta{padding:11px 24px;font-size:.82rem;}
+
+/* ─── HERO ─── */
+#hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;position:relative;overflow:hidden;}
+.hero-wave-bg{position:absolute;inset:0;pointer-events:none;z-index:0;}
+.hero-wave-bg svg{position:absolute;bottom:0;left:0;width:100%;height:300px;}
+.hero-glow{position:absolute;top:-10%;right:-5%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(245,166,35,0.1) 0%,transparent 70%);animation:pulseGlow 4s ease-in-out infinite alternate;}
+.hero-glow2{position:absolute;bottom:-20%;left:-10%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(245,166,35,0.05) 0%,transparent 70%);animation:pulseGlow 5s ease-in-out 1s infinite alternate;}
+@keyframes pulseGlow{from{transform:scale(1);}to{transform:scale(1.15);}}
+.grid-lines{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,.5) 30%,rgba(0,0,0,.5) 70%,transparent);}
+.hero-content{position:relative;z-index:2;max-width:760px;}
+.hero-badge{margin-bottom:24px;}
+.hero-title{font-family:var(--heading);font-size:clamp(2.4rem,6vw,4.8rem);font-weight:800;line-height:1.0;letter-spacing:-.04em;margin-bottom:26px;}
+.hero-sub{font-size:clamp(1rem,2vw,1.15rem);color:var(--muted);max-width:600px;margin-bottom:40px;line-height:1.8;}
+.hero-sub strong{color:var(--white);}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:60px;}
+.hero-stats{display:flex;flex-wrap:wrap;gap:48px;}
+.stat{display:flex;flex-direction:column;}
+.stat-num{font-family:var(--heading);font-size:2.1rem;font-weight:800;color:var(--white);line-height:1;}
+.stat-num span{color:var(--gold);}
+.stat-label{font-size:.78rem;color:var(--muted);margin-top:4px;letter-spacing:.05em;text-transform:uppercase;}
+
+/* ─── WAVE ANIMATION (hero bottom) ─── */
+@keyframes waveMove{0%{d:path('M0 60 Q285 10 570 60 Q855 110 1140 60 L1140 120 L0 120Z')}50%{d:path('M0 60 Q285 110 570 60 Q855 10 1140 60 L1140 120 L0 120Z')}100%{d:path('M0 60 Q285 10 570 60 Q855 110 1140 60 L1140 120 L0 120Z')}}
+@keyframes waveMove2{0%{d:path('M0 55 Q285 90 570 55 Q855 20 1140 55 L1140 120 L0 120Z')}50%{d:path('M0 55 Q285 20 570 55 Q855 90 1140 55 L1140 120 L0 120Z')}100%{d:path('M0 55 Q285 90 570 55 Q855 20 1140 55 L1140 120 L0 120Z')}}
+.wave-path1{animation:waveMove 7s ease-in-out infinite;}
+.wave-path2{animation:waveMove2 9s ease-in-out infinite;}
+
+/* ─── MARQUEE BAR ─── */
+.marquee-bar{background:var(--light-bg);padding:14px 0;overflow:hidden;}
+.marquee-track{display:inline-block;animation:marqueeScroll 22s linear infinite;white-space:nowrap;}
+@keyframes marqueeScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.marquee-item{display:inline-flex;align-items:center;gap:12px;font-size:.78rem;font-weight:600;color:#555;letter-spacing:.12em;text-transform:uppercase;padding:0 32px;}
+.marquee-sep{color:var(--gold);font-size:1.1rem;}
+
+/* ─── DOR (light section) ─── */
+#dor{padding:100px 0;background:var(--light-bg);}
+#dor .section-title{color:#222;}
+#dor .section-sub{color:#555;}
+#dor .badge{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:#B8841C;}
+#dor .badge::before{background:var(--gold-dark);}
+.dor-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.dor-list{display:flex;flex-direction:column;gap:16px;margin-top:32px;}
+.dor-item{display:flex;align-items:flex-start;gap:16px;padding:20px;background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:12px;transition:border-color .3s,transform .3s;}
+.dor-item:hover{border-color:rgba(245,166,35,0.4);transform:translateX(6px);}
+.dor-icon{width:44px;height:44px;border-radius:10px;background:rgba(245,166,35,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold-dark);}
+.dor-text strong{display:block;color:#222;font-size:.95rem;font-weight:700;margin-bottom:4px;}
+.dor-text p{color:#666;font-size:.87rem;line-height:1.6;}
+.dor-visual{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:20px;padding:32px;position:relative;overflow:hidden;}
+.dor-visual::before{content:'';position:absolute;top:-30%;right:-30%;width:300px;height:300px;background:radial-gradient(circle,rgba(245,166,35,0.08),transparent 70%);border-radius:50%;}
+.chart-bars{display:flex;align-items:flex-end;gap:12px;height:160px;margin-bottom:20px;}
+.bar{flex:1;border-radius:8px 8px 0 0;position:relative;transition:height .8s ease;}
+.bar.low{background:rgba(0,0,0,0.08);}
+.bar.high{background:linear-gradient(180deg,var(--gold),var(--gold-dark));}
+.bar-label{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);font-size:.72rem;color:#888;white-space:nowrap;}
+.chart-title{text-align:center;font-size:.83rem;color:#888;}
+.chart-highlight{text-align:center;font-size:1.05rem;font-weight:700;color:var(--gold-dark);margin-top:8px;}
+
+/* ─── SOLUÇÃO (dark) ─── */
+#solucao{padding:100px 0;background:var(--bg);}
+.solucao-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.process-flow{display:flex;flex-direction:column;gap:0;}
+.process-step{display:flex;gap:20px;align-items:flex-start;padding:24px;border-radius:14px;border:1px solid var(--border);background:var(--surface);position:relative;transition:border-color .3s;}
+.process-step:hover{border-color:rgba(245,166,35,0.35);}
+.process-step+.process-step{margin-top:-1px;}
+.process-step:first-child{border-radius:14px 14px 0 0;}
+.process-step:last-child{border-radius:0 0 14px 14px;}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--gold);color:#111;font-family:var(--heading);font-size:.9rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-body strong{display:block;font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:4px;}
+.step-body p{color:var(--muted);font-size:.85rem;}
+.solucao-content .section-sub{margin-top:16px;}
+.solucao-content .btn{margin-top:36px;}
+.quote-block{margin-top:40px;padding:24px;background:var(--surface);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;}
+.quote-block p{font-style:italic;color:var(--muted);font-size:.97rem;line-height:1.7;}
+.quote-block strong{color:var(--white);display:block;margin-top:10px;font-size:.85rem;}
+
+/* ─── SERVIÇOS (light) ─── */
+#servicos{padding:100px 0;background:var(--light-bg);}
+#servicos .section-title{color:#222;}
+#servicos .section-sub{color:#555;}
+#servicos .badge{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:#B8841C;}
+#servicos .badge::before{background:var(--gold-dark);}
+#servicos .divider{margin:18px auto;}
+.services-header{text-align:center;max-width:620px;margin:0 auto 60px;}
+.services-header .section-sub{margin:0 auto;}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.service-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:16px;padding:32px;transition:all .3s;position:relative;overflow:hidden;}
+.service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
+.service-card:hover{border-color:rgba(245,166,35,0.3);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.1);}
+.service-card:hover::before{transform:scaleX(1);}
+.service-icon{width:52px;height:52px;background:rgba(245,166,35,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gold-dark);margin-bottom:20px;}
+.service-icon svg{width:26px;height:26px;}
+.service-card h3{font-family:var(--heading);font-size:1.05rem;font-weight:700;margin-bottom:12px;color:#222;}
+.service-card p{color:#666;font-size:.88rem;line-height:1.7;margin-bottom:20px;}
+.service-result{display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:600;color:var(--gold-dark);}
+.service-result::before{content:'✓';font-size:.75rem;}
+.services-cta{text-align:center;margin-top:48px;}
+
+/* ─── PROVAS (dark) ─── */
+#provas{padding:100px 0;background:var(--bg);}
+.provas-header{text-align:center;max-width:600px;margin:0 auto 60px;}
+.provas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.prova-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;}
+.stars{display:flex;gap:4px;margin-bottom:16px;}
+.stars span{color:var(--gold);font-size:1rem;}
+.prova-card p{color:var(--muted);font-size:.92rem;line-height:1.75;font-style:italic;}
+.prova-author{display:flex;align-items:center;gap:12px;margin-top:20px;padding-top:20px;border-top:1px solid var(--border);}
+.author-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-weight:800;font-size:.95rem;color:#fff;flex-shrink:0;}
+.author-info strong{display:block;font-size:.88rem;color:var(--white);}
+.author-info span{font-size:.78rem;color:var(--muted);}
+.numbers-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:64px;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.num-item{padding:36px 28px;text-align:center;position:relative;}
+.num-item+.num-item::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:1px;background:var(--border);}
+.num-val{font-family:var(--heading);font-size:2.4rem;font-weight:800;color:var(--gold);line-height:1;}
+.num-val sup{font-size:1.2rem;}
+.num-label{color:var(--muted);font-size:.82rem;margin-top:6px;}
+
+/* ─── URGÊNCIA (dark with gold card) ─── */
+#urgencia{padding:80px 0;background:var(--surface);border-top:1px solid rgba(245,166,35,0.12);border-bottom:1px solid rgba(245,166,35,0.12);position:relative;overflow:hidden;}
+#urgencia::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(circle,rgba(245,166,35,0.08),transparent 70%);pointer-events:none;}
+.urgencia-inner{text-align:center;position:relative;}
+.urgencia-inner .section-title{max-width:700px;margin:16px auto 20px;}
+.urgencia-inner .section-sub{margin:0 auto 40px;text-align:center;}
+.urgency-hooks{display:flex;flex-direction:column;gap:12px;max-width:600px;margin:0 auto 40px;}
+.hook{padding:14px 22px;border:1px solid rgba(245,166,35,0.22);border-radius:10px;background:rgba(245,166,35,0.05);font-size:.91rem;color:var(--white);display:flex;align-items:center;gap:12px;}
+.hook::before{content:'⚡';font-size:1rem;}
+
+/* ─── DIFERENCIAIS (light) ─── */
+#diferenciais{padding:100px 0;background:var(--light-bg);}
+#diferenciais .section-title{color:#222;}
+#diferenciais .section-sub{color:#555;}
+#diferenciais .badge{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:#B8841C;}
+#diferenciais .badge::before{background:var(--gold-dark);}
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px;}
+.diff-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:14px;padding:28px;display:flex;gap:18px;align-items:flex-start;transition:all .3s;}
+.diff-card:hover{border-color:rgba(245,166,35,0.35);transform:translateX(5px);}
+.diff-icon{width:48px;height:48px;background:rgba(245,166,35,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gold-dark);flex-shrink:0;}
+.diff-icon svg{width:24px;height:24px;}
+.diff-body strong{display:block;font-family:var(--heading);font-size:.97rem;font-weight:700;margin-bottom:6px;color:#222;}
+.diff-body p{color:#666;font-size:.85rem;line-height:1.65;}
+
+/* ─── PROCESSO (dark) ─── */
+#processo{padding:100px 0;background:var(--bg);}
+.processo-header{text-align:center;max-width:580px;margin:0 auto 64px;}
+.steps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
+.steps-row::before{content:'';position:absolute;top:36px;left:12%;right:12%;height:2px;background:linear-gradient(90deg,var(--gold),rgba(245,166,35,0.15));z-index:0;}
+.step-block{text-align:center;padding:24px 16px;position:relative;z-index:1;}
+.step-circle{width:72px;height:72px;border-radius:50%;background:var(--surface);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;}
+.step-circle-num{font-family:var(--heading);font-size:1.4rem;font-weight:800;color:var(--gold);}
+.step-block h4{font-family:var(--heading);font-size:.97rem;font-weight:700;margin-bottom:8px;}
+.step-block p{color:var(--muted);font-size:.83rem;line-height:1.6;}
+
+/* ─── FAQ (light) ─── */
+#faq{padding:100px 0;background:var(--light-bg);}
+#faq .section-title{color:#222;}
+#faq .section-sub{color:#555;}
+#faq .badge{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:#B8841C;}
+#faq .badge::before{background:var(--gold-dark);}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+.faq-list{display:flex;flex-direction:column;gap:12px;}
+.faq-item{border:1px solid rgba(0,0,0,0.08);border-radius:12px;overflow:hidden;}
+.faq-q{padding:20px 22px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:.93rem;background:#fff;transition:color .2s;color:#222;}
+.faq-q:hover{color:var(--gold-dark);}
+.faq-q svg{width:18px;height:18px;flex-shrink:0;transition:transform .3s;color:#aaa;}
+.faq-item.open .faq-q svg{transform:rotate(45deg);color:var(--gold-dark);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;background:#fff;}
+.faq-item.open .faq-a{max-height:200px;padding:0 22px 20px;}
+.faq-a p{color:#666;font-size:.88rem;line-height:1.7;}
+
+/* ─── CTA FINAL (dark + ripple rings) ─── */
+#cta-final{padding:120px 0;text-align:center;position:relative;overflow:hidden;background:var(--bg);}
+.ripple-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.ripple-ring{position:absolute;border-radius:50%;border:1px solid rgba(245,166,35,0.08);animation:rippleAnim 3.5s linear infinite;}
+@keyframes rippleAnim{0%{opacity:.7;transform:scale(.05);}100%{opacity:0;transform:scale(1.6);}}
+.cta-card{position:relative;z-index:2;max-width:760px;margin:0 auto;background:var(--surface);border:1px solid rgba(245,166,35,0.2);border-radius:24px;padding:72px 48px;}
+.cta-card .section-title{margin-bottom:16px;}
+.cta-card .section-sub{margin:0 auto 40px;text-align:center;}
+.cta-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
+.cta-note{margin-top:22px;font-size:.82rem;color:var(--muted);}
+
+/* ─── YELLOW CARD (inside dark section) ─── */
+.yellow-highlight-card{background:var(--gold);border-radius:14px;padding:28px;color:#111;margin-top:32px;}
+.yellow-highlight-card p{font-size:1.05rem;font-weight:700;line-height:1.5;}
+
+/* ─── FOOTER ─── */
+footer{background:#0a0a0a;border-top:1px solid var(--border);padding:48px 0 32px;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:.83rem;transition:color .2s;}
+.footer-links a:hover{color:var(--white);}
+.footer-copy{text-align:center;margin-top:32px;color:var(--muted);font-size:.78rem;border-top:1px solid var(--border);padding-top:24px;}
+
+/* ─── HAMBURGER ─── */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;}
+.hamburger span{width:24px;height:2px;background:var(--white);transition:all .3s;}
+
+/* ─── WHATSAPP FLOAT ─── */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:999;width:60px;height:60px;background:var(--wa);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,0.4);animation:waFloat 2.5s ease-in-out infinite;cursor:pointer;text-decoration:none;}
+.wa-float svg{width:30px;height:30px;fill:#fff;}
+@keyframes waFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-6px) scale(1.04);}}
+.wa-tooltip{position:absolute;right:72px;background:var(--surface);border:1px solid var(--border);color:var(--white);padding:10px 16px;border-radius:10px;font-size:.82rem;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s;}
+.wa-float:hover .wa-tooltip{opacity:1;}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .dor-grid,.solucao-grid,.faq-grid{grid-template-columns:1fr;}
+  .services-grid,.provas-grid{grid-template-columns:1fr 1fr;}
+  .diff-grid{grid-template-columns:1fr;}
+  .numbers-bar{grid-template-columns:1fr 1fr;}
+  .num-item:nth-child(3)::before{display:none;}
+  .steps-row{grid-template-columns:1fr 1fr;gap:24px;}
+  .steps-row::before{display:none;}
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+  .cta-card{padding:48px 28px;}
+}
+@media(max-width:600px){
+  .services-grid,.provas-grid{grid-template-columns:1fr;}
+  .numbers-bar{grid-template-columns:1fr 1fr;}
+  .hero-stats{gap:24px;}
+  .steps-row{grid-template-columns:1fr;}
+  .hero-actions{flex-direction:column;}
+  .hero-actions .btn{justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-dot"></div>
+        ASSENT<span> AGENCIA</span>
+      </a>
+      <div class="nav-links">
+        <a href="#dor">O Problema</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#provas">Resultados</a>
+        <a href="#processo">Como Funciona</a>
+        <a href="#faq">Dúvidas</a>
+      </div>
+      <a href="https://wa.me/5562999999999?text=Quero+uma+análise+gratuita+do+meu+negócio" class="btn btn-primary nav-cta" target="_blank">Análise Gratuita</a>
+      <div class="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-wave-bg">
+    <div class="grid-lines"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <svg viewBox="0 0 1140 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave-path1" d="M0 60 Q285 10 570 60 Q855 110 1140 60 L1140 120 L0 120Z" fill="rgba(245,166,35,0.04)"/>
+      <path class="wave-path2" d="M0 55 Q285 90 570 55 Q855 20 1140 55 L1140 120 L0 120Z" fill="rgba(245,166,35,0.025)"/>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge badge reveal">🏆 Especialistas em Crescimento de Negócios Locais</div>
+      <h1 class="hero-title reveal">
+        Sua agenda cheia.<br>
+        Seu negócio <span class="highlight">lotado.</span><br>
+        Todo mês.
+      </h1>
+      <p class="hero-sub reveal">
+        Clientes estão procurando pelo seu serviço <strong>agora mesmo</strong> — mas encontram seus concorrentes antes de você. A gente muda isso. <strong>Sem complicação, sem jargão técnico. Só resultado.</strong>
+      </p>
+      <div class="hero-actions reveal">
+        <a href="https://wa.me/5562999999999?text=Quero+mais+clientes+na+minha+região" class="btn btn-primary" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Quero mais clientes agora
+        </a>
+        <a href="#solucao" class="btn btn-secondary">Ver como funciona →</a>
+      </div>
+      <div class="hero-stats reveal">
+        <div class="stat">
+          <div class="stat-num"><span id="c1">0</span>+</div>
+          <div class="stat-label">Negócios atendidos</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num"><span id="c2">0</span>%</div>
+          <div class="stat-label">Clientes satisfeitos</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">R$<span id="c3">0</span>M</div>
+          <div class="stat-label">Em receita gerada</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num"><span id="c4">0</span> dias</div>
+          <div class="stat-label">Para os primeiros resultados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE BAR -->
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span class="marquee-item">Criação de Sites e Landing Pages <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Design <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Copywriting <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Estratégias de Marketing <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Gestão de Tráfego Pago <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Automações <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Consultoria <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Google Meu Negócio <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Criação de Sites e Landing Pages <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Design <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Copywriting <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Estratégias de Marketing <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Gestão de Tráfego Pago <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Automações <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Consultoria <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Google Meu Negócio <span class="marquee-sep">|</span></span>
+  </div>
+</div>
+
+<!-- DOR -->
+<section id="dor">
+  <div class="container">
+    <div class="dor-grid">
+      <div>
+        <div class="badge reveal">O problema real</div>
+        <div class="divider reveal" style="background:var(--gold-dark);"></div>
+        <h2 class="section-title reveal">Se sua agenda não está cheia, você está <span class="highlight">perdendo dinheiro</span> todos os dias</h2>
+        <div class="dor-list">
+          <div class="dor-item reveal">
+            <div class="dor-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </div>
+            <div class="dor-text">
+              <strong>Negócio cheio de talento, vazio de clientes</strong>
+              <p>Você é bom no que faz, mas quem não te conhece não pode te contratar. O problema não é a qualidade — é a visibilidade.</p>
+            </div>
+          </div>
+          <div class="dor-item reveal">
+            <div class="dor-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="dor-text">
+              <strong>Dependência total de indicações</strong>
+              <p>Indicação é ótima — mas você não pode construir um negócio estável dependendo apenas da boa vontade dos outros.</p>
+            </div>
+          </div>
+          <div class="dor-item reveal">
+            <div class="dor-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="dor-text">
+              <strong>Já tentou fazer marketing e não deu certo</strong>
+              <p>Jogou dinheiro no Instagram, no Google, no Facebook — e não veio nada. Não é culpa sua: marketing sem estratégia é desperdício.</p>
+            </div>
+          </div>
+          <div class="dor-item reveal">
+            <div class="dor-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <div class="dor-text">
+              <strong>Seus concorrentes estão crescendo na sua frente</strong>
+              <p>Enquanto você espera, quem está investindo em marketing está dominando o bairro e levando os clientes que seriam seus.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dor-visual reveal">
+        <div class="chart-bars" id="chartBars">
+          <div class="bar low" style="height:20%" data-h="20"><span class="bar-label">Sem marketing</span></div>
+          <div class="bar low" style="height:35%" data-h="35"></div>
+          <div class="bar low" style="height:28%" data-h="28"></div>
+          <div class="bar high" style="height:85%" data-h="85"><span class="bar-label">Com Assent</span></div>
+          <div class="bar high" style="height:95%" data-h="95"></div>
+          <div class="bar high" style="height:100%" data-h="100"></div>
+        </div>
+        <p class="chart-title">Crescimento médio de clientes novos por mês</p>
+        <p class="chart-highlight">📈 +317% de aumento médio em 90 dias</p>
+        <div style="margin-top:24px;padding-top:24px;border-top:1px solid rgba(0,0,0,.08);">
+          <p style="color:#777;font-size:.85rem;line-height:1.7;">"Antes eu ficava esperando o telefone tocar. Agora eu tenho lista de espera." <br><strong style="color:#222;">— Renata S., salão de beleza, Goiânia</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUÇÃO -->
+<section id="solucao">
+  <div class="container">
+    <div class="solucao-grid">
+      <div>
+        <div class="process-flow">
+          <div class="process-step reveal">
+            <div class="step-num">1</div>
+            <div class="step-body"><strong>Analisamos seu negócio de graça</strong><p>Entendemos o que você faz, quem são seus clientes ideais e por que você ainda não está aparecendo.</p></div>
+          </div>
+          <div class="process-step reveal">
+            <div class="step-num">2</div>
+            <div class="step-body"><strong>Montamos um plano personalizado</strong><p>Nada de pacote genérico. Cada negócio é único — e a estratégia também é.</p></div>
+          </div>
+          <div class="process-step reveal">
+            <div class="step-num">3</div>
+            <div class="step-body"><strong>Executamos tudo por você</strong><p>Você não precisa aprender marketing. A gente faz enquanto você atende seus clientes.</p></div>
+          </div>
+          <div class="process-step reveal">
+            <div class="step-num">4</div>
+            <div class="step-body"><strong>Você recebe clientes novos todo mês</strong><p>Relatório claro, resultado visível. Sem enrolação, sem gráficos que não significam nada.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="solucao-content">
+        <div class="badge reveal">A solução</div>
+        <div class="divider reveal"></div>
+        <h2 class="section-title reveal">Nós cuidamos do marketing. <span class="highlight">Você cuida do seu negócio.</span></h2>
+        <p class="section-sub reveal">A ASSENT AGENCIA é especializada em fazer negócios locais aparecerem para quem está buscando exatamente o que você oferece — na sua cidade, no seu bairro.</p>
+        <div class="quote-block reveal">
+          <p>"Clientes estão procurando pelo seu serviço agora. O que falta é a sua empresa estar no lugar certo, na hora certa. É isso que a gente faz."</p>
+          <strong>— Equipe ASSENT AGENCIA</strong>
+        </div>
+        <a href="https://wa.me/5562999999999?text=Quero+lotar+minha+agenda" class="btn btn-primary reveal" target="_blank">Quero lotar minha agenda →</a>
+
+        <div class="yellow-highlight-card reveal" style="margin-top:32px;">
+          <p>A ASSENT é para quem quer <strong>resultado</strong> sem improviso.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="container">
+    <div class="services-header reveal">
+      <div class="badge">O que fazemos</div>
+      <div class="divider" style="margin:18px auto;background:var(--gold-dark);"></div>
+      <h2 class="section-title">Serviços que trazem <span class="highlight">clientes reais</span></h2>
+      <p class="section-sub" style="margin-top:14px;">Sem termos técnicos. O que você precisa saber é o resultado que cada serviço gera para o seu negócio.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+        <h3>Você no Google quando te procuram</h3>
+        <p>Quando alguém digita "clínica perto de mim" ou "restaurante em [sua cidade]", seu negócio aparece na frente. É o cliente mais qualificado que existe — ele já quer comprar.</p>
+        <div class="service-result">Aparecer antes dos concorrentes</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+        <h3>Anúncios que trazem cliente de verdade</h3>
+        <p>Criamos campanhas no Instagram e Facebook que aparecem exatamente para as pessoas da sua região que têm mais chance de contratar você — sem desperdiçar dinheiro.</p>
+        <div class="service-result">Clientes novos todo mês com previsibilidade</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3>Seu negócio no mapa da cidade</h3>
+        <p>Otimizamos seu perfil no Google Maps para que as pessoas do seu bairro e região te encontrem facilmente — com avaliações, fotos e tudo o que convence alguém a escolher você.</p>
+        <div class="service-result">Mais visitas, mais ligações, mais vendas</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>Redes sociais que vendem por você</h3>
+        <p>Conteúdo criado e publicado para você. Postagens que mostram o valor do seu trabalho e convencem quem ainda estava em dúvida a entrar em contato.</p>
+        <div class="service-result">Presença online que passa credibilidade</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Relatórios que você entende de verdade</h3>
+        <p>Sem gráfico complicado. Todo mês você recebe um resumo claro: quantos clientes chegaram por causa do marketing, quanto você investiu e qual foi o retorno.</p>
+        <div class="service-result">Total transparência sobre onde vai o seu dinheiro</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <h3>Site ou página que converte visita em cliente</h3>
+        <p>Criamos ou melhoramos sua presença digital para que o visitante não feche a aba sem entrar em contato. Cada elemento é pensado para converter.</p>
+        <div class="service-result">Mais contatos, menos visitantes que somem</div>
+      </div>
+    </div>
+    <div class="services-cta reveal">
+      <a href="https://wa.me/5562999999999?text=Quero+uma+análise+gratuita+do+meu+negócio" class="btn btn-primary" target="_blank" style="background:var(--gold-dark);">Receber uma análise gratuita do meu negócio →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROVAS -->
+<section id="provas">
+  <div class="container">
+    <div class="provas-header reveal">
+      <div class="badge">Resultados reais</div>
+      <div class="divider" style="margin:18px auto;"></div>
+      <h2 class="section-title">Negócios que decidiram <span class="highlight">não esperar mais</span></h2>
+      <p class="section-sub" style="margin-top:14px;">Veja o que acontece quando um negócio local para de depender de indicação e começa a atrair clientes de forma consistente.</p>
+    </div>
+    <div class="provas-grid">
+      <div class="prova-card reveal">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Minha clínica estava com horários vazios toda semana. Em 45 dias com a ASSENT AGENCIA, minha agenda encheu e tive que contratar mais uma funcionária."</p>
+        <div class="prova-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#F5A623,#B8841C);">DR</div>
+          <div class="author-info"><strong>Dra. Rafaela Mendes</strong><span>Clínica de Estética — Goiânia/GO</span></div>
+        </div>
+      </div>
+      <div class="prova-card reveal">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Gastei anos postando no Instagram sem resultado. Depois que a ASSENT assumiu, as mensagens não pararam mais. O retorno foi em menos de 30 dias."</p>
+        <div class="prova-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);">CS</div>
+          <div class="author-info"><strong>Carlos Santos</strong><span>Salão Masculino — Aparecida de Goiânia/GO</span></div>
+        </div>
+      </div>
+      <div class="prova-card reveal">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Nunca tinha investido em marketing. Achava caro. Hoje entendo que o caro era ficar com as mesas vazias. Triplicamos o movimento nos fins de semana."</p>
+        <div class="prova-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#10b981,#047857);">MO</div>
+          <div class="author-info"><strong>Marcos Oliveira</strong><span>Restaurante familiar — Senador Canedo/GO</span></div>
+        </div>
+      </div>
+      <div class="prova-card reveal">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Minha academia estava perdendo alunos todo mês. Com 60 dias de trabalho, revertemos completamente o quadro e voltamos a crescer."</p>
+        <div class="prova-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#f59e0b,#b45309);">JL</div>
+          <div class="author-info"><strong>Juliana Lima</strong><span>Academia de Ginástica — Goiânia/GO</span></div>
+        </div>
+      </div>
+      <div class="prova-card reveal">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Todo mundo diz que faz marketing, mas a ASSENT mostrou número. Antes do trabalho e depois. Ficou fácil de ver que valeu cada centavo."</p>
+        <div class="prova-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">RP</div>
+          <div class="author-info"><strong>Ricardo Pinheiro</strong><span>Mecânica Automotiva — Trindade/GO</span></div>
+        </div>
+      </div>
+      <div class="prova-card reveal">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Minha farmácia de manipulação estava invisível no Google. Agora aparece na primeira página para quem busca na nossa cidade. As vendas online triplicaram."</p>
+        <div class="prova-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#ec4899,#9d174d);">AF</div>
+          <div class="author-info"><strong>Ana Ferreira</strong><span>Farmácia de Manipulação — Anápolis/GO</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="numbers-bar reveal">
+      <div class="num-item"><div class="num-val">312<sup>+</sup></div><div class="num-label">Negócios locais atendidos</div></div>
+      <div class="num-item"><div class="num-val">94<sup>%</sup></div><div class="num-label">Clientes satisfeitos</div></div>
+      <div class="num-item"><div class="num-val">30<sup>dias</sup></div><div class="num-label">Para os primeiros resultados</div></div>
+      <div class="num-item"><div class="num-val">4,2<sup>x</sup></div><div class="num-label">Retorno médio do investimento</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- URGÊNCIA -->
+<section id="urgencia">
+  <div class="container">
+    <div class="urgencia-inner">
+      <div class="badge reveal" style="margin:0 auto;">⚠️ Não ignore isso</div>
+      <h2 class="section-title reveal" style="margin:16px auto 20px;max-width:700px;">Seus concorrentes já estão <span class="highlight">aparecendo no Google.</span> E você?</h2>
+      <p class="section-sub reveal" style="margin:0 auto 40px;text-align:center;">Enquanto você lê isso, alguém está pesquisando pelo serviço que você oferece. A pergunta é: eles vão te encontrar — ou vão encontrar seu concorrente?</p>
+      <div class="urgency-hooks">
+        <div class="hook reveal">"Se sua agenda não está cheia, você está perdendo dinheiro todos os dias"</div>
+        <div class="hook reveal">"Clientes estão procurando pelo seu serviço agora — mas não encontram você"</div>
+        <div class="hook reveal">"Pare de depender apenas de indicação. Construa uma fonte previsível de clientes"</div>
+        <div class="hook reveal">"Cada mês que passa sem marketing é um mês de vantagem para quem está investindo"</div>
+      </div>
+      <a href="https://wa.me/5562999999999?text=Quero+falar+com+um+especialista+agora" class="btn btn-primary reveal" style="font-size:1rem;padding:20px 42px;" target="_blank">Falar com um especialista agora →</a>
+    </div>
+  </div>
+</section>
+
+<!-- DIFERENCIAIS -->
+<section id="diferenciais">
+  <div class="container">
+    <div class="reveal" style="max-width:560px;margin-bottom:16px;">
+      <div class="badge">Por que a ASSENT</div>
+      <div class="divider" style="background:var(--gold-dark);"></div>
+      <h2 class="section-title">Por que negócios locais escolhem a gente <span class="highlight">e ficam</span></h2>
+    </div>
+    <p class="section-sub reveal" style="margin-bottom:0;color:#555;">Não somos mais uma agência que promete e some. Somos parceiros de crescimento que entendem o negócio local de verdade.</p>
+    <div class="diff-grid">
+      <div class="diff-card reveal">
+        <div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="diff-body"><strong>Especialistas em negócio local, não em grandes marcas</strong><p>Não atendemos multinacionais. Só negócios locais — clínicas, restaurantes, salões, prestadores de serviço. Conhecemos seus problemas de dentro.</p></div>
+      </div>
+      <div class="diff-card reveal">
+        <div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="diff-body"><strong>Resultado em 30 dias ou a gente revisa a estratégia</strong><p>Sem esperar 6 meses para ver se funcionou. Os primeiros sinais chegam rápido — e se não chegarem, a gente ajusta sem custo extra.</p></div>
+      </div>
+      <div class="diff-card reveal">
+        <div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="diff-body"><strong>Você tem um gestor dedicado, não um robô</strong><p>Tem uma pessoa de carne e osso responsável pelo seu negócio. Ela responde, explica, e está disponível quando você precisar conversar.</p></div>
+      </div>
+      <div class="diff-card reveal">
+        <div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <div class="diff-body"><strong>Planos acessíveis para quem está começando</strong><p>Sem precisar ter o orçamento de uma grande empresa. Nossos planos cabem no bolso de negócios locais e geram retorno real desde o primeiro mês.</p></div>
+      </div>
+      <div class="diff-card reveal">
+        <div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="diff-body"><strong>Relatório mensal em português, simples de entender</strong><p>Nada de gráfico inútil. Você recebe: quantos clientes vieram do marketing, quanto foi o retorno, o que vem por aí. Transparência total.</p></div>
+      </div>
+      <div class="diff-card reveal">
+        <div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div class="diff-body"><strong>Sem contrato longo de amarrar</strong><p>Acreditamos tanto no nosso trabalho que não precisamos te prender em contrato longo. Você fica porque quer — porque está tendo resultado.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section id="processo">
+  <div class="container">
+    <div class="processo-header reveal">
+      <div class="badge">Como funciona</div>
+      <div class="divider" style="margin:18px auto;"></div>
+      <h2 class="section-title">Do primeiro contato ao <span class="highlight">cliente na porta</span></h2>
+      <p class="section-sub" style="margin:14px auto 0;">Simples assim. Sem burocracia, sem você precisar aprender nada técnico.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-block reveal">
+        <div class="step-circle"><div class="step-circle-num">1</div></div>
+        <h4>Análise gratuita</h4>
+        <p>Você nos conta sobre o negócio. A gente analisa seu perfil, concorrentes e oportunidades da sua região.</p>
+      </div>
+      <div class="step-block reveal">
+        <div class="step-circle"><div class="step-circle-num">2</div></div>
+        <h4>Estratégia personalizada</h4>
+        <p>Criamos um plano específico pro seu tipo de negócio e sua cidade. Sem pacote pronto, sem modelo genérico.</p>
+      </div>
+      <div class="step-block reveal">
+        <div class="step-circle"><div class="step-circle-num">3</div></div>
+        <h4>Execução completa</h4>
+        <p>Botamos a mão na massa. Anúncios, Google, redes sociais — a gente cuida de tudo enquanto você atende.</p>
+      </div>
+      <div class="step-block reveal">
+        <div class="step-circle"><div class="step-circle-num">4</div></div>
+        <h4>Resultado todo mês</h4>
+        <p>Clientes novos chegando, agenda cheia, relatório claro. E a gente sempre buscando crescer mais.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:56px;" class="reveal">
+      <a href="https://wa.me/5562999999999?text=Quero+receber+uma+análise+gratuita+do+meu+negócio" class="btn btn-primary" target="_blank" style="font-size:1rem;padding:18px 40px;">Receber uma análise gratuita do meu negócio →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="faq-grid">
+      <div>
+        <div class="badge reveal">Dúvidas frequentes</div>
+        <div class="divider reveal" style="background:var(--gold-dark);"></div>
+        <h2 class="section-title reveal">Perguntas que <span class="highlight">todo dono</span> faz antes de começar</h2>
+        <p class="section-sub reveal" style="margin-top:16px;">É normal ter dúvida. A gente responde tudo com honestidade — inclusive quando a resposta não é a que você quer ouvir.</p>
+        <a href="https://wa.me/5562999999999?text=Tenho+dúvidas+sobre+o+marketing+para+meu+negócio" class="btn btn-primary reveal" style="margin-top:32px;background:var(--gold-dark);" target="_blank">Tirar dúvida pelo WhatsApp →</a>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">Quanto custa e qual o investimento mínimo?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="faq-a"><p>Nossos planos começam a partir de R$497/mês para gestão de marketing local. Mas antes de qualquer investimento, fazemos uma análise gratuita para garantir que o plano escolhido faz sentido para o seu momento.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">Em quanto tempo começo a ver resultado?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="faq-a"><p>Os primeiros resultados aparecem entre 15 e 30 dias. Resultados mais consistentes e crescimento real acontecem entre o 2º e 3º mês. Somos honestos: marketing não é mágica — mas quando feito certo, transforma o negócio.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">Preciso entender de marketing para trabalhar com vocês?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="faq-a"><p>Não. Você não precisa saber nada de marketing. A gente cuida de tudo. Sua única função é atender bem os clientes que chegarem — essa parte a gente sabe que você já domina.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">Tem contrato de fidelidade?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="faq-a"><p>Não existe contrato de fidelidade longo. Trabalhamos com periodicidade mensal e você pode cancelar com aviso prévio de 30 dias. Acreditamos que o cliente deve ficar por resultado, não por obrigação.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">Funciona para o meu tipo de negócio?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="faq-a"><p>Atendemos clínicas, salões, academias, restaurantes, pet shops, prestadores de serviço, comércios de bairro, escritórios e muito mais. Se seu cliente está na sua cidade, a gente sabe como te conectar com ele.</p></div>
+        </div>
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">Já tentei anunciar antes e não deu certo. Por que seria diferente?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div class="faq-a"><p>A maioria das campanhas que não funcionaram foram criadas sem estratégia — anúncio genérico, público errado, oferta fraca. Na análise gratuita, a gente identifica exatamente o que foi feito de errado e como corrigir.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL (dark + ripple) -->
+<section id="cta-final">
+  <div class="ripple-bg">
+    <div class="ripple-ring" style="width:600px;height:600px;animation-delay:0s;"></div>
+    <div class="ripple-ring" style="width:600px;height:600px;animation-delay:.9s;"></div>
+    <div class="ripple-ring" style="width:600px;height:600px;animation-delay:1.8s;"></div>
+    <div class="ripple-ring" style="width:600px;height:600px;animation-delay:2.7s;"></div>
+  </div>
+  <div class="container">
+    <div class="cta-card reveal">
+      <div class="badge" style="margin:0 auto 24px;">Última chance de hoje</div>
+      <h2 class="section-title">Pronto para <span class="highlight">lotar sua agenda</span> e parar de esperar?</h2>
+      <p class="section-sub" style="margin:16px auto 40px;text-align:center;">Mais de 300 negócios locais já escolheram parar de depender de indicação e começaram a crescer de forma previsível. A análise gratuita não custa nada — e pode mudar tudo.</p>
+      <div class="cta-buttons">
+        <a href="https://wa.me/5562999999999?text=Quero+mais+clientes+na+minha+região" class="btn btn-primary" target="_blank" style="font-size:1rem;padding:20px 36px;">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Quero mais clientes na minha região
+        </a>
+        <a href="https://wa.me/5562999999999?text=Falar+com+especialista" class="btn btn-secondary" target="_blank">Falar com um especialista agora</a>
+      </div>
+      <p class="cta-note">✓ Análise gratuita &nbsp;·&nbsp; ✓ Sem compromisso &nbsp;·&nbsp; ✓ Resposta em até 1 hora útil</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <a href="#" class="logo" style="font-family:var(--heading);font-size:1.1rem;font-weight:800;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:10px;">
+        <div class="logo-dot"></div>
+        ASSENT<span style="color:var(--gold);"> AGENCIA</span>
+      </a>
+      <div class="footer-links">
+        <a href="#servicos">Serviços</a>
+        <a href="#provas">Resultados</a>
+        <a href="#processo">Como Funciona</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://wa.me/5562999999999" target="_blank">WhatsApp</a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2025 ASSENT AGENCIA — Especialistas em crescimento de negócios locais.<br>
+      <span style="font-size:.75rem;">Todos os direitos reservados. CNPJ: 00.000.000/0001-00</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/5562999999999?text=Quero+saber+mais+sobre+marketing+para+meu+negócio" class="wa-float" target="_blank" aria-label="WhatsApp">
+  <div class="wa-tooltip">Fale com a gente agora 👋</div>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+// NAV SCROLL
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>30);
+});
+
+// REVEAL ON SCROLL
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// HERO COUNTERS
+function animateCount(el,target,duration=1800){
+  let start=null;
+  const step=ts=>{
+    if(!start)start=ts;
+    const pct=Math.min((ts-start)/duration,1);
+    const ease=1-Math.pow(1-pct,3);
+    el.textContent=target<10?(ease*target).toFixed(1):Math.floor(ease*target);
+    if(pct<1)requestAnimationFrame(step);
+    else el.textContent=target<10?target.toFixed(1):target;
+  };
+  requestAnimationFrame(step);
+}
+setTimeout(()=>{
+  animateCount(document.getElementById('c1'),312);
+  animateCount(document.getElementById('c2'),94);
+  animateCount(document.getElementById('c3'),4.2);
+  animateCount(document.getElementById('c4'),30);
+},600);
+
+// FAQ
+function toggleFaq(el){
+  const item=el.parentElement;
+  document.querySelectorAll('.faq-item.open').forEach(i=>{if(i!==item)i.classList.remove('open');});
+  item.classList.toggle('open');
+}
+
+// MOBILE MENU
+function toggleMenu(){
+  const links=document.querySelector('.nav-links');
+  const cta=document.querySelector('.nav-cta');
+  if(links.style.display==='flex'){
+    links.style.display='';cta.style.display='';
+  }else{
+    links.style.cssText='display:flex;flex-direction:column;position:fixed;top:70px;left:0;right:0;background:rgba(17,17,17,.98);padding:24px;gap:20px;border-bottom:1px solid rgba(255,255,255,.07);z-index:999;backdrop-filter:blur(16px);';
+    cta.style.cssText='display:block;position:fixed;top:auto;bottom:20px;left:20px;right:20px;text-align:center;z-index:999;';
+  }
+}
+
+// CHART ANIMATION
+const chartObs=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting){
+    const bars=document.querySelectorAll('#chartBars .bar');
+    bars.forEach(b=>{
+      b.style.height='4px';
+      setTimeout(()=>{b.style.transition='height 1s ease';b.style.height=b.dataset.h+'%';},300);
+    });
+    chartObs.disconnect();
+  }
+},{threshold:0.3});
+const chartEl=document.getElementById('chartBars');
+if(chartEl)chartObs.observe(chartEl);
+</script>
+</body>
+</html>

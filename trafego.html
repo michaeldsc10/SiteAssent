@@ -3,16 +3,23 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gestão de Tráfego Pago — ASSENT AGENCIA</title>
+  <title>ASSENT - Gestão de Tráfego Pago</title>
   <meta name="description" content="Anúncios estratégicos no Google, Instagram e Facebook para negócios locais que querem clientes novos todo mês. Sem desperdício. Só resultado."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
   <style>
+.section-custom {
+  padding-top: var(--pt, 80px);
+  padding-bottom: var(--pb, 80px);
+  background: var(--bgc, transparent);
+}
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
+
+      --blackf:	   #050505;
       --bg:        #111111;
       --bg2:       #1a1a1a;
       --bg3:       #222222;
@@ -39,7 +46,7 @@
       font-size: 16px;
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
-      padding-top: 68px; /* altura da navbar.js */
+      padding-top: -10px; /* altura da navbar.js */
     }
 
     a { color: inherit; text-decoration: none; }
@@ -170,22 +177,13 @@
        HERO — vídeo BG
     ══════════════════════════════ */
     .hero {
-      position: relative;
-      min-height: 92vh;
+      min-height: auto;
       display: flex;
       align-items: center;
+      padding:130px 0 0;
+      position:relative;
       overflow: hidden;
-      background: #0a0a08;
-    }
-
-    .hero-video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: .28;
-      z-index: 0;
+      background:#1c1a14;
     }
 
     /* overlay em gradiente para suavizar o vídeo e criar profundidade */
@@ -203,7 +201,7 @@
       position: relative;
       z-index: 2;
       width: 100%;
-      padding: 100px 0 80px;
+      padding: 72px 0 64px;
     }
 
     .hero-content { max-width: 780px; }
@@ -236,7 +234,7 @@
       display: flex;
       gap: 14px;
       flex-wrap: wrap;
-      margin-bottom: 72px;
+      margin-bottom: 0;
     }
 
     /* Stats strip */
@@ -264,10 +262,24 @@
       color: var(--gold);
       line-height: 1;
       margin-bottom: 5px;
+}
+    .stat-numblack {
+      font-family: var(--heading);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--blackf);
+      line-height: 1;
+      margin-bottom: 5px;
     }
     .stat-label {
       font-size: .78rem;
       color: rgba(255,255,255,.45);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+     .stat-black {
+      font-size: .78rem;
+      color: #050505;
       letter-spacing: .05em;
       text-transform: uppercase;
     }
@@ -840,14 +852,16 @@
 ══════════════════════════════════════ -->
 <section class="hero">
 
-  <!-- Vídeo de background -->
-  <video class="hero-video" autoplay muted loop playsinline>
-    <source src="BG-video_KDB.mp4" type="video/mp4"/>
-  </video>
+  <video
+    autoplay muted playsinline loop
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"
+    src="BG-video_KDB.webm"
+  ></video>
 
   <div class="hero-inner">
-    <div class="container">
-      <div class="hero-content">
+    
+  <div class="container">
+    <div class="hero-content">
 
         <span class="badge">📈 Gestão de Tráfego Pago</span>
 
@@ -870,29 +884,34 @@
           </a>
         </div>
 
-        <div class="stats-strip">
-          <div class="stat-item">
-            <div class="stat-num">312<span style="color:var(--gold-dark)">+</span></div>
-            <div class="stat-label">Negócios atendidos</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">4,2<span style="color:var(--gold-dark)">x</span></div>
-            <div class="stat-label">Retorno médio do investimento</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">30 dias</div>
-            <div class="stat-label">Para os primeiros resultados</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">94<span style="color:var(--gold-dark)">%</span></div>
-            <div class="stat-label">Clientes satisfeitos</div>
-          </div>
+        
         </div>
 
       </div>
     </div>
   </div>
 </section>
+<div class="section-custom" style="--bgc:#f0f0ec; --pt:40px; --pb:40px;">
+<div class="container">
+  <div class="stats-strip" style="margin-top: -40px; margin-bottom: 40px;">
+    <div class="stat-item">
+      <div class="stat-numblack">312<span style="color:var(--gold-dark)">+</span></div>
+      <div class="stat-black">Negócios atendidos</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-numblack">4,2<span style="color:var(--gold-dark)">x</span></div>
+      <div class="stat-black">Retorno médio do investimento</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-numblack">30 <span style="color:var(--gold-dark)">dias</span></div>
+      <div class="stat-black">Para os primeiros resultados</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-numblack">94<span style="color:var(--gold-dark)">%</span></div>
+      <div class="stat-black">Clientes satisfeitos</div>
+    </div>
+  </div>
+</div>
 
 
 <!-- ══════════════════════════════════════
@@ -1100,7 +1119,7 @@
         <div class="lab">Retornado para cada R$1 investido (média)</div>
       </div>
       <div class="result-stat reveal">
-        <div class="num">15 dias</div>
+        <div class="num">30 dias</div>
         <div class="lab">Para os primeiros resultados aparecerem</div>
       </div>
       <div class="result-stat reveal">
@@ -1123,12 +1142,12 @@
       </div>
       <div class="testimonial reveal">
         <div class="stars">★★★★★</div>
-        <p class="testimonial-text">"Gastei anos postando no Instagram sem resultado. Depois que a ASSENT assumiu o tráfego, as mensagens não pararam mais. O retorno foi em menos de 30 dias."</p>
+        <p class="testimonial-text">"Melhorou muito minha cartela de clientes depois que o Michael assumiu, a empresa dele é muito boa nisso, as fotos que eles fazem são muito profissionais e atraem os clientes de verdade."</p>
         <div class="testimonial-author">
           <div class="avatar">CS</div>
           <div>
-            <div class="author-name">Carlos Santos</div>
-            <div class="author-role">Salão Masculino — Aparecida de Goiânia/GO</div>
+            <div class="author-name">Josenildo</div>
+            <div class="author-role">Barbershop Masculino — Goiânia/GO</div>
           </div>
         </div>
       </div>
@@ -1226,7 +1245,7 @@
         <div class="dif-icon">💰</div>
         <div>
           <div class="dif-title">Planos acessíveis para negócios locais</div>
-          <div class="dif-desc">Você não precisa ter orçamento de grande empresa. Nossos planos começam em R$497/mês e geram retorno desde o primeiro mês.</div>
+          <div class="dif-desc">Você não precisa ter orçamento de grande empresa. Nossos planos começam em R$697/mês e geram retorno desde o primeiro mês.</div>
         </div>
       </div>
     </div>

@@ -67,12 +67,32 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
   }
-  .login-logo {
+  .assent-logo {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2.2rem;
     font-weight: 300;
     letter-spacing: 0.3em;
-    color: var(--gold);
+    background: linear-gradient(
+      90deg,
+      #D4AF37 0%,
+      #EAEAEA 25%,
+      #D4AF37 50%,
+      #EAEAEA 75%,
+      #B8860B 100%
+    );
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    animation: assentShimmer 4s ease-in-out infinite;
+  }
+  @keyframes assentShimmer {
+    0%   { background-position: 0%   center; }
+    50%  { background-position: 100% center; }
+    100% { background-position: 0%   center; }
+  }
+  .login-logo {
+    font-size: 2.6rem;
     text-align: center;
     margin-bottom: 6px;
   }
@@ -158,11 +178,7 @@
     border-bottom: 1px solid var(--border);
   }
   .sidebar-logo-text {
-    font-family: 'Cormorant Garamond', serif;
     font-size: 1.4rem;
-    font-weight: 300;
-    letter-spacing: 0.3em;
-    color: var(--gold);
   }
   .sidebar-logo-sub {
     font-size: 0.6rem;
@@ -539,7 +555,7 @@
 <!-- ═══ LOGIN ═══ -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">ASSENT</div>
+    <div class="login-logo assent-logo">ASSENT</div>
     <div class="login-sub">Painel de Gerenciamento</div>
     <div class="field-group">
       <label>GitHub Token (Personal Access Token)</label>
@@ -570,7 +586,7 @@
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-logo">
-      <div class="sidebar-logo-text">ASSENT</div>
+      <div class="sidebar-logo-text assent-logo">ASSENT</div>
       <div class="sidebar-logo-sub">CMS</div>
     </div>
     <div class="sidebar-repo">
@@ -733,6 +749,8 @@ function doLogin() {
   if (!token || !owner || !repo) { showError('Preencha todos os campos.'); return; }
   const btn = document.getElementById('btn-login');
   btn.disabled = true; btn.textContent = 'Verificando...';
+  // Set token in state BEFORE calling ghFetch, which reads from state.token
+  state.token = token;
   ghFetch(`/repos/${owner}/${repo}`)
     .then(data => {
       if (data.message) throw new Error(data.message);

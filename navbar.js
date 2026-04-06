@@ -1,3 +1,4 @@
+console.log("NAVBAR NOVA VERSÃO");
 class AssentNavbar extends HTMLElement {
   connectedCallback() {
     this.attachShadow({ mode: 'open' });
@@ -122,9 +123,9 @@ class AssentNavbar extends HTMLElement {
           transform: translateX(-50%);
           background: #fff;
           border-radius: 14px;
-          padding: 12px;
+          padding: 18px;
           box-shadow: 0 8px 40px rgba(0,0,0,.22);
-          min-width: 310px;
+          min-width: 420px;
           border: 1px solid rgba(0,0,0,.06);
           z-index: 10;
         }
@@ -144,7 +145,7 @@ class AssentNavbar extends HTMLElement {
           display: flex;
           align-items: flex-start;
           gap: 14px;
-          padding: 13px 15px;
+          padding: 18px 18px;
           border-radius: 10px;
           text-decoration: none;
           transition: background .2s;
@@ -167,14 +168,16 @@ class AssentNavbar extends HTMLElement {
           font-size: .87rem;
           font-weight: 700;
           color: #B8841C;
-          margin-bottom: 3px;
+          margin-bottom: 6px;
         }
         .ddesc {
           font-size: .77rem;
           color: #666;
           line-height: 1.5;
         }
-
+	.ditem + .ditem {
+	  margin-top: 6px;
+	}
         /* ── HAMBURGER ── */
         .hamburger {
           display: none;

@@ -11,7 +11,10 @@ class AssentNavbar extends HTMLElement {
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
+	.ddesc {
+	  line-height: 1.6;
+ 	 font-size: .8rem;
+	}
         /* ── LOGO ── */
         .logo {
           font-family: 'Montserrat', sans-serif;

@@ -6,60 +6,7 @@
 <title>ASSENT AGENCIA — Mais Clientes no Seu Bairro</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-.assent-logo {
-  font-size: 32px; /* aumenta aqui */
-}
-.assent-logo {
-  background: linear-gradient(
-    90deg,
-    #D4AF37 0%,
-    #EAEAEA 25%,
-    #D4AF37 50%,
-    #EAEAEA 75%,
-    #B8860B 100%
-  );
-
-  background-size: 250% auto;
-
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-  /* compatibilidade */
-  background-clip: text;
-  color: transparent;
-}
-.assent-logo--shimmer {
-  background-size: 250% auto;
-  animation: assentShimmer 4s ease-in-out infinite;
-}
-
-@keyframes assentShimmer {
-  0%   { background-position: 0%   center; }
-  50%  { background-position: 100% center; }
-  100% { background-position: 0%   center; }
-}
-
-#navbar {
-      width: 100%;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-    }
+<script src="/navbar.js" defer></script>
 :root {
   --bg: #111111;
   --surface: #1a1a1a;
@@ -97,81 +44,6 @@ body{background:var(--bg);color:var(--white);font-family:var(--body);overflow-x:
 .reveal{opacity:0;transform:translateY(36px);transition:opacity .65s ease,transform .65s ease;}
 .reveal.visible{opacity:1;transform:none;}
 
-/* ─── NAV ─── */
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 0;transition:all .3s ease;background:#1c1a14;border-bottom:1px solid rgba(255,255,255,0.1);}
-nav.scrolled{background:rgba(28,26,20,0.98);backdrop-filter:blur(16px);box-shadow:0 2px 24px rgba(0,0,0,0.5);}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;}
-.logo{font-family:var(--heading);font-size:1.15rem;font-weight:800;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:10px;letter-spacing:-.01em;}
-.logo span{color:var(--gold);}
-.logo-dot{width:9px;height:9px;background:var(--gold);border-radius:50%;box-shadow:0 0 12px var(--gold);}
-.nav-links{display:flex;align-items:center;gap:32px;}
-.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;transition:color .2s;}
-.nav-links a:hover{color:var(--white);}
-.nav-cta{padding:11px 24px;font-size:.82rem;}
-
-/* ─── DROPDOWN SERVIÇOS ─── */
-.nav-item-dropdown{position:relative;}
-.nav-item-dropdown > a{display:flex;align-items:center;gap:6px;cursor:pointer;}
-.nav-dropdown-arrow{display:inline-flex;align-items:center;transition:transform .25s ease;}
-.nav-item-dropdown.open .nav-dropdown-arrow{transform:rotate(180deg);}
-.nav-dropdown{
-  display:none;
-  position:absolute;
-  top:calc(100% + 18px);
-  left:50%;
-  transform:translateX(-50%);
-  background:#fff;
-  border-radius:14px;
-  padding:12px;
-  box-shadow:0 8px 40px rgba(0,0,0,0.22);
-  min-width:300px;
-  z-index:2000;
-  border:1px solid rgba(0,0,0,0.06);
-}
-.nav-item-dropdown.open .nav-dropdown{display:block;}
-.nav-dropdown::before{
-  content:'';
-  position:absolute;
-  top:-7px;
-  left:50%;
-  transform:translateX(-50%);
-  width:14px;height:14px;
-  background:#fff;
-  border-left:1px solid rgba(0,0,0,0.06);
-  border-top:1px solid rgba(0,0,0,0.06);
-  rotate:45deg;
-}
-.dropdown-item{
-  display:flex;align-items:flex-start;gap:14px;
-  padding:14px 16px;
-  border-radius:10px;
-  text-decoration:none;
-  transition:background .2s;
-  cursor:pointer;
-}
-.dropdown-item:hover{background:rgba(245,166,35,0.07);}
-.dropdown-item-icon{
-  width:42px;height:42px;flex-shrink:0;
-  border-radius:10px;
-  background:rgba(245,166,35,0.1);
-  display:flex;align-items:center;justify-content:center;
-  color:#B8841C;
-}
-.dropdown-item-icon svg{width:22px;height:22px;}
-.dropdown-item-title{
-  display:block;
-  font-family:var(--heading);
-  font-size:.88rem;font-weight:700;
-  color:#B8841C;
-  margin-bottom:3px;
-  letter-spacing:-.01em;
-}
-.dropdown-item-desc{
-  font-size:.78rem;
-  color:#666;
-  line-height:1.5;
-  font-family:var(--body);
-}
 
 /* ─── HERO ─── */
 #hero{min-height:auto;display:flex;align-items:center;padding:130px 0 0;position:relative;overflow:hidden;background:#1c1a14;}
@@ -367,10 +239,6 @@ footer{background:#0a0a0a;border-top:1px solid var(--border);padding:48px 0 32px
 .footer-links a:hover{color:var(--white);}
 .footer-copy{text-align:center;margin-top:32px;color:var(--muted);font-size:.78rem;border-top:1px solid var(--border);padding-top:24px;}
 
-/* ─── HAMBURGER ─── */
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;}
-.hamburger span{width:24px;height:2px;background:var(--white);transition:all .3s;}
-
 /* ─── WHATSAPP FLOAT ─── */
 .wa-float{position:fixed;bottom:28px;right:28px;z-index:999;width:60px;height:60px;background:var(--wa);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,0.4);animation:waFloat 2.5s ease-in-out infinite;cursor:pointer;text-decoration:none;}
 .wa-float svg{width:30px;height:30px;fill:#fff;}
@@ -402,72 +270,7 @@ footer{background:#0a0a0a;border-top:1px solid var(--border);padding:48px 0 32px
 </style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav id="navbar">
-  <div class="container">
-    <div class="nav-inner">
-
-      <a href="#" class="logo">
-        <span class="assent-logo assent-logo--sm assent-logo--shimmer">ASSENT</span>
-      </a>
-
-      <div class="nav-links">
-        <a href="#dor">O Problema</a>
-
-        <div class="nav-item-dropdown" id="navServicos">
-          <a href="#servicos" onclick="toggleServicosDropdown(event)" class="nav-link-servicos">
-            Serviços
-            <span class="nav-dropdown-arrow">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </a>
-
-          <div class="nav-dropdown">
-            <!-- TODOS OS ITENS MANTIDOS -->
-            
-            <a href="#servicos" class="dropdown-item">
-              <div class="dropdown-item-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M3 3h18v4L12 17 3 7V3z"/>
-                </svg>
-              </div>
-              <div>
-                <span class="dropdown-item-title">Gestão de Tráfego Pago</span>
-                <span class="dropdown-item-desc">Anúncios estratégicos para empresas que querem resultados previsíveis.</span>
-              </div>
-            </a>
-	<a href="#servicos" class="dropdown-item"> <div class="dropdown-item-icon"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5"/></svg> </div> <div> <span class="dropdown-item-title">Aplicativos</span> 
-<span class="dropdown-item-desc">Soluções digitais personalizadas para escalar o seu negócio.</span> 
-</div> 
-</a> 
-	<a href="#servicos" class="dropdown-item"> <div class="dropdown-item-icon"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><circle cx="12" cy="14" r="3"/></svg> </div> <div> <span class="dropdown-item-title">Fotografia Profissional</span> 
-<span class="dropdown-item-desc">Imagens que valorizam sua marca e convertem visitantes em clientes.</span> 
-</div> 
-</a> 
-            <!-- restante continua igual -->
-          </div>
-        </div>
-
-        <a href="#provas">Resultados</a>
-        <a href="#processo">Como Funciona</a>
-        <a href="#faq">Dúvidas</a>
-      </div>
-
-      <a href="https://wa.me/5562991383079?text=Olá!" class="btn btn-primary nav-cta" target="_blank">
-        Análise Gratuita
-      </a>
-
-      <div class="hamburger" onclick="toggleMenu()">
-        <span></span><span></span><span></span>
-      </div>
-
-    </div>
-  </div>
-</nav>
-
+<assent-navbar></assent-navbar>
 <!-- HERO -->
 <section id="hero">
   <video
@@ -971,12 +774,7 @@ window.addEventListener('scroll',()=>{
   document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>30);
 });
 
-// SERVIÇOS DROPDOWN
-function toggleServicosDropdown(e){
-  e.preventDefault();
-  const el=document.getElementById('navServicos');
-  el.classList.toggle('open');
-}
+
 document.addEventListener('click',function(e){
   const dd=document.getElementById('navServicos');
   if(dd && !dd.contains(e.target)) dd.classList.remove('open');
@@ -1013,18 +811,6 @@ function toggleFaq(el){
   const item=el.parentElement;
   document.querySelectorAll('.faq-item.open').forEach(i=>{if(i!==item)i.classList.remove('open');});
   item.classList.toggle('open');
-}
-
-// MOBILE MENU
-function toggleMenu(){
-  const links=document.querySelector('.nav-links');
-  const cta=document.querySelector('.nav-cta');
-  if(links.style.display==='flex'){
-    links.style.display='';cta.style.display='';
-  }else{
-    links.style.cssText='display:flex;flex-direction:column;position:fixed;top:70px;left:0;right:0;background:rgba(17,17,17,.98);padding:24px;gap:20px;border-bottom:1px solid rgba(255,255,255,.07);z-index:999;backdrop-filter:blur(16px);';
-    cta.style.cssText='display:block;position:fixed;top:auto;bottom:20px;left:20px;right:20px;text-align:center;z-index:999;';
-  }
 }
 
 

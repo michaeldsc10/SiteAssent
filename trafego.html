@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestão de Tráfego Pago — ASSENT AGENCIA</title>
+  <meta name="description" content="Anúncios estratégicos no Google, Instagram e Facebook para negócios locais que querem clientes novos todo mês. Sem desperdício. Só resultado."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #111111;
+      --bg2:       #1a1a1a;
+      --bg3:       #222222;
+      --surface:   #1a1a1a;
+      --gold:      #F5A623;
+      --gold-dark: #E09820;
+      --gold-glow: rgba(245,166,35,0.18);
+      --white:     #FFFFFF;
+      --light-bg:  #F0F0EC;
+      --muted:     #777777;
+      --border:    rgba(255,255,255,0.07);
+      --green:     #22c55e;
+      --heading:   'Montserrat', sans-serif;
+      --body:      'Inter', sans-serif;
+      --max:       1140px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      padding-top: 68px; /* altura da navbar.js */
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ─── UTILS ─── */
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245,166,35,0.12);
+      border: 1px solid rgba(245,166,35,0.3);
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border-radius: 100px;
+    }
+    .badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: block;
+      box-shadow: 0 0 8px var(--gold);
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .section-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
+    }
+
+    .section-title {
+      font-family: var(--heading);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -.025em;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 1.02rem;
+      color: var(--muted);
+      max-width: 580px;
+      line-height: 1.75;
+    }
+
+    .divider {
+      width: 48px; height: 3px;
+      background: var(--gold);
+      border-radius: 4px;
+      margin: 16px 0 28px;
+    }
+
+    .highlight { color: var(--gold); }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: #111;
+      font-family: var(--heading);
+      font-weight: 700;
+      font-size: .92rem;
+      padding: 17px 34px;
+      border-radius: 50px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      transition: background .25s, transform .25s, box-shadow .25s;
+      box-shadow: 0 0 40px rgba(245,166,35,0.28);
+    }
+    .btn-primary:hover {
+      background: var(--gold-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(245,166,35,0.42);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--white);
+      font-family: var(--heading);
+      font-weight: 600;
+      font-size: .88rem;
+      padding: 16px 28px;
+      border-radius: 50px;
+      border: 1.5px solid var(--border);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-secondary:hover {
+      border-color: rgba(255,255,255,0.28);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* ─── REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ══════════════════════════════
+       HERO — vídeo BG
+    ══════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: #0a0a08;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .28;
+      z-index: 0;
+    }
+
+    /* overlay em gradiente para suavizar o vídeo e criar profundidade */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 60% 40%, rgba(245,166,35,0.10) 0%, transparent 65%),
+        linear-gradient(to bottom, rgba(11,11,8,0.55) 0%, rgba(11,11,8,0.2) 50%, rgba(11,11,8,0.85) 100%);
+      z-index: 1;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      padding: 100px 0 80px;
+    }
+
+    .hero-content { max-width: 780px; }
+
+    .hero h1 {
+      font-family: var(--heading);
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.06;
+      letter-spacing: -.035em;
+      color: var(--white);
+      margin: 24px 0 22px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      color: rgba(255,255,255,.65);
+      max-width: 580px;
+      margin-bottom: 42px;
+      line-height: 1.8;
+    }
+    .hero-sub strong { color: var(--white); }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 72px;
+    }
+
+    /* Stats strip */
+    .stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 40px;
+      gap: 0;
+    }
+    .stat-item {
+      flex: 1;
+      min-width: 130px;
+      padding: 0 28px 0 0;
+      position: relative;
+    }
+    .stat-item + .stat-item {
+      padding-left: 28px;
+      border-left: 1px solid rgba(255,255,255,.1);
+    }
+    .stat-num {
+      font-family: var(--heading);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat-label {
+      font-size: .78rem;
+      color: rgba(255,255,255,.45);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    /* ══════════════════════════════
+       SEÇÕES GENÉRICAS
+    ══════════════════════════════ */
+    section { padding: 96px 0; }
+
+    /* ── PROBLEMA (light) ── */
+    .s-problema { background: var(--light-bg); }
+    .s-problema .section-title,
+    .s-problema .section-sub { color: #222; }
+    .s-problema .section-sub { color: #555; }
+    .s-problema .section-tag { color: #B8841C; }
+    .s-problema .section-tag::before { background: var(--gold-dark); box-shadow: none; }
+    .s-problema .divider { background: var(--gold-dark); }
+
+    .problema-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+      margin-top: 8px;
+    }
+
+    .dor-list { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+
+    .dor-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 12px;
+      transition: border-color .3s, transform .3s;
+    }
+    .dor-item:hover { border-color: rgba(245,166,35,.4); transform: translateX(5px); }
+
+    .dor-icon {
+      width: 44px; height: 44px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: rgba(245,166,35,.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+    }
+
+    .dor-title { font-weight: 700; font-size: .95rem; color: #222; margin-bottom: 4px; }
+    .dor-desc  { font-size: .87rem; color: #666; line-height: 1.6; }
+
+    /* insight card (light section) */
+    .insight-card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 20px;
+      padding: 36px;
+      position: sticky;
+      top: 88px;
+    }
+    .insight-card .big-stat {
+      font-family: var(--heading);
+      font-size: 4rem;
+      font-weight: 800;
+      color: var(--gold-dark);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .insight-card p { font-size: .95rem; color: #555; margin-bottom: 20px; }
+    .insight-card .mini-divider { height: 1px; background: rgba(0,0,0,.08); margin: 16px 0; }
+    .insight-card .verdict {
+      font-size: .87rem;
+      color: #888;
+      font-style: italic;
+      line-height: 1.65;
+    }
+    .insight-card .verdict strong { color: #333; }
+
+    /* ── COMO FUNCIONA (dark) ── */
+    .s-como { background: var(--bg); }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 20px;
+      margin-top: 56px;
+    }
+
+    .step-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: border-color .25s, transform .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .step-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .4s ease;
+    }
+    .step-card:hover { border-color: rgba(245,166,35,.3); transform: translateY(-5px); }
+    .step-card:hover::before { transform: scaleX(1); }
+
+    .step-num {
+      font-family: var(--heading);
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: rgba(245,166,35,.15);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .step-title { font-weight: 700; font-size: .97rem; color: var(--white); margin-bottom: 8px; font-family: var(--heading); }
+    .step-desc  { font-size: .86rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── O QUE ESTÁ INCLUÍDO (light) ── */
+    .s-incluido { background: var(--light-bg); }
+    .s-incluido .section-title,
+    .s-incluido h2 { color: #222; }
+    .s-incluido .section-tag { color: #B8841C; }
+    .s-incluido .section-tag::before { background: var(--gold-dark); box-shadow: none; }
+
+    .include-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .include-card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 16px;
+      padding: 28px;
+      transition: border-color .25s, transform .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .include-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .4s ease;
+    }
+    .include-card:hover { border-color: rgba(245,166,35,.35); transform: translateY(-5px); }
+    .include-card:hover::before { transform: scaleX(1); }
+
+    .include-icon {
+      width: 48px; height: 48px;
+      background: rgba(245,166,35,.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 18px;
+    }
+    .include-title { font-weight: 700; font-size: .97rem; color: #222; margin-bottom: 6px; font-family: var(--heading); }
+    .include-desc  { font-size: .86rem; color: #666; line-height: 1.65; }
+
+    /* ── PARA QUEM É (dark) ── */
+    .s-paraquem { background: var(--bg); }
+
+    .para-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .para-col {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .para-col-title {
+      font-family: var(--heading);
+      font-weight: 700;
+      font-size: .82rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    .para-col-title.sim { background: rgba(34,197,94,.1); color: var(--green); }
+    .para-col-title.nao { background: rgba(239,68,68,.1); color: #ef4444; }
+
+    .para-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: .9rem;
+      color: rgba(255,255,255,.72);
+      line-height: 1.55;
+    }
+    .para-item .icon { flex-shrink: 0; margin-top: 1px; }
+
+    /* ── RESULTADOS (light) ── */
+    .s-resultados { background: var(--light-bg); }
+    .s-resultados .section-title { color: #222; }
+    .s-resultados .section-tag { color: #B8841C; }
+    .s-resultados .section-tag::before { background: var(--gold-dark); box-shadow: none; }
+
+    .results-intro {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 16px;
+      margin-top: 48px;
+      margin-bottom: 48px;
+    }
+    .result-stat {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+    }
+    .result-stat .num {
+      font-family: var(--heading);
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--gold-dark);
+    }
+    .result-stat .lab { font-size: .78rem; color: #888; margin-top: 5px; }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 20px;
+    }
+    .testimonial {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 16px;
+      padding: 28px;
+      transition: border-color .2s, transform .3s;
+    }
+    .testimonial:hover { border-color: rgba(245,166,35,.35); transform: translateY(-4px); }
+
+    .stars { color: var(--gold); font-size: .9rem; margin-bottom: 14px; }
+
+    .testimonial-text {
+      font-size: .9rem;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--heading);
+      font-weight: 800;
+      font-size: .82rem;
+      color: #111;
+      flex-shrink: 0;
+    }
+    .author-name { font-weight: 700; font-size: .88rem; color: #222; }
+    .author-role { font-size: .77rem; color: #999; }
+
+    /* ── URGÊNCIA (dark + gold glow) ── */
+    .s-urgencia {
+      background: var(--bg2);
+      border-top: 1px solid rgba(245,166,35,.12);
+      border-bottom: 1px solid rgba(245,166,35,.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .s-urgencia::before {
+      content: '';
+      position: absolute;
+      top: -40%; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(circle, rgba(245,166,35,.07), transparent 70%);
+      pointer-events: none;
+    }
+
+    .urgencia-inner {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      position: relative;
+    }
+    .urgencia-text { flex: 1; }
+
+    .urgencia-tag {
+      display: inline-block;
+      background: rgba(239,68,68,.12);
+      border: 1px solid rgba(239,68,68,.3);
+      color: #ef4444;
+      font-size: .73rem;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 50px;
+      margin-bottom: 18px;
+    }
+
+    .urgencia h2 {
+      font-family: var(--heading);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 14px;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+    .urgencia p { font-size: 1rem; color: var(--muted); line-height: 1.75; }
+
+    .urgencia-cta { flex-shrink: 0; text-align: center; }
+    .urgencia-note { font-size: .78rem; color: var(--muted); margin-top: 12px; line-height: 1.7; }
+
+    /* ── DIFERENCIAIS (light) ── */
+    .s-diferenciais { background: var(--light-bg); }
+    .s-diferenciais .section-title { color: #222; }
+    .s-diferenciais .section-tag { color: #B8841C; }
+    .s-diferenciais .section-tag::before { background: var(--gold-dark); box-shadow: none; }
+
+    .dif-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .dif-card {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 14px;
+      padding: 26px;
+      transition: border-color .2s, transform .3s;
+    }
+    .dif-card:hover { border-color: rgba(245,166,35,.35); transform: translateX(5px); }
+
+    .dif-icon {
+      width: 46px; height: 46px;
+      flex-shrink: 0;
+      background: rgba(245,166,35,.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .dif-title { font-weight: 700; font-size: .97rem; color: #222; margin-bottom: 5px; font-family: var(--heading); }
+    .dif-desc  { font-size: .86rem; color: #666; line-height: 1.65; }
+
+    /* ── FAQ (dark) ── */
+    .s-faq { background: var(--bg); }
+
+    .faq-list {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 780px;
+    }
+    .faq-item {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .faq-item.open { border-color: rgba(245,166,35,.28); }
+
+    .faq-q {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--white);
+      font-family: var(--body);
+      font-size: .97rem;
+      font-weight: 600;
+      text-align: left;
+      transition: background .2s;
+    }
+    .faq-q:hover { background: rgba(255,255,255,.03); }
+    .faq-q svg { flex-shrink: 0; transition: transform .3s; color: var(--gold); }
+    .faq-item.open .faq-q svg { transform: rotate(45deg); }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease;
+    }
+    .faq-a-inner {
+      padding: 0 24px 20px;
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* ── CTA FINAL (dark + glow) ── */
+    .s-cta-final {
+      background: var(--bg);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .s-cta-final::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 55% at 50% 100%, rgba(245,166,35,.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-card {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      background: var(--bg2);
+      border: 1px solid rgba(245,166,35,.18);
+      border-radius: 24px;
+      padding: 72px 48px;
+    }
+    .cta-card h2 {
+      font-family: var(--heading);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 16px;
+      line-height: 1.12;
+      letter-spacing: -.025em;
+    }
+    .cta-card h2 em { font-style: normal; color: var(--gold); }
+    .cta-card p {
+      font-size: 1.02rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 40px;
+    }
+
+    .guarantee {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    .guarantee-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+    .guarantee-item svg { color: var(--green); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0a0a0a;
+      border-top: 1px solid var(--border);
+      padding: 36px 24px;
+    }
+    .footer-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-logo {
+      font-family: var(--heading);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--gold);
+      letter-spacing: .05em;
+    }
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+    .footer-links a { font-size: .84rem; color: var(--muted); transition: color .2s; }
+    .footer-links a:hover { color: var(--white); }
+    .footer-copy { font-size: .77rem; color: var(--muted); }
+
+    /* ── WHATSAPP FLOAT ── */
+    .wa-float {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 999;
+      width: 58px; height: 58px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 24px rgba(37,211,102,.4);
+      animation: waFloat 2.5s ease-in-out infinite;
+      cursor: pointer;
+    }
+    .wa-float svg { width: 28px; height: 28px; fill: #fff; }
+    @keyframes waFloat {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+
+    /* ─── RESPONSIVO ─── */
+    @media (max-width: 900px) {
+      .problema-grid,
+      .para-cols { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .include-grid { grid-template-columns: 1fr 1fr; }
+      .results-intro { grid-template-columns: 1fr 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr 1fr; }
+      .dif-grid { grid-template-columns: 1fr; }
+      .urgencia-inner { flex-direction: column; text-align: center; gap: 40px; }
+      .insight-card { position: static; }
+    }
+    @media (max-width: 600px) {
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .include-grid { grid-template-columns: 1fr; }
+      .results-intro { grid-template-columns: 1fr 1fr; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions .btn-primary,
+      .hero-actions .btn-secondary { justify-content: center; }
+      .cta-card { padding: 48px 24px; }
+      .stats-strip { gap: 24px; }
+      .stat-item { border-left: none !important; padding-left: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- navbar.js carrega a navbar automaticamente -->
+<script src="navbar.js" defer></script>
+<assent-navbar></assent-navbar>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero">
+
+  <!-- Vídeo de background -->
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="BG-video_KDB.mp4" type="video/mp4"/>
+  </video>
+
+  <div class="hero-inner">
+    <div class="container">
+      <div class="hero-content">
+
+        <span class="badge">📈 Gestão de Tráfego Pago</span>
+
+        <h1>Seu negócio aparecendo para quem<br><em>já quer comprar de você.</em></h1>
+
+        <p class="hero-sub">
+          Chega de pagar por clique que não vira cliente.
+          Com gestão estratégica de anúncios, <strong>cada real investido trabalha para lotar sua agenda</strong> — todo mês, de forma previsível.
+        </p>
+
+        <div class="hero-actions">
+          <a href="https://wa.me/5562991383079?text=Olá!+Quero+uma+análise+gratuita+de+tráfego+pago+para+meu+negócio" class="btn-primary">
+            Quero uma análise gratuita
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#como-funciona" class="btn-secondary">
+            Ver como funciona →
+          </a>
+        </div>
+
+        <div class="stats-strip">
+          <div class="stat-item">
+            <div class="stat-num">312<span style="color:var(--gold-dark)">+</span></div>
+            <div class="stat-label">Negócios atendidos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">4,2<span style="color:var(--gold-dark)">x</span></div>
+            <div class="stat-label">Retorno médio do investimento</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">30 dias</div>
+            <div class="stat-label">Para os primeiros resultados</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">94<span style="color:var(--gold-dark)">%</span></div>
+            <div class="stat-label">Clientes satisfeitos</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     PROBLEMA
+══════════════════════════════════════ -->
+<section class="s-problema" id="problema">
+  <div class="container">
+    <div class="problema-grid">
+      <div>
+        <span class="section-tag reveal">O Problema Real</span>
+        <h2 class="section-title reveal">Você já gastou dinheiro com anúncio e não voltou nada. Não é culpa sua.</h2>
+        <div class="divider reveal"></div>
+        <p class="section-sub reveal">
+          A maioria dos anúncios que não funcionam têm o mesmo problema: foram feitos sem estratégia, sem segmentação correta, sem oferta atraente.
+          O dinheiro foi embora. A culpa foi jogada no "marketing não funciona". Mas funciona — quando é feito do jeito certo.
+        </p>
+
+        <ul class="dor-list">
+          <li class="dor-item reveal">
+            <div class="dor-icon">💸</div>
+            <div>
+              <div class="dor-title">Investiu e não veio retorno</div>
+              <div class="dor-desc">Anúncios genéricos, público errado, oferta fraca. O dinheiro foi para o ralo e a desconfiança ficou.</div>
+            </div>
+          </li>
+          <li class="dor-item reveal">
+            <div class="dor-icon">📉</div>
+            <div>
+              <div class="dor-title">Não sabe o que funcionou (ou por quê)</div>
+              <div class="dor-desc">Sem relatório claro, sem métricas que fazem sentido. Você gasta e não sabe se valeu.</div>
+            </div>
+          </li>
+          <li class="dor-item reveal">
+            <div class="dor-icon">🔁</div>
+            <div>
+              <div class="dor-title">Depende demais de indicação</div>
+              <div class="dor-desc">Indicação é ótima, mas mês que não vem indicação, não vem cliente. Isso não é negócio — é sorte.</div>
+            </div>
+          </li>
+          <li class="dor-item reveal">
+            <div class="dor-icon">😰</div>
+            <div>
+              <div class="dor-title">Seus concorrentes aparecem antes de você</div>
+              <div class="dor-desc">Enquanto você lê isso, clientes estão encontrando seus concorrentes no Google e no Instagram.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="insight-card reveal">
+          <div class="big-stat">87%</div>
+          <p>dos consumidores pesquisam online <strong>antes</strong> de comprar ou contratar um serviço local.</p>
+          <div class="mini-divider"></div>
+          <p style="font-size:.87rem;">Se você não está aparecendo nessa pesquisa, está perdendo clientes para quem está.</p>
+          <div class="mini-divider"></div>
+          <div class="verdict">
+            "Não é uma questão de <em>se</em> os anúncios funcionam. É uma questão de <em>como</em> eles são feitos.
+            Anúncio errado desperdiça dinheiro. Anúncio certo traz cliente todo mês."
+            <br><br><strong>— Equipe ASSENT AGENCIA</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     COMO FUNCIONA
+══════════════════════════════════════ -->
+<section class="s-como" id="como-funciona">
+  <div class="container">
+    <span class="section-tag reveal">O Processo</span>
+    <h2 class="section-title reveal">Do zero ao cliente na porta em 4 etapas simples</h2>
+    <div class="divider reveal"></div>
+    <p class="section-sub reveal">
+      Você não precisa entender de anúncios. Nossa função é fazer isso por você,
+      enquanto você foca em atender bem quem chega.
+    </p>
+
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">01</div>
+        <div class="step-title">Diagnóstico do negócio</div>
+        <div class="step-desc">Entendemos quem você atende, onde está seu cliente ideal, e o que o impede de te contratar hoje.</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">02</div>
+        <div class="step-title">Estratégia personalizada</div>
+        <div class="step-desc">Escolhemos os canais certos (Google, Meta, ou ambos), definimos o público e criamos a oferta que converte.</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">03</div>
+        <div class="step-title">Campanha no ar em até 7 dias</div>
+        <div class="step-desc">Criamos os anúncios, configuramos tudo e colocamos no ar. Você aprova e pronto — os clientes começam a chegar.</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">04</div>
+        <div class="step-title">Otimização contínua e relatório</div>
+        <div class="step-desc">Todo mês você recebe um relatório claro: quanto investiu, quantos clientes chegaram, qual foi o retorno real.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     O QUE ESTÁ INCLUÍDO
+══════════════════════════════════════ -->
+<section class="s-incluido" id="incluido">
+  <div class="container">
+    <span class="section-tag reveal">O Que Você Recebe</span>
+    <h2 class="section-title reveal" style="color:#222;">Tudo o que precisa para atrair clientes — sem você precisar mexer em nada</h2>
+    <div class="divider reveal"></div>
+
+    <div class="include-grid">
+      <div class="include-card reveal">
+        <div class="include-icon">🔍</div>
+        <div class="include-title">Pesquisa de público e concorrência</div>
+        <div class="include-desc">Mapeamos quem é seu cliente ideal, onde ele está e o que seus concorrentes estão fazendo (ou errando).</div>
+      </div>
+      <div class="include-card reveal">
+        <div class="include-icon">✍️</div>
+        <div class="include-title">Criação dos anúncios</div>
+        <div class="include-desc">Textos, imagens e formatos pensados para parar o scroll e convencer o cliente a clicar — e contratar.</div>
+      </div>
+      <div class="include-card reveal">
+        <div class="include-icon">🎯</div>
+        <div class="include-title">Segmentação precisa</div>
+        <div class="include-desc">Seu anúncio aparece para as pessoas certas na cidade certa, no momento certo — sem desperdiçar verba.</div>
+      </div>
+      <div class="include-card reveal">
+        <div class="include-icon">⚙️</div>
+        <div class="include-title">Configuração completa das campanhas</div>
+        <div class="include-desc">Google Ads, Meta Ads (Instagram + Facebook) — configuramos, testamos e ajustamos até funcionar.</div>
+      </div>
+      <div class="include-card reveal">
+        <div class="include-icon">📊</div>
+        <div class="include-title">Monitoramento diário</div>
+        <div class="include-desc">Acompanhamos os anúncios todos os dias e fazemos ajustes em tempo real para maximizar o resultado.</div>
+      </div>
+      <div class="include-card reveal">
+        <div class="include-icon">📋</div>
+        <div class="include-title">Relatório mensal em português simples</div>
+        <div class="include-desc">Sem gráfico inútil. Você recebe: quantos clientes vieram, quanto custou cada um, e o que vem por aí.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     PARA QUEM É
+══════════════════════════════════════ -->
+<section class="s-paraquem" id="paraquem">
+  <div class="container">
+    <span class="section-tag reveal">Para Quem É</span>
+    <h2 class="section-title reveal">Esse serviço foi feito para você?</h2>
+    <div class="divider reveal"></div>
+    <p class="section-sub reveal">
+      A gestão de tráfego da Assent é ideal para um perfil específico de empresário.
+      Veja se você se encaixa.
+    </p>
+
+    <div class="para-cols">
+      <div class="para-col reveal">
+        <span class="para-col-title sim">✓ &nbsp;É para você se...</span>
+        <div class="para-item"><span class="icon">✅</span> Você quer clientes novos chegando todo mês de forma previsível</div>
+        <div class="para-item"><span class="icon">✅</span> Está cansado de depender só de indicação</div>
+        <div class="para-item"><span class="icon">✅</span> Quer parar de postar no Instagram sem resultado</div>
+        <div class="para-item"><span class="icon">✅</span> Está disposto a investir em marketing com estratégia</div>
+        <div class="para-item"><span class="icon">✅</span> Tem um negócio local — clínica, salão, academia, restaurante, pet shop, prestador de serviço...</div>
+        <div class="para-item"><span class="icon">✅</span> Quer transparência total sobre onde vai o seu dinheiro</div>
+      </div>
+      <div class="para-col reveal">
+        <span class="para-col-title nao">✗ &nbsp;Não é para você se...</span>
+        <div class="para-item"><span class="icon">❌</span> Quer resultado imediato sem nenhum investimento</div>
+        <div class="para-item"><span class="icon">❌</span> Não tem disposição para dar retorno aos clientes que chegarem</div>
+        <div class="para-item"><span class="icon">❌</span> Quer uma fórmula mágica sem estratégia</div>
+        <div class="para-item"><span class="icon">❌</span> Está buscando mais seguidores, não mais clientes pagantes</div>
+        <div class="para-item"><span class="icon">❌</span> Seu negócio não atende clientes de uma cidade ou região específica</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     RESULTADOS
+══════════════════════════════════════ -->
+<section class="s-resultados" id="resultados">
+  <div class="container">
+    <span class="section-tag reveal">Resultados Reais</span>
+    <h2 class="section-title reveal">Negócios que pararam de esperar e começaram a crescer</h2>
+    <div class="divider reveal"></div>
+
+    <div class="results-intro">
+      <div class="result-stat reveal">
+        <div class="num">+317%</div>
+        <div class="lab">Aumento médio de clientes em 90 dias</div>
+      </div>
+      <div class="result-stat reveal">
+        <div class="num">R$3,80</div>
+        <div class="lab">Retornado para cada R$1 investido (média)</div>
+      </div>
+      <div class="result-stat reveal">
+        <div class="num">15 dias</div>
+        <div class="lab">Para os primeiros resultados aparecerem</div>
+      </div>
+      <div class="result-stat reveal">
+        <div class="num">94%</div>
+        <div class="lab">Clientes que renovam após o 1º mês</div>
+      </div>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Minha clínica estava com horários vazios toda semana. Em 45 dias com a ASSENT AGENCIA, minha agenda encheu e tive que contratar mais uma funcionária."</p>
+        <div class="testimonial-author">
+          <div class="avatar">DR</div>
+          <div>
+            <div class="author-name">Dra. Rafaela Mendes</div>
+            <div class="author-role">Clínica de Estética — Goiânia/GO</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Gastei anos postando no Instagram sem resultado. Depois que a ASSENT assumiu o tráfego, as mensagens não pararam mais. O retorno foi em menos de 30 dias."</p>
+        <div class="testimonial-author">
+          <div class="avatar">CS</div>
+          <div>
+            <div class="author-name">Carlos Santos</div>
+            <div class="author-role">Salão Masculino — Aparecida de Goiânia/GO</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Todo mundo diz que faz marketing, mas a ASSENT mostrou número. Antes do trabalho e depois. Ficou fácil de ver que valeu cada centavo."</p>
+        <div class="testimonial-author">
+          <div class="avatar">RP</div>
+          <div>
+            <div class="author-name">Ricardo Pinheiro</div>
+            <div class="author-role">Mecânica Automotiva — Trindade/GO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     URGÊNCIA
+══════════════════════════════════════ -->
+<section class="s-urgencia">
+  <div class="container">
+    <div class="urgencia-inner">
+      <div class="urgencia-text reveal">
+        <span class="urgencia-tag">⚠️ &nbsp;Não ignore isso</span>
+        <h2>Seu concorrente está rodando anúncio agora mesmo.</h2>
+        <p>
+          Enquanto você lê essa página, alguém na sua cidade está pesquisando o serviço que você oferece.
+          A pergunta não é <em>se</em> vão encontrar alguém — é se vão encontrar <strong style="color:var(--white);">você</strong> ou o seu concorrente.
+          Cada dia sem anúncio é um dia de vantagem que você dá para quem está investindo.
+        </p>
+      </div>
+      <div class="urgencia-cta reveal">
+        <a href="https://wa.me/5562991383079?text=Olá!+Quero+uma+análise+gratuita+de+tráfego+pago+para+o+meu+negócio" class="btn-primary">
+          Falar com um especialista agora
+        </a>
+        <div class="urgencia-note">
+          ✓ Análise gratuita &nbsp;·&nbsp; ✓ Sem compromisso<br>
+          ✓ Resposta em até 1 hora útil
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     DIFERENCIAIS
+══════════════════════════════════════ -->
+<section class="s-diferenciais">
+  <div class="container">
+    <span class="section-tag reveal">Por Que a Assent</span>
+    <h2 class="section-title reveal">Por que negócios locais escolhem a gente — e ficam</h2>
+    <div class="divider reveal"></div>
+
+    <div class="dif-grid">
+      <div class="dif-card reveal">
+        <div class="dif-icon">🏘️</div>
+        <div>
+          <div class="dif-title">Especialistas em negócio local</div>
+          <div class="dif-desc">Não atendemos multinacionais. Só negócios locais — quem precisa de clientes na cidade, no bairro. Conhecemos seus problemas de dentro.</div>
+        </div>
+      </div>
+      <div class="dif-card reveal">
+        <div class="dif-icon">⚡</div>
+        <div>
+          <div class="dif-title">Resultado em 30 dias ou revisamos a estratégia</div>
+          <div class="dif-desc">Os primeiros sinais chegam rápido. Se não chegarem, a gente ajusta sem custo extra. Sem desculpa, sem enrolação.</div>
+        </div>
+      </div>
+      <div class="dif-card reveal">
+        <div class="dif-icon">👤</div>
+        <div>
+          <div class="dif-title">Gestor dedicado ao seu negócio</div>
+          <div class="dif-desc">Você tem uma pessoa de carne e osso responsável pelas suas campanhas. Ela responde, explica e está disponível quando precisar.</div>
+        </div>
+      </div>
+      <div class="dif-card reveal">
+        <div class="dif-icon">📋</div>
+        <div>
+          <div class="dif-title">Relatório em português, sem gráfico inútil</div>
+          <div class="dif-desc">Todo mês: quantos clientes chegaram por causa dos anúncios, quanto custou cada um, qual foi o retorno. Só o que importa.</div>
+        </div>
+      </div>
+      <div class="dif-card reveal">
+        <div class="dif-icon">🔓</div>
+        <div>
+          <div class="dif-title">Sem contrato longo prendendo você</div>
+          <div class="dif-desc">Você fica porque está tendo resultado, não porque é obrigado. Acreditamos tanto no nosso trabalho que não precisamos te prender.</div>
+        </div>
+      </div>
+      <div class="dif-card reveal">
+        <div class="dif-icon">💰</div>
+        <div>
+          <div class="dif-title">Planos acessíveis para negócios locais</div>
+          <div class="dif-desc">Você não precisa ter orçamento de grande empresa. Nossos planos começam em R$497/mês e geram retorno desde o primeiro mês.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FAQ
+══════════════════════════════════════ -->
+<section class="s-faq" id="faq">
+  <div class="container">
+    <span class="section-tag reveal">Dúvidas Frequentes</span>
+    <h2 class="section-title reveal">Perguntas que todo empresário faz antes de começar</h2>
+    <div class="divider reveal"></div>
+    <p class="section-sub reveal">A gente responde tudo com honestidade — inclusive quando a resposta não é a que você quer ouvir.</p>
+
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Quanto custa e qual o investimento mínimo?
+          <svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M9 4v10M4 9h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">A gestão começa a partir de R$497/mês. Além disso, há o valor da verba de anúncios — que é pago diretamente para o Google ou Meta e fica totalmente sob o seu controle. Antes de qualquer investimento, fazemos uma análise gratuita para garantir que o plano faz sentido para o seu momento.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Em quanto tempo começo a ver resultado?
+          <svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M9 4v10M4 9h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Os primeiros resultados aparecem entre 15 e 30 dias. Resultados mais sólidos e crescimento consistente acontecem no 2º e 3º mês. Somos honestos: marketing não é mágica — mas quando feito certo, transforma o negócio.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Preciso entender de marketing para trabalhar com vocês?
+          <svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M9 4v10M4 9h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Não. Nenhum conhecimento técnico necessário. Você nos conta sobre seu negócio, aprova os anúncios e cuida dos clientes que chegarem. O resto é com a gente.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Já tentei anunciar antes e não deu certo. Por que seria diferente?
+          <svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M9 4v10M4 9h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">A maioria das campanhas que não funcionaram tinham os mesmos problemas: anúncio genérico, público errado e oferta fraca. Na análise gratuita, a gente identifica exatamente o que foi feito de errado e como corrigir. Nossos clientes que "já tentaram antes" são os que mais se surpreendem com o resultado.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Tem contrato de fidelidade?
+          <svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M9 4v10M4 9h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Não. Trabalhamos com periodicidade mensal e você pode cancelar com aviso prévio de 30 dias. Acreditamos que você deve ficar porque está tendo resultado — não porque está preso em contrato.</div>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Funciona para o meu tipo de negócio?
+          <svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M9 4v10M4 9h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Atendemos clínicas, salões, academias, restaurantes, pet shops, prestadores de serviço, comércios de bairro, escritórios e muito mais. Se o seu cliente está na sua cidade, a gente sabe como te conectar com ele.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:36px;" class="reveal">
+      <a href="https://wa.me/5562991383079?text=Tenho+dúvidas+sobre+gestão+de+tráfego+pago" class="btn-secondary">
+        Tirar dúvida pelo WhatsApp →
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CTA FINAL
+══════════════════════════════════════ -->
+<section class="s-cta-final">
+  <div class="container">
+    <div class="cta-card reveal">
+      <h2>Pronto para parar de perder clientes<br><em>para seus concorrentes?</em></h2>
+      <p>A análise gratuita não custa nada e pode mudar completamente o rumo do seu negócio. Resposta em até 1 hora útil.</p>
+
+      <a href="https://wa.me/5562991383079?text=Olá!+Quero+uma+análise+gratuita+de+tráfego+pago+para+o+meu+negócio" class="btn-primary">
+        Quero mais clientes na minha região
+        <svg width="18" height="18" fill="none" viewBox="0 0 18 18">
+          <path d="M3 9h12M11 5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <div class="guarantee">
+        <div class="guarantee-item">
+          <svg width="15" height="15" fill="none" viewBox="0 0 16 16"><path d="M13 4L6 11 3 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Análise gratuita
+        </div>
+        <div class="guarantee-item">
+          <svg width="15" height="15" fill="none" viewBox="0 0 16 16"><path d="M13 4L6 11 3 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sem compromisso
+        </div>
+        <div class="guarantee-item">
+          <svg width="15" height="15" fill="none" viewBox="0 0 16 16"><path d="M13 4L6 11 3 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sem contrato longo
+        </div>
+        <div class="guarantee-item">
+          <svg width="15" height="15" fill="none" viewBox="0 0 16 16"><path d="M13 4L6 11 3 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Resposta em até 1 hora útil
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <a href="https://assentagencia.com.br" class="footer-logo">ASSENT</a>
+    <ul class="footer-links">
+      <li><a href="https://assentagencia.com.br">Início</a></li>
+      <li><a href="https://assentagencia.com.br/#servicos">Serviços</a></li>
+      <li><a href="https://assentagencia.com.br/#provas">Resultados</a></li>
+      <li><a href="https://wa.me/5562991383079">Contato</a></li>
+    </ul>
+    <div class="footer-copy">© 2025 ASSENT AGENCIA. Todos os direitos reservados.</div>
+  </div>
+</footer>
+
+
+<!-- WhatsApp flutuante -->
+<a href="https://wa.me/5562991383079?text=Olá!" class="wa-float" target="_blank" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.824L.057 23.882a.5.5 0 0 0 .61.61l6.058-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.028-1.382l-.36-.214-3.733.902.917-3.64-.235-.374A9.818 9.818 0 1 1 12 21.818z"/>
+  </svg>
+</a>
+
+
+<script>
+  /* ── FAQ ACCORDION ── */
+  function toggleFaq(btn) {
+    const item   = btn.closest('.faq-item');
+    const answer = item.querySelector('.faq-a');
+    const isOpen = item.classList.contains('open');
+
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.faq-a').style.maxHeight = null;
+    });
+
+    if (!isOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  const reveals  = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), 80 * (Array.from(reveals).indexOf(entry.target) % 4));
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

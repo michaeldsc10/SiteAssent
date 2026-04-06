@@ -1,4 +1,3 @@
-console.log("NAVBAR NOVA VERSÃO");
 class AssentNavbar extends HTMLElement {
   connectedCallback() {
     this.attachShadow({ mode: 'open' });

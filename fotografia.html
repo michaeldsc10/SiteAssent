@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<script src="/navbar.js" defer></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fotografia Profissional para Negócios Locais — ASSENT AGENCIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#111111;--surface:#1a1a1a;--gold:#F5A623;--gold-dark:#E09820;--white:#FFFFFF;--light-bg:#F0F0EC;--muted:#777777;--border:rgba(255,255,255,0.07);--wa:#25D366;--heading:'Montserrat',sans-serif;--body:'Inter',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}body{background:var(--bg);color:var(--white);font-family:var(--body);overflow-x:hidden;line-height:1.6;}
+.container{max-width:1140px;margin:0 auto;padding:0 24px;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);color:var(--gold);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;border-radius:100px;}
+.badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold);display:block;box-shadow:0 0 8px var(--gold);}
+.highlight{color:var(--gold);}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:17px 34px;border-radius:50px;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;transition:all .25s ease;border:none;font-family:var(--heading);letter-spacing:.06em;text-transform:uppercase;}
+.btn-primary{background:var(--gold);color:#111;box-shadow:0 0 40px rgba(245,166,35,0.3);}
+.btn-primary:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:0 0 60px rgba(245,166,35,0.45);}
+.btn-secondary{background:transparent;color:var(--white);border:1.5px solid var(--border);}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.04);}
+.btn svg{width:18px;height:18px;flex-shrink:0;}
+.section-title{font-family:var(--heading);font-size:clamp(1.7rem,3.5vw,2.8rem);font-weight:800;line-height:1.15;letter-spacing:-.02em;}
+.section-sub{color:var(--muted);font-size:1rem;max-width:560px;line-height:1.75;}
+.divider{width:56px;height:3px;background:var(--gold);border-radius:4px;margin:18px 0;}
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* HERO */
+#hero{min-height:auto;display:flex;align-items:center;padding:130px 0 0;position:relative;overflow:hidden;background:#1a140a;}
+.hero-content{position:relative;z-index:3;max-width:760px;}
+.hero-badge{margin-bottom:24px;}
+.hero-title{font-family:var(--heading);font-size:clamp(2.4rem,6vw,4.8rem);font-weight:800;line-height:1.0;letter-spacing:-.04em;margin-bottom:26px;}
+.hero-sub{font-size:clamp(1rem,2vw,1.15rem);color:var(--muted);max-width:600px;margin-bottom:40px;line-height:1.8;}
+.hero-sub strong{color:var(--white);}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:0;padding-bottom:72px;}
+
+ /* ══════════════════════════════
+       HERO — vídeo BG
+    ══════════════════════════════ */
+    .hero {
+      min-height: auto;
+      display: flex;
+      align-items: center;
+      padding:130px 0 0;
+      position:relative;
+      overflow: hidden;
+      background:#1c1a14;
+    }
+
+/* STATS */
+#hero-stats{background:#F0F0EC;padding:56px 0;border-bottom:1px solid rgba(0,0,0,0.07);}
+.hero-stats-grid{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center;gap:0;max-width:860px;margin:0 auto;}
+.hero-stat-item{text-align:center;padding:0 24px;}
+.hero-stat-num{font-family:var(--heading);font-size:2.6rem;font-weight:800;color:#111;line-height:1;letter-spacing:-.03em;}
+.hero-stat-plus{color:var(--gold);font-size:2.2rem;}
+.hero-stat-label{font-size:.75rem;color:#888;margin-top:6px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;}
+.hero-stat-sep{width:1px;height:60px;background:rgba(0,0,0,0.1);}
+
+/* MARQUEE */
+.marquee-bar{background:var(--light-bg);padding:14px 0;overflow:hidden;}
+.marquee-track{display:inline-block;animation:marqueeScroll 26s linear infinite;white-space:nowrap;}
+@keyframes marqueeScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.marquee-item{display:inline-flex;align-items:center;gap:12px;font-size:.78rem;font-weight:600;color:#555;letter-spacing:.12em;text-transform:uppercase;padding:0 32px;}
+.marquee-sep{color:var(--gold);font-size:1.1rem;}
+
+/* DOR */
+#dor{padding:100px 0;background:var(--light-bg);}
+#dor .section-title{color:#222;}#dor .section-sub{color:#555;}
+#dor .badge{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:#B8841C;}
+#dor .badge::before{background:var(--gold-dark);}
+.dor-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.dor-list{display:flex;flex-direction:column;gap:16px;margin-top:32px;}
+.dor-item{display:flex;align-items:flex-start;gap:16px;padding:20px;background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:12px;transition:border-color .3s,transform .3s;}
+.dor-item:hover{border-color:rgba(245,166,35,0.4);transform:translateX(6px);}
+.dor-icon{width:44px;height:44px;border-radius:10px;background:rgba(245,166,35,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold-dark);}
+.dor-text strong{display:block;color:#222;font-size:.95rem;font-weight:700;margin-bottom:4px;}
+.dor-text p{color:#666;font-size:.87rem;line-height:1.6;}
+.dor-visual{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:20px;padding:32px;position:relative;overflow:hidden;}
+.dor-visual::before{content:'';position:absolute;top:-30%;right:-30%;width:300px;height:300px;background:radial-gradient(circle,rgba(245,166,35,0.08),transparent 70%);border-radius:50%;}
+
+/* BEFORE/AFTER */
+.ba-comparison{position:relative;border-radius:12px;overflow:hidden;cursor:col-resize;aspect-ratio:4/3;background:#111;margin-bottom:16px;}
+.ba-pane{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.ba-pane.before-pane{background:#1a1a1a;z-index:1;}
+.ba-pane.after-pane{background:#1a1408;z-index:2;clip-path:inset(0 50% 0 0);}
+.ba-pane-icon{font-size:3.5rem;opacity:.3;}
+.ba-pane-text{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.ba-handle-line{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--gold);z-index:4;pointer-events:none;}
+.ba-handle-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:var(--gold);border-radius:50%;z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none;box-shadow:0 0 0 3px rgba(245,166,35,.25);}
+.ba-handle-btn::before,.ba-handle-btn::after{content:'';border-style:solid;width:0;height:0;}
+.ba-handle-btn::before{border-width:6px 8px 6px 0;border-color:transparent #111 transparent transparent;margin-right:4px;}
+.ba-handle-btn::after{border-width:6px 0 6px 8px;border-color:transparent transparent transparent #111;}
+.ba-labels{position:absolute;bottom:12px;width:100%;display:flex;justify-content:space-between;padding:0 14px;z-index:6;pointer-events:none;}
+.ba-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:6px;}
+.ba-label.antes{background:rgba(0,0,0,.7);color:#aaa;}
+.ba-label.depois{background:var(--gold);color:#111;}
+.ba-caption{text-align:center;font-size:.82rem;color:#888;margin-top:4px;}
+
+/* SOLUCAO */
+#solucao{padding:100px 0;background:var(--bg);}
+.solucao-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.process-flow{display:flex;flex-direction:column;gap:0;}
+.process-step{display:flex;gap:20px;align-items:flex-start;padding:24px;border-radius:14px;border:1px solid var(--border);background:var(--surface);position:relative;transition:border-color .3s;}
+.process-step:hover{border-color:rgba(245,166,35,0.35);}
+.process-step+.process-step{margin-top:-1px;}
+.process-step:first-child{border-radius:14px 14px 0 0;}
+.process-step:last-child{border-radius:0 0 14px 14px;}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--gold);color:#111;font-family:var(--heading);font-size:.9rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-body strong{display:block;font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:4px;}
+.step-body p{color:var(--muted);font-size:.85rem;}
+.quote-block{margin-top:40px;padding:24px;background:var(--surface);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;}
+.quote-block p{font-style:italic;color:var(--muted);font-size:.97rem;line-height:1.7;}
+.quote-block strong{color:var(--white);display:block;margin-top:10px;font-size:.85rem;}
+
+/* SERVICOS */
+#servicos{padding:100px 0;background:var(--light-bg);}
+#servicos .section-title{color:#222;}#servicos .section-sub{color:#555;}
+#servicos .badge{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:#B8841C;}
+#servicos .badge::before{background:var(--gold-dark);}
+.services-header{text-align:center;max-width:620px;margin:0 auto 60px;}
+.services-header .section-sub{margin:0 auto;}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.service-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:16px;padding:32px;transition:all .3s;position:relative;overflow:hidden;}
+.service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
+.service-card:hover{border-color:rgba(245,166,35,0.3);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.1);}
+.service-card:hover::before{transform:scaleX(1);}
+.service-icon{width:52px;height:52px;background:rgba(245,166,35,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gold-dark);margin-bottom:20px;}
+.service-icon svg{width:26px;height:26px;}
+.service-card h3{font-family:var(--heading);font-size:1.05rem;font-weight:700;margin-bottom:12px;color:#222;}
+.service-card p{color:#666;font-size:.88rem;line-height:1.7;margin-bottom:20px;}
+.service-result{display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:600;color:var(--gold-dark);}
+.service-result::before{content:'✓';font-size:.75rem;}
+.services-cta{text-align:center;margin-top:48px;}
+
+/* ANTES DEPOIS SECTION */
+#antes-depois{padding:80px 0;background:var(--light-bg);border-top:1px solid rgba(0,0,0,.06);}
+#antes-depois .section-title{color:#222;text-align:center;}
+#antes-depois .badge{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:#B8841C;}
+#antes-depois .badge::before{background:var(--gold-dark);}
+.ad-header{text-align:center;margin-bottom:56px;}
+.ad-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+.ad-item{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:16px;overflow:hidden;}
+.ad-item-header{padding:20px 24px 0;}
+.ad-item-header h4{font-family:var(--heading);font-size:1rem;font-weight:700;color:#222;margin-bottom:4px;}
+.ad-item-header p{font-size:.82rem;color:#888;}
+.ad-slider-wrap{padding:20px 24px 24px;}
+
+/* PROVAS */
+#provas{padding:100px 0;background:var(--bg);}
+.provas-header{text-align:center;max-width:600px;margin:0 auto 60px;}
+.provas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.prova-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;}
+.stars{display:flex;gap:4px;margin-bottom:16px;}
+.stars span{color:var(--gold);font-size:1rem;}
+.prova-card p{color:var(--muted);font-size:.92rem;line-height:1.75;font-style:italic;}
+.prova-author{display:flex;align-items:center;gap:12px;margin-top:20px;padding-top:20px;border-top:1px solid var(--border);}
+.author-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--heading);font-weight:800;font-size:.95rem;color:#fff;flex-shrink:0;}
+.author-info strong{display:block;font-size:.88rem;color:var(--white);}
+.author-info span{font-size:.78rem;color:var(--muted);}
+.numbers-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:64px;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.num-item{padding:36px 28px;text-align:center;position:relative;}
+.num-item+.num-item::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:1px;background:var(--border);}
+.num-val{font-family:var(--heading);font-size:2.4rem;font-weight:800;color:var(--gold);line-height:1;}
+.num-val sup{font-size:1.2rem;}
+.num-label{color:var(--muted);font-size:.82rem;margin-top:6px;}
+
+/* URGENCIA */
+#urgencia{padding:80px 0;background:var(--surface);border-top:1px solid rgba(245,166,35,0.12);border-bottom:1px solid rgba(245,166,35,0.12);position:relative;overflow:hidden;}
+#urgencia::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(circle,rgba(245,166,35,0.08),transparent 70%);pointer-events:none;}
+.urgencia-inner{text-align:center;position:relative;}
+.urgencia-inner .section-title{max-width:700px;margin:16px auto 20px;}
+.urgencia-inner .section-sub{margin:0 auto 40px;text-align:center;}
+.urgency-hooks{display:flex;flex-direction:column;gap:12px;max-width:600px;margin:0 auto 40px;}
+.hook{padding:14px 22px;border:1px solid rgba(245,166,35,0.22);border-radius:10px;background:rgba(245,166,35,0.05);font-size:.91rem;color:var(--white);display:flex;align-items:center;gap:12px;}
+.hook::before{content:'📸';font-size:1rem;}
+
+/* DIFERENCIAIS */
+#diferenciais{padding:100px 0;background:var(--light-bg);}
+#diferenciais .section-title{color:#222;}#diferenciais .section-sub{color:#555;}
+#diferenciais .badge{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:#B8841C;}
+#diferenciais .badge::before{background:var(--gold-dark);}
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px;}
+.diff-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:14px;padding:28px;display:flex;gap:18px;align-items:flex-start;transition:all .3s;}
+.diff-card:hover{border-color:rgba(245,166,35,0.35);transform:translateX(5px);}
+.diff-icon{width:48px;height:48px;background:rgba(245,166,35,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gold-dark);flex-shrink:0;}
+.diff-icon svg{width:24px;height:24px;}
+.diff-body strong{display:block;font-family:var(--heading);font-size:.97rem;font-weight:700;margin-bottom:6px;color:#222;}
+.diff-body p{color:#666;font-size:.85rem;line-height:1.65;}
+
+/* PROCESSO */
+#processo{padding:100px 0;background:var(--bg);}
+.processo-header{text-align:center;max-width:580px;margin:0 auto 64px;}
+.steps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
+.steps-row::before{content:'';position:absolute;top:36px;left:12%;right:12%;height:2px;background:linear-gradient(90deg,var(--gold),rgba(245,166,35,0.15));z-index:0;}
+.step-block{text-align:center;padding:24px 16px;position:relative;z-index:1;}
+.step-circle{width:72px;height:72px;border-radius:50%;background:var(--surface);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;}
+.step-circle-num{font-family:var(--heading);font-size:1.4rem;font-weight:800;color:var(--gold);}
+.step-block h4{font-family:var(--heading);font-size:.97rem;font-weight:700;margin-bottom:8px;}
+.step-block p{color:var(--muted);font-size:.83rem;line-height:1.6;}
+
+/* FAQ */
+#faq{padding:100px 0;background:var(--light-bg);}
+#faq .section-title{color:#222;}#faq .section-sub{color:#555;}
+#faq .badge{background:rgba(245,166,35,0.15);border-color:rgba(245,166,35,0.4);color:#B8841C;}
+#faq .badge::before{background:var(--gold-dark);}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+.faq-list{display:flex;flex-direction:column;gap:12px;}
+.faq-item{border:1px solid rgba(0,0,0,0.08);border-radius:12px;overflow:hidden;}
+.faq-q{padding:20px 22px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:.93rem;background:#fff;transition:color .2s;color:#222;}
+.faq-q:hover{color:var(--gold-dark);}
+.faq-q svg{width:18px;height:18px;flex-shrink:0;transition:transform .3s;color:#aaa;}
+.faq-item.open .faq-q svg{transform:rotate(45deg);color:var(--gold-dark);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;background:#fff;}
+.faq-item.open .faq-a{max-height:200px;padding:0 22px 20px;}
+.faq-a p{color:#666;font-size:.88rem;line-height:1.7;}
+
+/* CTA */
+#cta-final{padding:120px 0;text-align:center;position:relative;overflow:hidden;background:var(--bg);}
+.ripple-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.ripple-ring{position:absolute;border-radius:50%;border:1px solid rgba(245,166,35,0.08);animation:rippleAnim 3.5s linear infinite;}
+@keyframes rippleAnim{0%{opacity:.7;transform:scale(.05);}100%{opacity:0;transform:scale(1.6);}}
+.cta-card{position:relative;z-index:2;max-width:760px;margin:0 auto;background:var(--surface);border:1px solid rgba(245,166,35,0.2);border-radius:24px;padding:72px 48px;}
+.cta-card .section-title{margin-bottom:16px;}
+.cta-card .section-sub{margin:0 auto 40px;text-align:center;}
+.cta-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
+.cta-note{margin-top:22px;font-size:.82rem;color:var(--muted);}
+
+/* FOOTER */
+footer{background:#0a0a0a;border-top:1px solid var(--border);padding:48px 0 32px;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:.83rem;transition:color .2s;}
+.footer-links a:hover{color:var(--white);}
+.footer-copy{text-align:center;margin-top:32px;color:var(--muted);font-size:.78rem;border-top:1px solid var(--border);padding-top:24px;}
+
+/* WHATSAPP */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:999;width:60px;height:60px;background:var(--wa);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,0.4);animation:waFloat 2.5s ease-in-out infinite;cursor:pointer;text-decoration:none;}
+.wa-float svg{width:30px;height:30px;fill:#fff;}
+@keyframes waFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-6px) scale(1.04);}}
+.wa-tooltip{position:absolute;right:72px;background:var(--surface);border:1px solid var(--border);color:var(--white);padding:10px 16px;border-radius:10px;font-size:.82rem;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s;}
+.wa-float:hover .wa-tooltip{opacity:1;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .dor-grid,.solucao-grid,.faq-grid{grid-template-columns:1fr;}
+  .services-grid,.provas-grid{grid-template-columns:1fr 1fr;}
+  .diff-grid{grid-template-columns:1fr;}
+  .numbers-bar{grid-template-columns:1fr 1fr;}
+  .steps-row{grid-template-columns:1fr 1fr;gap:24px;}
+  .steps-row::before{display:none;}
+  .hero-stats-grid{grid-template-columns:1fr 1fr;gap:32px 0;}
+  .hero-stat-sep{display:none;}
+  .ad-grid{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .services-grid,.provas-grid{grid-template-columns:1fr;}
+  .numbers-bar{grid-template-columns:1fr 1fr;}
+  .steps-row{grid-template-columns:1fr;}
+  .hero-actions{flex-direction:column;}
+  .hero-actions .btn{justify-content:center;}
+}
+</style>
+</head>
+<body>
+<assent-navbar></assent-navbar>
+
+<section id="hero">
+
+<video
+    autoplay muted playsinline loop
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"
+    src="BG-video_KDB.webm"
+  ></video>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge badge reveal">📷 Fotografia profissional para negócios locais</div>
+      <h1 class="hero-title reveal">Fotos que fazem<br>seu cliente <span class="highlight">querer comprar</span><br>antes de entrar.</h1>
+      <p class="hero-sub reveal">Seu produto é bom. Mas se a foto não transmite isso, <strong>o cliente vai embora antes de conhecer você.</strong> A gente muda isso com imagens profissionais que vendem — para restaurantes, salões, clínicas e qualquer negócio local.</p>
+      <div class="hero-actions reveal">
+        <a href="https://wa.me/5562991383079?text=Olá!+Quero+saber+mais+sobre+fotografia+profissional+para+meu+negócio." class="btn btn-primary" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Quero fotos profissionais
+        </a>
+        <a href="#antes-depois" class="btn btn-secondary">Ver transformações →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hero-stats">
+  <div class="container">
+    <div class="hero-stats-grid">
+      <div class="hero-stat-item"><div class="hero-stat-num"><span id="c1">0</span><span class="hero-stat-plus">%</span></div><div class="hero-stat-label">Mais cliques nos anúncios</div></div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat-item"><div class="hero-stat-num"><span id="c2">0</span><span class="hero-stat-plus">h</span></div><div class="hero-stat-label">Prazo de entrega</div></div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat-item"><div class="hero-stat-num"><span id="c3">0</span><span class="hero-stat-plus">+</span></div><div class="hero-stat-label">Negócios atendidos</div></div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat-item"><div class="hero-stat-num"><span id="c4">0</span><span class="hero-stat-plus">x</span></div><div class="hero-stat-label">Mais percepção de valor</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span class="marquee-item">Restaurantes <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Salões de Beleza <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Clínicas Estéticas <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Barbearias <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Pet Shops <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Padarias e Cafeterias <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Moda e Vestuário <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Academias <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Restaurantes <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Salões de Beleza <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Clínicas Estéticas <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Barbearias <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Pet Shops <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Padarias e Cafeterias <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Moda e Vestuário <span class="marquee-sep">|</span></span>
+    <span class="marquee-item">Academias <span class="marquee-sep">|</span></span>
+  </div>
+</div>
+
+<section id="dor">
+  <div class="container">
+    <div class="dor-grid">
+      <div>
+        <div class="badge reveal">O problema real</div>
+        <div class="divider reveal" style="background:var(--gold-dark);"></div>
+        <h2 class="section-title reveal">Foto ruim <span class="highlight">afasta cliente</span> antes dele entrar no seu negócio</h2>
+        <div class="dor-list">
+          <div class="dor-item reveal">
+            <div class="dor-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+            <div class="dor-text"><strong>O cliente decide em 3 segundos</strong><p>Antes de ler o preço ou perguntar o horário — ele já julgou pelo que viu. Se a foto não passa qualidade, você perdeu o cliente antes de qualquer conversa.</p></div>
+          </div>
+          <div class="dor-item reveal">
+            <div class="dor-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+            <div class="dor-text"><strong>Foto de celular não convence mais</strong><p>Seus concorrentes já estão com fotografia profissional. Se o seu visual parece amador, o cliente vai escolher quem parece mais confiável — mesmo que seu serviço seja melhor.</p></div>
+          </div>
+          <div class="dor-item reveal">
+            <div class="dor-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div class="dor-text"><strong>Anúncio caro com imagem fraca = desperdício</strong><p>Você investe em tráfego pago mas a foto não converte. O problema não está no anúncio em si — está na imagem que não passa credibilidade.</p></div>
+          </div>
+          <div class="dor-item reveal">
+            <div class="dor-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <div class="dor-text"><strong>Feed bagunçado passa falta de profissionalismo</strong><p>Sem identidade visual consistente, seu negócio parece improviso. O cliente quer confiar em quem vai contratar — e a foto é o primeiro sinal disso.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="dor-visual reveal">
+        <div style="font-family:var(--heading);font-size:1.1rem;font-weight:700;color:#222;margin-bottom:8px;">Por que fotos profissionais aumentam as vendas?</div>
+        <p style="color:#666;font-size:.88rem;line-height:1.7;margin-bottom:24px;">Negócios locais com fotografia profissional têm até 3x mais engajamento e conversão do que os que usam fotos amadoras.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:120px;height:8px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;"><div style="width:25%;height:100%;background:#ccc;border-radius:4px;"></div></div><span style="font-size:.82rem;color:#888;">Foto de celular</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:120px;height:8px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;"><div style="width:90%;height:100%;background:var(--gold-dark);border-radius:4px;"></div></div><span style="font-size:.82rem;color:#222;font-weight:600;">Foto profissional</span></div>
+        </div>
+        <p style="text-align:center;font-size:.83rem;color:#888;">Taxa de conversão nos anúncios</p>
+        <p style="text-align:center;font-size:1.05rem;font-weight:700;color:var(--gold-dark);margin-top:8px;">📈 Até 3x mais cliques com fotos profissionais</p>
+        <div style="margin-top:24px;padding-top:24px;border-top:1px solid rgba(0,0,0,.08);">
+          <p style="color:#777;font-size:.85rem;line-height:1.7;">"Depois das fotos profissionais, clientes começaram a escolher meu restaurante pelo que viram no Instagram. Antes disso, nunca tinha acontecido." <br><strong style="color:#222;">— Carlos O., restaurante, Goiânia</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="solucao">
+  <div class="container">
+    <div class="solucao-grid">
+      <div>
+        <div class="process-flow">
+          <div class="process-step reveal"><div class="step-num">1</div><div class="step-body"><strong>Briefing do seu negócio</strong><p>Entendemos o que você vende, quem é seu cliente ideal e qual é o estilo visual. 15 minutos pelo WhatsApp já bastam.</p></div></div>
+          <div class="process-step reveal"><div class="step-num">2</div><div class="step-body"><strong>Sessão fotográfica profissional</strong><p>Levamos equipamento e iluminação até você — ou fazemos em estúdio. Seu produto no melhor ângulo, com a melhor luz.</p></div></div>
+          <div class="process-step reveal"><div class="step-num">3</div><div class="step-body"><strong>Edição com identidade visual</strong><p>Tratamento de cor, contraste e retoque alinhados à sua marca. Fotos prontas para usar em qualquer canal.</p></div></div>
+          <div class="process-step reveal"><div class="step-num">4</div><div class="step-body"><strong>Entrega em 24 horas</strong><p>Alta resolução para redes sociais, anúncios, cardápio digital, Google Meu Negócio e mais.</p></div></div>
+        </div>
+      </div>
+      <div class="solucao-content">
+        <div class="badge reveal">A solução</div>
+        <div class="divider reveal"></div>
+        <h2 class="section-title reveal">A gente cuida das fotos. <span class="highlight">Você cuida do atendimento.</span></h2>
+        <p class="section-sub reveal" style="margin-top:16px;">A ASSENT AGENCIA é especializada em fotografia para negócios locais. Sabemos o que converte para restaurantes, salões, clínicas e comércios de bairro.</p>
+        <div class="quote-block reveal"><p>"Uma foto ruim afasta o cliente antes mesmo de ele entrar. Uma foto profissional já fecha a venda antes de qualquer conversa."</p><strong>— Equipe ASSENT AGENCIA</strong></div>
+        <a href="https://wa.me/5562991383079?text=Quero+fazer+fotografia+profissional+para+meu+negócio" class="btn btn-primary reveal" target="_blank" style="margin-top:36px;">Quero fotos profissionais →</a>
+        <div style="margin-top:32px;background:var(--gold);border-radius:14px;padding:28px;" class="reveal"><p style="font-size:1.05rem;font-weight:700;color:#111;line-height:1.5;font-family:var(--heading);">Fotografia que se paga. <strong>Na primeira venda que fechar por causa das fotos.</strong></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="servicos">
+  <div class="container">
+    <div class="services-header reveal">
+      <div class="badge">O que fotografamos</div>
+      <div class="divider" style="margin:18px auto;background:var(--gold-dark);"></div>
+      <h2 class="section-title">Fotografia para <span class="highlight">cada tipo de negócio local</span></h2>
+      <p class="section-sub" style="margin-top:14px;">Cada nicho tem suas particularidades. A gente conhece o que funciona para cada um deles.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 2h18l-2 7H5L3 2z"/><path d="M5 9v11a2 2 0 002 2h10a2 2 0 002-2V9"/></svg></div>
+        <h3>Gastronomia e Delivery</h3>
+        <p>Fotos de pratos que fazem a boca encher d'água. Luz, composição e ângulo certos para cardápio digital, iFood e redes sociais.</p>
+        <div class="service-result">Cardápio que vende por si mesmo</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <h3>Salões e Estética</h3>
+        <p>Antes e depois de tratamentos, ambiente do salão, profissionais em ação. Imagens que transmitem confiança antes da primeira visita.</p>
+        <div class="service-result">Agenda cheia de clientes novos</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <h3>Clínicas e Saúde</h3>
+        <p>Ambiente clínico, equipe, equipamentos e serviços fotografados para passar profissionalismo — fator decisivo na escolha do paciente.</p>
+        <div class="service-result">Credibilidade que atrai pacientes</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+        <h3>Moda e Comércio</h3>
+        <p>Produtos fotografados de forma atrativa para e-commerce, redes sociais e catálogos. Imagens que fazem o cliente querer comprar.</p>
+        <div class="service-result">Produto que vende mais online</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <h3>Espaços e Ambientes</h3>
+        <p>Fotografia de interiores para pet shops, academias e qualquer negócio que precisa mostrar o ambiente antes do cliente chegar.</p>
+        <div class="service-result">Ambiente que já convence antes da visita</div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+        <h3>Conteúdo para Redes Sociais</h3>
+        <p>Pacotes de conteúdo fotográfico pensados para feed, stories e anúncios. Dezenas de fotos prontas para usar nos próximos meses.</p>
+        <div class="service-result">Meses de conteúdo em um dia de sessão</div>
+      </div>
+    </div>
+    <div class="services-cta reveal">
+      <a href="https://wa.me/5562991383079?text=Olá!+Quero+saber+mais+sobre+fotografia+para+meu+negócio." class="btn btn-primary" target="_blank" style="background:var(--gold-dark);">Quero fotografar meu negócio →</a>
+    </div>
+  </div>
+</section>
+
+<section id="antes-depois">
+  <div class="container">
+    <div class="ad-header">
+      <div class="badge reveal" style="margin:0 auto 16px;">Transformações reais</div>
+      <h2 class="section-title reveal">Mesmo produto. <span class="highlight">Percepção completamente diferente.</span></h2>
+      <p class="section-sub reveal" style="max-width:540px;margin:14px auto 0;">Arraste o divisor e veja a diferença que a fotografia profissional faz. Adicione suas fotos reais substituindo os placeholders.</p>
+    </div>
+    <div class="ad-grid reveal">
+      <div class="ad-item">
+        <div class="ad-item-header"><h4>Fotografia de produto</h4><p>Substitua pelos seus produtos reais</p></div>
+        <div class="ad-slider-wrap">
+          <div class="ba-comparison" id="ba1">
+            <!-- Para usar fotos reais, substitua as divs abaixo por: -->
+            <!-- <img class="ba-pane before-pane" style="object-fit:cover;" src="antes.jpg" alt="antes"> -->
+            <!-- <img class="ba-pane after-pane"  style="object-fit:cover;" src="depois.jpg" alt="depois"> -->
+            <div class="ba-pane before-pane"><div class="ba-pane-icon">📱</div><div class="ba-pane-text">Foto de celular</div></div>
+            <div class="ba-pane after-pane"><div class="ba-pane-icon" style="opacity:.5;">✨</div><div class="ba-pane-text" style="color:var(--gold);opacity:.7;">Foto profissional</div></div>
+            <div class="ba-handle-line" id="ba1-line"></div>
+            <div class="ba-handle-btn" id="ba1-btn"></div>
+            <div class="ba-labels"><span class="ba-label antes">Antes</span><span class="ba-label depois">Depois</span></div>
+          </div>
+          <p class="ba-caption">💡 Substitua os placeholders pelas suas fotos reais</p>
+        </div>
+      </div>
+      <div class="ad-item">
+        <div class="ad-item-header"><h4>Ambiente do negócio</h4><p>Substitua pela foto do seu espaço</p></div>
+        <div class="ad-slider-wrap">
+          <div class="ba-comparison" id="ba2">
+            <div class="ba-pane before-pane" style="background:#181818;"><div class="ba-pane-icon">🏪</div><div class="ba-pane-text">Foto de celular</div></div>
+            <div class="ba-pane after-pane" style="background:#161408;"><div class="ba-pane-icon" style="opacity:.5;">🌟</div><div class="ba-pane-text" style="color:var(--gold);opacity:.7;">Foto profissional</div></div>
+            <div class="ba-handle-line" id="ba2-line"></div>
+            <div class="ba-handle-btn" id="ba2-btn"></div>
+            <div class="ba-labels"><span class="ba-label antes">Antes</span><span class="ba-label depois">Depois</span></div>
+          </div>
+          <p class="ba-caption">💡 Substitua os placeholders pelas suas fotos reais</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="provas">
+  <div class="container">
+    <div class="provas-header reveal">
+      <div class="badge">Resultados reais</div>
+      <div class="divider" style="margin:18px auto;"></div>
+      <h2 class="section-title">Negócios locais que <span class="highlight">mudaram com as fotos</span></h2>
+      <p class="section-sub" style="margin-top:14px;">O que acontece quando um negócio para de usar foto de celular e começa a se apresentar com profissionalismo.</p>
+    </div>
+    <div class="provas-grid">
+      <div class="prova-card reveal">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Meu restaurante estava com mesas vazias. Depois das fotos profissionais, as reservas pelo Instagram explodiram. Triplicamos o movimento em 30 dias."</p>
+        <div class="prova-author"><div class="author-avatar" style="background:linear-gradient(135deg,#F5A623,#B8841C);">CO</div><div class="author-info"><strong>Carlos Oliveira</strong><span>Restaurante — Goiânia/GO</span></div></div>
+      </div>
+      <div class="prova-card reveal">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Depois da sessão com a Assent, comecei a receber clientes que disseram que escolheram meu salão pela foto do Instagram. Nunca tinha acontecido isso."</p>
+        <div class="prova-author"><div class="author-avatar" style="background:linear-gradient(135deg,#ec4899,#9d174d);">AS</div><div class="author-info"><strong>Ana Santos</strong><span>Salão de Beleza — Aparecida de Goiânia/GO</span></div></div>
+      </div>
+      <div class="prova-card reveal">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Gastava dinheiro em anúncio mas a foto não convertia. Com as fotos profissionais, o mesmo orçamento passou a trazer 4x mais cliques para minha clínica."</p>
+        <div class="prova-author"><div class="author-avatar" style="background:linear-gradient(135deg,#10b981,#047857);">RM</div><div class="author-info"><strong>Dra. Renata Moura</strong><span>Clínica Estética — Goiânia/GO</span></div></div>
+      </div>
+    </div>
+    <div class="numbers-bar reveal">
+      <div class="num-item"><div class="num-val"><span id="n1">0</span><sup>+</sup></div><div class="num-label">Sessões realizadas</div></div>
+      <div class="num-item"><div class="num-val"><span id="n2">0</span><sup>h</sup></div><div class="num-label">Prazo de entrega</div></div>
+      <div class="num-item"><div class="num-val"><span id="n3">0</span><sup>x</sup></div><div class="num-label">Mais engajamento</div></div>
+      <div class="num-item"><div class="num-val"><span id="n4">0</span><sup>%</sup></div><div class="num-label">Clientes satisfeitos</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="urgencia">
+  <div class="container">
+    <div class="urgencia-inner">
+      <div class="badge reveal" style="margin:0 auto;">⚠️ Não ignore isso</div>
+      <h2 class="section-title reveal" style="margin:16px auto 20px;max-width:700px;">Seus concorrentes já estão <span class="highlight">com fotos profissionais.</span> E você?</h2>
+      <p class="section-sub reveal" style="margin:0 auto 40px;text-align:center;">Enquanto você usa foto de celular, seu concorrente está fechando vendas com imagens que convencem. Cada dia que passa é uma vantagem que eles ganham sobre você.</p>
+      <div class="urgency-hooks">
+        <div class="hook reveal">"Seu cliente decide pela foto antes de entrar no seu negócio"</div>
+        <div class="hook reveal">"Foto ruim desvaloriza até o melhor produto ou serviço"</div>
+        <div class="hook reveal">"Anúncio com foto profissional tem até 3x mais cliques"</div>
+        <div class="hook reveal">"Uma sessão gera conteúdo para meses de posts e anúncios"</div>
+      </div>
+      <a href="https://wa.me/5562991383079?text=Quero+fazer+fotografia+profissional+para+meu+negócio" class="btn btn-primary reveal" style="font-size:1rem;padding:20px 42px;" target="_blank">Agendar minha sessão agora →</a>
+    </div>
+  </div>
+</section>
+
+<section id="diferenciais">
+  <div class="container">
+    <div class="reveal" style="max-width:560px;margin-bottom:16px;">
+      <div class="badge">Por que a ASSENT</div>
+      <div class="divider" style="background:var(--gold-dark);"></div>
+      <h2 class="section-title">Por que escolher a Assent <span class="highlight">para fotografar seu negócio</span></h2>
+    </div>
+    <p class="section-sub reveal" style="margin-bottom:0;color:#555;">Não somos um estúdio genérico. Somos especialistas em fotografia para negócios locais — sabemos o que o seu cliente quer ver.</p>
+    <div class="diff-grid">
+      <div class="diff-card reveal"><div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="diff-body"><strong>Especialistas em negócio local</strong><p>Não fotografamos grandes marcas. Só restaurantes, salões, clínicas, comércios de bairro. Conhecemos o que funciona para o seu público.</p></div></div>
+      <div class="diff-card reveal"><div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="diff-body"><strong>Entrega em 24 horas</strong><p>Você não espera semanas. Sessão hoje, fotos amanhã — prontas para postar e usar nos anúncios imediatamente.</p></div></div>
+      <div class="diff-card reveal"><div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div><div class="diff-body"><strong>Fotos otimizadas para cada canal</strong><p>Instagram, anúncios, Google Meu Negócio, iFood — entregamos nos formatos certos para cada plataforma.</p></div></div>
+      <div class="diff-card reveal"><div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="diff-body"><strong>Integrado com gestão de tráfego</strong><p>Se você usa nosso serviço de anúncios também, suas fotos e campanhas trabalham juntas para resultado máximo.</p></div></div>
+      <div class="diff-card reveal"><div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="diff-body"><strong>Atendimento personalizado</strong><p>Você tem um profissional dedicado que entende o seu negócio. Não é pacote genérico — é fotografia pensada para a sua realidade.</p></div></div>
+      <div class="diff-card reveal"><div class="diff-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="diff-body"><strong>Resultado garantido ou refazemos</strong><p>Se as fotos não ficarem dentro do briefing combinado, refazemos a sessão sem custo extra. Simples assim.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="processo">
+  <div class="container">
+    <div class="processo-header reveal">
+      <div class="badge">Como funciona</div>
+      <div class="divider" style="margin:18px auto;"></div>
+      <h2 class="section-title">Da sessão às fotos prontas <span class="highlight">em menos de 24h</span></h2>
+      <p class="section-sub" style="margin:14px auto 0;">Simples, rápido e sem burocracia. Você só precisa mostrar o que vende — o resto é com a gente.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-block reveal"><div class="step-circle"><div class="step-circle-num">1</div></div><h4>Briefing rápido</h4><p>Você nos conta sobre o negócio e o que quer fotografar. 15 minutos pelo WhatsApp.</p></div>
+      <div class="step-block reveal"><div class="step-circle"><div class="step-circle-num">2</div></div><h4>Sessão fotográfica</h4><p>Fotografamos no seu espaço ou em estúdio. Trazemos tudo — luz, fundo, equipamento.</p></div>
+      <div class="step-block reveal"><div class="step-circle"><div class="step-circle-num">3</div></div><h4>Edição profissional</h4><p>Retoque, cor e tratamento alinhados à sua identidade visual.</p></div>
+      <div class="step-block reveal"><div class="step-circle"><div class="step-circle-num">4</div></div><h4>Entrega em 24h</h4><p>Fotos no formato certo para cada canal. Prontas para usar no dia seguinte.</p></div>
+    </div>
+    <div style="text-align:center;margin-top:56px;" class="reveal">
+      <a href="https://wa.me/5562991383079?text=Quero+agendar+uma+sessão+fotográfica+para+meu+negócio" class="btn btn-primary" target="_blank" style="font-size:1rem;padding:18px 40px;">Agendar minha sessão →</a>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="faq-grid">
+      <div>
+        <div class="badge reveal">Dúvidas frequentes</div>
+        <div class="divider reveal" style="background:var(--gold-dark);"></div>
+        <h2 class="section-title reveal">Perguntas que <span class="highlight">todo dono</span> faz antes de fotografar</h2>
+        <p class="section-sub reveal" style="margin-top:16px;">Respondemos tudo com honestidade — inclusive quando a resposta não é a que você quer ouvir.</p>
+        <a href="https://wa.me/5562991383079?text=Tenho+dúvidas+sobre+fotografia+profissional+para+meu+negócio" class="btn btn-primary reveal" style="margin-top:32px;background:var(--gold-dark);" target="_blank">Tirar dúvida pelo WhatsApp →</a>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Quanto custa a sessão fotográfica?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><div class="faq-a"><p>Os valores variam conforme tipo de sessão, quantidade de fotos e local. Entre em contato pelo WhatsApp para um orçamento personalizado — sem compromisso.</p></div></div>
+        <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Vocês vêm até meu negócio ou preciso ir ao estúdio?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><div class="faq-a"><p>As duas opções estão disponíveis. Para fotografia de ambiente vamos até você com equipamento completo. Para produtos menores, o estúdio pode ser mais adequado. Definimos juntos o que faz mais sentido.</p></div></div>
+        <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Em quanto tempo recebo as fotos?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><div class="faq-a"><p>Entregamos as fotos editadas em até 24 horas após a sessão. Em grandes volumes, pode ser até 48 horas — informamos antes.</p></div></div>
+        <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">As fotos servem para anúncios pagos?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><div class="faq-a"><p>Sim! As fotos são entregues nos formatos ideais para Instagram, Facebook, Google Meu Negócio, iFood e outros. Se você usa nosso serviço de tráfego pago também, integramos direto nas campanhas.</p></div></div>
+        <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Preciso me preparar para a sessão?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><div class="faq-a"><p>Fazemos um briefing antes da sessão para orientar o que preparar. É simples e a gente guia tudo. Você só precisa ter o produto ou espaço pronto para aparecer bem.</p></div></div>
+        <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Funciona para meu tipo de negócio?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><div class="faq-a"><p>Se você tem algo para mostrar ao cliente — produto, serviço, ambiente ou equipe — fotografia profissional vai funcionar. Atendemos restaurantes, salões, clínicas, pet shops, academias, comércio de bairro e muito mais.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cta-final">
+  <div class="ripple-bg">
+    <div class="ripple-ring" style="width:600px;height:600px;animation-delay:0s;"></div>
+    <div class="ripple-ring" style="width:600px;height:600px;animation-delay:.9s;"></div>
+    <div class="ripple-ring" style="width:600px;height:600px;animation-delay:1.8s;"></div>
+    <div class="ripple-ring" style="width:600px;height:600px;animation-delay:2.7s;"></div>
+  </div>
+  <div class="container">
+    <div class="cta-card reveal">
+      <div class="badge" style="margin:0 auto 24px;">Pronto para transformar seu negócio?</div>
+      <h2 class="section-title">Fotos que fazem seu cliente <span class="highlight">querer comprar antes de entrar.</span></h2>
+      <p class="section-sub" style="margin:16px auto 40px;text-align:center;">Entrega em 24 horas. Sem contrato longo. Resultado que você vê nos anúncios e nas redes sociais desde o primeiro post.</p>
+      <div class="cta-buttons">
+        <a href="https://wa.me/5562991383079?text=Olá!+Quero+agendar+uma+sessão+fotográfica+para+meu+negócio." class="btn btn-primary" target="_blank" style="font-size:1rem;padding:20px 36px;">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Agendar minha sessão agora
+        </a>
+        <a href="https://wa.me/5562991383079?text=Olá!+Quero+saber+mais+sobre+fotografia+para+negócios." class="btn btn-secondary" target="_blank">Ver mais informações</a>
+      </div>
+      <p class="cta-note">✓ Entrega em 24h &nbsp;·&nbsp; ✓ Fotos para todos os canais &nbsp;·&nbsp; ✓ Sem contrato de fidelidade</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <a href="/" style="text-decoration:none;font-family:var(--heading);font-weight:800;font-size:1.1rem;color:var(--gold);">ASSENT AGENCIA</a>
+      <div class="footer-links">
+        <a href="/#servicos">Serviços</a>
+        <a href="/#provas">Resultados</a>
+        <a href="/#processo">Como Funciona</a>
+        <a href="/#faq">FAQ</a>
+        <a href="https://wa.me/5562991383079" target="_blank">WhatsApp</a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2025 ASSENT AGENCIA — Especialistas em crescimento de negócios locais.<br>
+      <span style="font-size:.75rem;">Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/5562991383079?text=Olá!+Vim+pelo+site+da+Assent+Agência+e+gostaria+de+saber+mais+sobre+fotografia+profissional." class="wa-float" target="_blank" aria-label="WhatsApp">
+  <div class="wa-tooltip">Fale com a gente agora 👋</div>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+function initSlider(cardId,lineId,btnId){
+  const card=document.getElementById(cardId),line=document.getElementById(lineId),btn=document.getElementById(btnId);
+  const after=card.querySelector('.after-pane');
+  if(!card)return;
+  let dragging=false;
+  function setPos(pct){pct=Math.max(2,Math.min(98,pct));if(after)after.style.clipPath='inset(0 '+(100-pct)+'% 0 0)';line.style.left=pct+'%';btn.style.left=pct+'%';}
+  function getX(e){return e.touches?e.touches[0].clientX:e.clientX;}
+  card.addEventListener('mousedown',e=>{dragging=true;e.preventDefault();});
+  card.addEventListener('touchstart',e=>{dragging=true;},{passive:true});
+  window.addEventListener('mousemove',e=>{if(!dragging)return;const r=card.getBoundingClientRect();setPos(((getX(e)-r.left)/r.width)*100);});
+  window.addEventListener('touchmove',e=>{if(!dragging)return;const r=card.getBoundingClientRect();setPos(((getX(e)-r.left)/r.width)*100);},{passive:true});
+  window.addEventListener('mouseup',()=>dragging=false);
+  window.addEventListener('touchend',()=>dragging=false);
+}
+initSlider('ba1','ba1-line','ba1-btn');
+initSlider('ba2','ba2-line','ba2-btn');
+
+function animateCount(el,target,duration=1800){
+  let start=null;
+  const step=ts=>{if(!start)start=ts;const pct=Math.min((ts-start)/duration,1);const ease=1-Math.pow(1-pct,3);el.textContent=Math.floor(ease*target);if(pct<1)requestAnimationFrame(step);else el.textContent=target;};
+  requestAnimationFrame(step);
+}
+setTimeout(()=>{
+  animateCount(document.getElementById('c1'),300);
+  animateCount(document.getElementById('c2'),24);
+  animateCount(document.getElementById('c3'),150);
+  animateCount(document.getElementById('c4'),3);
+  animateCount(document.getElementById('n1'),150);
+  animateCount(document.getElementById('n2'),24);
+  animateCount(document.getElementById('n3'),3);
+  animateCount(document.getElementById('n4'),97);
+},600);
+
+function toggleFaq(el){const item=el.parentElement;document.querySelectorAll('.faq-item.open').forEach(i=>{if(i!==item)i.classList.remove('open');});item.classList.toggle('open');}
+
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>

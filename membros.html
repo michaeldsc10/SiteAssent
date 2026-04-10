@@ -601,14 +601,6 @@ async function loadDashboard(user) {
   // Welcome
   document.getElementById('welcome-name').textContent = nome.split(' ')[0];
 
-  // Nav avatar
-  const navAv = document.getElementById('nav-avatar');
-  if (perfil.fotoURL) {
-    navAv.innerHTML = `<img src="${perfil.fotoURL}" alt="foto"/>`;
-  } else {
-    document.getElementById('nav-avatar-initials').textContent = initials;
-  }
-
   // Profile card
   const profAv = document.getElementById('profile-avatar-btn');
   if (perfil.fotoURL) {

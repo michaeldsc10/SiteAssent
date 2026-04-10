@@ -649,7 +649,14 @@ window.addEventListener('assent:authchange', async (e) => {
     const licSnap = await window._getDoc(window._doc(window._db, 'licencas', user.uid));
     _licenca = licSnap.exists() ? licSnap.data() : {};
   } catch(err) {
-    _licenca = {};
+    // Erro de permissão Firestore — regras bloqueando a leitura
+    console.error('Erro ao verificar licença:', err.code, err.message);
+    const titulo = document.querySelector('#view-negado .negado-title');
+    const sub    = document.querySelector('#view-negado .negado-sub');
+    if (titulo) titulo.textContent = 'Erro ao verificar acesso';
+    if (sub)    sub.textContent = 'Não foi possível ler sua licença (' + (err.code || err.message) + '). Verifique as Firestore Rules ou fale com a ASSENT.';
+    showView('negado');
+    return;
   }
 
   if (!_licenca.clienteCurso) {

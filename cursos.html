@@ -632,28 +632,30 @@ function showView(name) {
 // ══════════════════════════════════════
 //  AUTH — via navbar.js
 // ══════════════════════════════════════
+let _authJaProcessado = false;
+
 window.addEventListener('assent:authchange', async (e) => {
+  console.log('[ASSENT Cursos] evento authchange recebido. Já processado?', _authJaProcessado);
+
+  // Garante que só executa uma vez (Firebase pode disparar o evento mais de uma vez)
+  if (_authJaProcessado) return;
+  _authJaProcessado = true;
+
   document.getElementById('loading-screen').classList.add('hide');
   const { user } = e.detail;
 
   if (!user) {
-    // Redireciona para login preservando destino
     window.location.href = '/membros';
     return;
   }
 
   _user = user;
-
-  // Verifica licença de cursos
-  console.log('[ASSENT Cursos] UID do usuário:', user.uid);
-  console.log('[ASSENT Cursos] window._db disponível:', !!window._db);
-  console.log('[ASSENT Cursos] window._getDoc disponível:', !!window._getDoc);
+  console.log('[ASSENT Cursos] UID:', user.uid);
 
   try {
     const licSnap = await window._getDoc(window._doc(window._db, 'licencas', user.uid));
-    console.log('[ASSENT Cursos] Documento licencas existe?', licSnap.exists());
-    console.log('[ASSENT Cursos] Dados do documento:', licSnap.exists() ? licSnap.data() : 'VAZIO');
     _licenca = licSnap.exists() ? licSnap.data() : {};
+    console.log('[ASSENT Cursos] clienteCurso:', _licenca.clienteCurso);
   } catch(err) {
     console.error('[ASSENT Cursos] ERRO ao ler licença:', err.code, err.message);
     const titulo = document.querySelector('#view-negado .negado-title');
@@ -664,16 +666,26 @@ window.addEventListener('assent:authchange', async (e) => {
     return;
   }
 
-  console.log('[ASSENT Cursos] clienteCurso:', _licenca.clienteCurso);
-
   if (!_licenca.clienteCurso) {
-    console.warn('[ASSENT Cursos] Acesso negado — clienteCurso não é true no documento.');
+    console.warn('[ASSENT Cursos] clienteCurso não é true. Mostrando negado.');
     showView('negado');
     return;
   }
 
-  await carregarLista();
+  console.log('[ASSENT Cursos] Acesso liberado. Chamando carregarLista...');
+  console.log('[ASSENT Cursos] #view-lista existe?', !!document.getElementById('view-lista'));
+  console.log('[ASSENT Cursos] #cursos-grid existe?', !!document.getElementById('cursos-grid'));
+
+  try {
+    await carregarLista();
+  } catch(err) {
+    console.error('[ASSENT Cursos] carregarLista lançou exceção:', err);
+  }
+
+  console.log('[ASSENT Cursos] Chamando showView lista...');
   showView('lista');
+  console.log('[ASSENT Cursos] showView lista executado. Views ativas:', 
+    [...document.querySelectorAll('.view.active')].map(el => el.id));
 });
 
 // ══════════════════════════════════════

@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cursos — ASSENT AGÊNCIA</title>
+<script type="module" src="/navbar.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:        #111111;
+  --surface:   #1a1a1a;
+  --surface2:  #222222;
+  --surface3:  #2a2a2a;
+  --gold:      #F5A623;
+  --gold-dark: #E09820;
+  --gold-glow: rgba(245,166,35,0.18);
+  --white:     #FFFFFF;
+  --muted:     #777777;
+  --muted2:    #555555;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --success:   #4CAF50;
+  --danger:    #e05555;
+  --heading:   'Montserrat', sans-serif;
+  --body:      'Inter', sans-serif;
+  --nav-h:     68px;
+  --sidebar-w: 320px;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--bg); color:var(--white);
+  font-family:var(--body); min-height:100vh;
+  overflow-x:hidden; line-height:1.6;
+  padding-top: var(--nav-h);
+}
+::-webkit-scrollbar{ width:5px; }
+::-webkit-scrollbar-track{ background:var(--bg); }
+::-webkit-scrollbar-thumb{ background:var(--surface3); border-radius:3px; }
+
+/* ── VIEWS ── */
+.view{ display:none; min-height:calc(100vh - var(--nav-h)); }
+.view.active{ display:block; }
+
+/* ── LOADING ── */
+#loading-screen{
+  position:fixed; inset:0; background:var(--bg); z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:20px;
+  transition:opacity .4s ease;
+}
+#loading-screen.hide{ opacity:0; pointer-events:none; }
+.loading-logo{ font-family:var(--heading); font-weight:800; font-size:1.4rem; letter-spacing:.06em; }
+.loading-logo span{ color:var(--gold); }
+.spinner{
+  width:36px; height:36px;
+  border:3px solid var(--surface3); border-top-color:var(--gold);
+  border-radius:50%; animation:spin .8s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* ── TOAST ── */
+.toast{
+  position:fixed; bottom:24px; right:24px; z-index:9999;
+  background:var(--surface); border:1px solid var(--border2);
+  border-radius:10px; padding:14px 20px;
+  font-size:.875rem; color:var(--white);
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  transform:translateY(20px); opacity:0;
+  transition:all .3s ease; pointer-events:none;
+  display:flex; align-items:center; gap:10px;
+}
+.toast.show{ transform:translateY(0); opacity:1; }
+.toast.ok{ border-color:rgba(76,175,80,.3); }
+.toast.err{ border-color:rgba(224,85,85,.3); }
+
+
+/* ══════════════════════════════════════
+   VIEW: NEGADO
+══════════════════════════════════════ */
+#view-negado{
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:0; text-align:center;
+  padding:60px 24px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(245,166,35,.06) 0%, transparent 60%),
+    var(--bg);
+}
+.negado-icon{
+  width:80px; height:80px; border-radius:50%;
+  background:rgba(245,166,35,.08); border:1px solid rgba(245,166,35,.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:2rem; margin-bottom:28px;
+}
+.negado-title{
+  font-family:var(--heading); font-size:1.6rem; font-weight:800;
+  letter-spacing:-.02em; margin-bottom:12px;
+}
+.negado-sub{ color:var(--muted); font-size:.95rem; max-width:420px; margin-bottom:36px; line-height:1.7; }
+.btn-negado{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:14px 32px; border-radius:50px;
+  background:var(--gold); color:#111;
+  font-family:var(--heading); font-size:.85rem; font-weight:700;
+  letter-spacing:.07em; text-transform:uppercase;
+  text-decoration:none; transition:all .2s;
+  box-shadow:0 0 30px var(--gold-glow);
+}
+.btn-negado:hover{ background:var(--gold-dark); transform:translateY(-2px); }
+
+
+/* ══════════════════════════════════════
+   VIEW: LISTA DE CURSOS
+══════════════════════════════════════ */
+.lista-hero{
+  padding:56px 40px 40px;
+  max-width:1200px; margin:0 auto;
+  display:flex; align-items:flex-end; justify-content:space-between;
+  flex-wrap:wrap; gap:20px;
+  border-bottom:1px solid var(--border);
+}
+.lista-hero-text h1{
+  font-family:var(--heading); font-size:2rem; font-weight:800;
+  letter-spacing:-.03em; line-height:1.15;
+}
+.lista-hero-text h1 span{ color:var(--gold); }
+.lista-hero-text p{ color:var(--muted); font-size:.9rem; margin-top:8px; }
+
+.cursos-body{ max-width:1200px; margin:0 auto; padding:40px; }
+
+/* Grid de cards */
+.cursos-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+  gap:24px;
+}
+
+/* Card de curso */
+.curso-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px; overflow:hidden;
+  cursor:pointer;
+  transition:border-color .2s, transform .2s, box-shadow .2s;
+  position:relative;
+}
+.curso-card:hover{
+  border-color:rgba(245,166,35,.35);
+  transform:translateY(-4px);
+  box-shadow:0 16px 48px rgba(0,0,0,.3), 0 0 0 1px rgba(245,166,35,.1);
+}
+.curso-thumb{
+  width:100%; aspect-ratio:16/9;
+  background:var(--surface2); position:relative; overflow:hidden;
+}
+.curso-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+.curso-thumb-placeholder{
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  color:var(--muted2); font-size:2.5rem;
+}
+.curso-play-overlay{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.4); opacity:0;
+  transition:opacity .2s;
+}
+.curso-card:hover .curso-play-overlay{ opacity:1; }
+.play-circle{
+  width:52px; height:52px; border-radius:50%;
+  background:var(--gold); display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 30px rgba(245,166,35,.5);
+}
+.play-circle svg{ width:20px; height:20px; fill:#111; margin-left:3px; }
+
+.curso-card-body{ padding:22px; }
+.curso-badges{ display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+.badge{
+  font-size:.68rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  padding:4px 10px; border-radius:100px;
+}
+.badge-categoria{ background:rgba(245,166,35,.1); color:var(--gold); border:1px solid rgba(245,166,35,.2); }
+.badge-nivel{ background:rgba(255,255,255,.05); color:var(--muted); border:1px solid var(--border2); }
+
+.curso-titulo{
+  font-family:var(--heading); font-size:1rem; font-weight:700;
+  letter-spacing:-.01em; margin-bottom:8px; line-height:1.4;
+}
+.curso-desc{ color:var(--muted); font-size:.82rem; line-height:1.6; margin-bottom:18px;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.curso-meta{
+  display:flex; align-items:center; gap:16px;
+  font-size:.78rem; color:var(--muted); margin-bottom:16px;
+}
+.curso-meta span{ display:flex; align-items:center; gap:5px; }
+.curso-meta svg{ width:13px; height:13px; opacity:.7; }
+
+/* Barra de progresso no card */
+.card-progress-wrap{ }
+.card-progress-label{
+  display:flex; justify-content:space-between;
+  font-size:.73rem; color:var(--muted); margin-bottom:6px;
+}
+.card-progress-bar{
+  height:4px; background:var(--surface3); border-radius:2px; overflow:hidden;
+}
+.card-progress-fill{
+  height:100%; background:var(--gold); border-radius:2px;
+  transition:width .5s ease;
+}
+
+/* Estado vazio */
+.empty-state{
+  grid-column:1/-1;
+  text-align:center; padding:80px 20px;
+  border:1px dashed var(--border2); border-radius:16px;
+}
+.empty-state .icon{ font-size:3rem; margin-bottom:20px; }
+.empty-state h3{ font-family:var(--heading); font-size:1.1rem; font-weight:700; margin-bottom:8px; }
+.empty-state p{ color:var(--muted); font-size:.875rem; }
+
+
+/* ══════════════════════════════════════
+   VIEW: PLAYER
+══════════════════════════════════════ */
+#view-player{ display:none; flex-direction:column; }
+#view-player.active{ display:flex; }
+
+/* Header fixo do player */
+.player-header{
+  position:sticky; top:var(--nav-h); z-index:100;
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:0 24px; height:56px;
+  display:flex; align-items:center; gap:20px;
+}
+.btn-voltar{
+  background:none; border:none; color:var(--muted);
+  font-family:var(--body); font-size:.82rem; font-weight:500;
+  cursor:pointer; display:flex; align-items:center; gap:7px;
+  transition:color .2s; padding:0; flex-shrink:0;
+  letter-spacing:.03em;
+}
+.btn-voltar:hover{ color:var(--white); }
+.btn-voltar svg{ width:16px; height:16px; }
+.player-header-sep{ width:1px; height:20px; background:var(--border2); flex-shrink:0; }
+.player-curso-titulo{
+  font-family:var(--heading); font-size:.85rem; font-weight:700;
+  letter-spacing:.01em; flex:1; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+}
+.player-progress-wrap{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.player-progress-bar{
+  width:120px; height:4px; background:var(--surface3); border-radius:2px;
+}
+.player-progress-fill{
+  height:100%; background:var(--gold); border-radius:2px; transition:width .4s;
+}
+.player-progress-pct{ font-size:.75rem; color:var(--gold); font-weight:700; white-space:nowrap; }
+
+/* Toggle sidebar mobile */
+.btn-toggle-sidebar{
+  display:none; background:none; border:1px solid var(--border2);
+  border-radius:8px; padding:7px 12px; color:var(--muted);
+  font-size:.78rem; font-weight:600; cursor:pointer;
+  align-items:center; gap:6px; letter-spacing:.04em;
+  flex-shrink:0; font-family:var(--body);
+  transition:all .2s;
+}
+.btn-toggle-sidebar:hover{ border-color:var(--gold); color:var(--gold); }
+
+/* Layout player */
+.player-layout{
+  display:flex; flex:1;
+  height:calc(100vh - var(--nav-h) - 56px);
+  overflow:hidden;
+}
+
+/* Sidebar */
+.player-sidebar{
+  width:var(--sidebar-w); flex-shrink:0;
+  background:var(--surface); border-right:1px solid var(--border);
+  display:flex; flex-direction:column;
+  overflow:hidden; transition:width .3s ease, opacity .3s;
+}
+.player-sidebar.collapsed{ width:0; opacity:0; pointer-events:none; }
+
+.sidebar-scroll{ flex:1; overflow-y:auto; }
+.sidebar-scroll::-webkit-scrollbar{ width:4px; }
+.sidebar-scroll::-webkit-scrollbar-thumb{ background:var(--surface3); border-radius:2px; }
+
+/* Módulos na sidebar */
+.modulo-item{ border-bottom:1px solid var(--border); }
+.modulo-header{
+  padding:16px 20px;
+  display:flex; align-items:center; gap:10px;
+  cursor:pointer; transition:background .15s;
+  user-select:none;
+}
+.modulo-header:hover{ background:var(--surface2); }
+.modulo-titulo{
+  flex:1; font-family:var(--heading); font-size:.8rem;
+  font-weight:700; letter-spacing:.02em;
+}
+.modulo-count{ font-size:.72rem; color:var(--muted); white-space:nowrap; }
+.modulo-arrow{
+  font-size:.7rem; color:var(--muted); transition:transform .2s;
+  flex-shrink:0;
+}
+.modulo-item.collapsed .modulo-arrow{ transform:rotate(-90deg); }
+.modulo-aulas{ display:block; }
+.modulo-item.collapsed .modulo-aulas{ display:none; }
+
+/* Aula na sidebar */
+.aula-item{
+  padding:12px 20px 12px 16px;
+  display:flex; align-items:flex-start; gap:12px;
+  cursor:pointer; transition:background .15s;
+  border-left:3px solid transparent;
+}
+.aula-item:hover{ background:var(--surface2); }
+.aula-item.ativa{
+  background:rgba(245,166,35,.06);
+  border-left-color:var(--gold);
+}
+.aula-check{
+  width:22px; height:22px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  margin-top:1px;
+}
+.aula-check svg{ width:18px; height:18px; }
+.aula-item-info{ flex:1; min-width:0; }
+.aula-item-titulo{
+  font-size:.82rem; font-weight:500; color:var(--white);
+  line-height:1.4;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.aula-item.completa .aula-item-titulo{ color:var(--muted); }
+.aula-item.ativa .aula-item-titulo{ color:var(--gold); }
+.aula-item-duracao{ font-size:.72rem; color:var(--muted); margin-top:3px; }
+
+/* Main player */
+.player-main{
+  flex:1; overflow-y:auto; display:flex; flex-direction:column;
+}
+.player-main::-webkit-scrollbar{ width:5px; }
+.player-main::-webkit-scrollbar-thumb{ background:var(--surface3); border-radius:3px; }
+
+.video-container{
+  width:100%; position:relative;
+  background:#000;
+}
+.video-aspect{
+  position:relative; padding-bottom:56.25%; height:0;
+}
+.video-aspect iframe{
+  position:absolute; inset:0; width:100%; height:100%;
+  border:none;
+}
+.video-placeholder{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; color:var(--muted);
+  background:linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+}
+.video-placeholder svg{ width:48px; height:48px; opacity:.3; }
+.video-placeholder p{ font-size:.85rem; }
+
+.aula-info{
+  padding:28px 36px 40px;
+  flex:1;
+}
+.aula-info-titulo{
+  font-family:var(--heading); font-size:1.15rem; font-weight:800;
+  letter-spacing:-.01em; margin-bottom:8px;
+}
+.aula-info-modulo{
+  font-size:.78rem; color:var(--muted); margin-bottom:14px;
+  display:flex; align-items:center; gap:6px;
+}
+.aula-info-modulo::before{
+  content:''; width:3px; height:12px;
+  background:var(--gold); border-radius:2px; display:block;
+}
+.aula-info-desc{
+  color:var(--muted); font-size:.875rem; line-height:1.7;
+  margin-bottom:28px; max-width:680px;
+}
+
+/* Controles */
+.player-controls{
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.btn-ctrl{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:11px 22px; border-radius:50px;
+  font-family:var(--heading); font-size:.78rem; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase;
+  cursor:pointer; transition:all .2s; border:none;
+}
+.btn-ctrl:disabled{ opacity:.35; cursor:not-allowed; transform:none !important; }
+.btn-prev{
+  background:var(--surface2); color:var(--white);
+  border:1px solid var(--border2);
+}
+.btn-prev:hover:not(:disabled){ border-color:rgba(255,255,255,.3); }
+.btn-next{
+  background:var(--surface2); color:var(--white);
+  border:1px solid var(--border2);
+}
+.btn-next:hover:not(:disabled){ border-color:rgba(255,255,255,.3); }
+.btn-complete{
+  background:var(--gold); color:#111;
+  box-shadow:0 0 24px var(--gold-glow);
+}
+.btn-complete:hover:not(:disabled){ background:var(--gold-dark); transform:translateY(-1px); }
+.btn-complete.done{
+  background:rgba(76,175,80,.15); color:#81c784;
+  border:1px solid rgba(76,175,80,.3); box-shadow:none;
+}
+.btn-complete.done:hover:not(:disabled){ background:rgba(76,175,80,.2); }
+.btn-ctrl svg{ width:15px; height:15px; }
+
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .lista-hero{ padding:36px 20px 28px; }
+  .cursos-body{ padding:24px 20px; }
+
+  .player-header{ padding:0 16px; gap:12px; }
+  .player-progress-wrap{ display:none; }
+  .btn-toggle-sidebar{ display:inline-flex; }
+
+  .player-layout{ height:calc(100vh - var(--nav-h) - 56px); flex-direction:column; }
+
+  .player-sidebar{
+    position:fixed;
+    top:calc(var(--nav-h) + 56px);
+    left:0; right:0; bottom:0;
+    width:100%; z-index:200;
+    transform:translateX(-100%);
+    transition:transform .3s ease;
+    border-right:none;
+    border-top:1px solid var(--border);
+  }
+  .player-sidebar.open{ transform:translateX(0); }
+  .player-sidebar.collapsed{ width:100%; opacity:1; pointer-events:auto; }
+
+  .player-main{ overflow-y:auto; }
+
+  .aula-info{ padding:20px 16px 32px; }
+  .aula-info-desc{ display:none; }
+  .player-controls{ gap:8px; }
+  .btn-ctrl{ padding:10px 16px; font-size:.73rem; }
+}
+</style>
+</head>
+<body>
+
+<assent-navbar></assent-navbar>
+
+<!-- ── LOADING ── -->
+<div id="loading-screen">
+  <div class="loading-logo">ASSENT <span>AGÊNCIA</span></div>
+  <div class="spinner"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VIEW: NEGADO
+══════════════════════════════════════ -->
+<div id="view-negado" class="view">
+  <div style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0;text-align:center;padding:80px 24px;min-height:calc(100vh - 68px);">
+    <div class="negado-icon">🔒</div>
+    <h1 class="negado-title">Acesso restrito</h1>
+    <p class="negado-sub">
+      Você não tem uma licença ativa para a área de cursos.<br>
+      Entre em contato conosco para liberar o seu acesso.
+    </p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
+      <a href="https://wa.me/5562991383079?text=Quero+acesso+aos+cursos" target="_blank" class="btn-negado">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Falar com a ASSENT
+      </a>
+      <a href="/membros" class="btn-negado" style="background:var(--surface2);color:var(--white);box-shadow:none;border:1px solid var(--border2);">
+        Minha conta
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VIEW: LISTA DE CURSOS
+══════════════════════════════════════ -->
+<div id="view-lista" class="view">
+  <div class="lista-hero">
+    <div class="lista-hero-text">
+      <h1>Minha área de <span>Cursos</span></h1>
+      <p id="lista-sub">Carregando cursos disponíveis...</p>
+    </div>
+  </div>
+  <div class="cursos-body">
+    <div class="cursos-grid" id="cursos-grid">
+      <!-- preenchido por JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VIEW: PLAYER
+══════════════════════════════════════ -->
+<div id="view-player" class="view">
+
+  <!-- Header do player -->
+  <div class="player-header">
+    <button class="btn-voltar" id="btn-voltar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Voltar
+    </button>
+    <div class="player-header-sep"></div>
+    <span class="player-curso-titulo" id="player-curso-titulo"></span>
+    <div class="player-progress-wrap">
+      <div class="player-progress-bar">
+        <div class="player-progress-fill" id="player-progress-fill" style="width:0%"></div>
+      </div>
+      <span class="player-progress-pct" id="player-progress-pct">0%</span>
+    </div>
+    <button class="btn-toggle-sidebar" id="btn-toggle-sidebar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/>
+      </svg>
+      Aulas
+    </button>
+  </div>
+
+  <!-- Layout principal -->
+  <div class="player-layout">
+
+    <!-- Sidebar de módulos/aulas -->
+    <aside class="player-sidebar" id="player-sidebar">
+      <div class="sidebar-scroll">
+        <div id="modulos-lista">
+          <!-- preenchido por JS -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Área do vídeo -->
+    <main class="player-main">
+
+      <div class="video-container">
+        <div class="video-aspect">
+          <!-- Placeholder inicial -->
+          <div class="video-placeholder" id="video-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/>
+            </svg>
+            <p>Selecione uma aula para começar</p>
+          </div>
+          <iframe
+            id="youtube-player"
+            src=""
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            style="display:none;">
+          </iframe>
+        </div>
+      </div>
+
+      <div class="aula-info">
+        <div class="aula-info-modulo" id="aula-info-modulo">Selecione uma aula</div>
+        <h2 class="aula-info-titulo" id="aula-info-titulo"></h2>
+        <p class="aula-info-desc" id="aula-info-desc"></p>
+
+        <div class="player-controls">
+          <button class="btn-ctrl btn-prev" id="btn-prev" onclick="navAula(-1)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Anterior
+          </button>
+          <button class="btn-ctrl btn-complete" id="btn-complete" onclick="marcarConcluida()" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Marcar como concluída
+          </button>
+          <button class="btn-ctrl btn-next" id="btn-next" onclick="navAula(1)" disabled>
+            Próxima
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span id="toast-icon">✓</span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+// ══════════════════════════════════════
+//  ESTADO GLOBAL
+// ══════════════════════════════════════
+let _user        = null;
+let _licenca     = null;
+let _cursoAtivo  = null;
+let _aulaAtiva   = null;
+let _progresso   = { aulasCompletas: [], aulaAtual: null };
+let _todasAulas  = []; // lista flat para navegação prev/next
+let _sidebarOpen = false;
+
+// ── SVGs auxiliares ──
+const SVG_CHECK = `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="rgba(76,175,80,0.15)" stroke="rgba(76,175,80,0.5)" stroke-width="1.5"/><polyline points="8 12 11 15 16 9" stroke="#81c784" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const SVG_CIRCLE = `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/></svg>`;
+const SVG_ACTIVE = `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="rgba(245,166,35,0.5)" stroke-width="1.5"/><circle cx="12" cy="12" r="4" fill="rgba(245,166,35,0.7)"/></svg>`;
+
+// ══════════════════════════════════════
+//  VIEWS
+// ══════════════════════════════════════
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById('view-' + name);
+  if (el) el.classList.add('active');
+  window.scrollTo({ top: 0 });
+}
+
+// ══════════════════════════════════════
+//  AUTH — via navbar.js
+// ══════════════════════════════════════
+window.addEventListener('assent:authchange', async (e) => {
+  document.getElementById('loading-screen').classList.add('hide');
+  const { user } = e.detail;
+
+  if (!user) {
+    // Redireciona para login preservando destino
+    window.location.href = '/membros';
+    return;
+  }
+
+  _user = user;
+
+  // Verifica licença de cursos
+  try {
+    const licSnap = await window._getDoc(window._doc(window._db, 'licencas', user.uid));
+    _licenca = licSnap.exists() ? licSnap.data() : {};
+  } catch(err) {
+    _licenca = {};
+  }
+
+  if (!_licenca.clienteCurso) {
+    showView('negado');
+    return;
+  }
+
+  await carregarLista();
+  showView('lista');
+});
+
+// ══════════════════════════════════════
+//  LISTA DE CURSOS
+// ══════════════════════════════════════
+async function carregarLista() {
+  const grid = document.getElementById('cursos-grid');
+  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:.875rem;">Carregando cursos...</div>`;
+
+  try {
+    const snap = await window._getDocs(
+      window._query(
+        window._collection(window._db, 'cursos'),
+        window._where('ativo', '==', true),
+        window._orderBy('ordem')
+      )
+    );
+
+    const cursos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Busca progresso de cada curso
+    const progressos = await Promise.all(
+      cursos.map(c =>
+        window._getDoc(window._doc(window._db, 'progresso', `${_user.uid}_${c.id}`))
+          .then(s => s.exists() ? s.data() : null)
+          .catch(() => null)
+      )
+    );
+
+    renderLista(cursos, progressos);
+  } catch(err) {
+    console.error('Erro ao carregar cursos:', err);
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="icon">⚠️</div>
+        <h3>Erro ao carregar cursos</h3>
+        <p>Verifique sua conexão e recarregue a página.</p>
+      </div>`;
+  }
+}
+
+function renderLista(cursos, progressos) {
+  const grid  = document.getElementById('cursos-grid');
+  const sub   = document.getElementById('lista-sub');
+
+  if (cursos.length === 0) {
+    sub.textContent = 'Nenhum curso disponível ainda.';
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">📚</div>
+        <h3>Em breve</h3>
+        <p>Os cursos serão disponibilizados em breve.<br>Aguarde novidades!</p>
+      </div>`;
+    return;
+  }
+
+  sub.textContent = `${cursos.length} curso${cursos.length > 1 ? 's' : ''} disponível${cursos.length > 1 ? 'is' : ''}`;
+
+  grid.innerHTML = cursos.map((c, i) => {
+    const prog      = progressos[i];
+    const concluidas = prog?.aulasCompletas?.length || 0;
+    const total     = c.totalAulas || 0;
+    const pct       = total > 0 ? Math.round((concluidas / total) * 100) : 0;
+    const iniciado  = concluidas > 0;
+
+    // Tenta usar a thumb do YouTube do primeiro vídeo
+    const primeiroYT = c.modulos?.[0]?.aulas?.[0]?.youtubeId;
+    const thumbSrc   = c.thumb || (primeiroYT ? `https://img.youtube.com/vi/${primeiroYT}/mqdefault.jpg` : '');
+
+    return `
+    <div class="curso-card" onclick="abrirCurso('${c.id}')">
+      <div class="curso-thumb">
+        ${thumbSrc
+          ? `<img src="${thumbSrc}" alt="${c.titulo}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\"curso-thumb-placeholder\\">📹</div>'">`
+          : `<div class="curso-thumb-placeholder">📹</div>`}
+        <div class="curso-play-overlay">
+          <div class="play-circle">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="curso-card-body">
+        <div class="curso-badges">
+          ${c.categoria ? `<span class="badge badge-categoria">${c.categoria}</span>` : ''}
+          ${c.nivel     ? `<span class="badge badge-nivel">${c.nivel}</span>` : ''}
+        </div>
+        <div class="curso-titulo">${c.titulo}</div>
+        ${c.descricao ? `<div class="curso-desc">${c.descricao}</div>` : ''}
+        <div class="curso-meta">
+          ${total > 0 ? `<span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+            ${total} aula${total > 1 ? 's' : ''}
+          </span>` : ''}
+          ${c.duracao ? `<span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            ${c.duracao}
+          </span>` : ''}
+        </div>
+        <div class="card-progress-wrap">
+          <div class="card-progress-label">
+            <span>${iniciado ? `${concluidas} de ${total} concluídas` : 'Não iniciado'}</span>
+            <span style="color:var(--gold);font-weight:700;">${pct > 0 ? pct + '%' : ''}</span>
+          </div>
+          <div class="card-progress-bar">
+            <div class="card-progress-fill" style="width:${pct}%"></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════
+//  ABRIR CURSO (player)
+// ══════════════════════════════════════
+async function abrirCurso(cursoId) {
+  // Limpa o iframe
+  const iframe = document.getElementById('youtube-player');
+  iframe.style.display = 'none';
+  iframe.src = '';
+  document.getElementById('video-placeholder').style.display = 'flex';
+
+  try {
+    const cursoSnap = await window._getDoc(window._doc(window._db, 'cursos', cursoId));
+    if (!cursoSnap.exists()) { showToast('Curso não encontrado.', 'err'); return; }
+
+    _cursoAtivo = { id: cursoId, ...cursoSnap.data() };
+
+    // Carrega progresso
+    const progSnap = await window._getDoc(window._doc(window._db, 'progresso', `${_user.uid}_${cursoId}`));
+    _progresso = progSnap.exists()
+      ? { aulasCompletas: [], aulaAtual: null, ...progSnap.data() }
+      : { aulasCompletas: [], aulaAtual: null };
+
+    // Monta lista flat de aulas para prev/next
+    _todasAulas = [];
+    (_cursoAtivo.modulos || []).forEach(m => {
+      (m.aulas || []).forEach(a => {
+        _todasAulas.push({ ...a, _moduloTitulo: m.titulo });
+      });
+    });
+
+    renderPlayer();
+    showView('player');
+
+    // Abre a última aula acessada ou a primeira
+    const aulaAlvo = _todasAulas.find(a => a.id === _progresso.aulaAtual) || _todasAulas[0];
+    if (aulaAlvo) selecionarAula(aulaAlvo);
+
+  } catch(err) {
+    console.error(err);
+    showToast('Erro ao abrir o curso.', 'err');
+  }
+}
+
+// ══════════════════════════════════════
+//  RENDER SIDEBAR
+// ══════════════════════════════════════
+function renderPlayer() {
+  document.getElementById('player-curso-titulo').textContent = _cursoAtivo.titulo;
+  atualizarProgressBar();
+
+  const lista = document.getElementById('modulos-lista');
+  lista.innerHTML = (_cursoAtivo.modulos || []).map((m, mi) => {
+    const aulasHTML = (m.aulas || []).map(a => {
+      const concluida = (_progresso.aulasCompletas || []).includes(a.id);
+      const ativa     = _aulaAtiva?.id === a.id;
+      const checkIcon = ativa ? SVG_ACTIVE : concluida ? SVG_CHECK : SVG_CIRCLE;
+      return `
+        <div class="aula-item ${concluida ? 'completa' : ''} ${ativa ? 'ativa' : ''}"
+             id="aula-item-${a.id}"
+             onclick="selecionarAula(${encodeAula(a, m.titulo)})">
+          <div class="aula-check">${checkIcon}</div>
+          <div class="aula-item-info">
+            <div class="aula-item-titulo">${a.titulo}</div>
+            ${a.duracao ? `<div class="aula-item-duracao">${a.duracao}</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="modulo-item" id="modulo-${mi}">
+        <div class="modulo-header" onclick="toggleModulo(${mi})">
+          <span class="modulo-titulo">${m.titulo}</span>
+          <span class="modulo-count">${m.aulas?.length || 0} aulas</span>
+          <span class="modulo-arrow">▾</span>
+        </div>
+        <div class="modulo-aulas">${aulasHTML}</div>
+      </div>`;
+  }).join('');
+}
+
+function encodeAula(aula, moduloTitulo) {
+  const obj = { ...aula, _moduloTitulo: moduloTitulo };
+  return "'" + JSON.stringify(obj).replace(/'/g, "\\'") + "'";
+}
+
+// ══════════════════════════════════════
+//  SELECIONAR AULA
+// ══════════════════════════════════════
+function selecionarAula(aulaOrStr) {
+  const aula = typeof aulaOrStr === 'string' ? JSON.parse(aulaOrStr) : aulaOrStr;
+  _aulaAtiva = aula;
+
+  // Vídeo
+  const iframe      = document.getElementById('youtube-player');
+  const placeholder = document.getElementById('video-placeholder');
+  if (aula.youtubeId) {
+    iframe.src = `https://www.youtube-nocookie.com/embed/${aula.youtubeId}?rel=0&modestbranding=1&color=white`;
+    iframe.style.display = 'block';
+    placeholder.style.display = 'none';
+  } else {
+    iframe.src = '';
+    iframe.style.display = 'none';
+    placeholder.style.display = 'flex';
+  }
+
+  // Info
+  document.getElementById('aula-info-modulo').textContent = aula._moduloTitulo || '';
+  document.getElementById('aula-info-titulo').textContent = aula.titulo || '';
+  document.getElementById('aula-info-desc').textContent   = aula.descricao || '';
+
+  // Botão concluída
+  const concluida = (_progresso.aulasCompletas || []).includes(aula.id);
+  const btnComp   = document.getElementById('btn-complete');
+  btnComp.disabled = false;
+  btnComp.innerHTML = concluida
+    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><polyline points="20 6 9 17 4 12"/></svg> Concluída`
+    : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><polyline points="20 6 9 17 4 12"/></svg> Marcar como concluída`;
+  btnComp.classList.toggle('done', concluida);
+
+  // Prev / next
+  const idx = _todasAulas.findIndex(a => a.id === aula.id);
+  document.getElementById('btn-prev').disabled = idx <= 0;
+  document.getElementById('btn-next').disabled = idx >= _todasAulas.length - 1;
+
+  // Sidebar: atualiza estado ativo
+  document.querySelectorAll('.aula-item').forEach(el => el.classList.remove('ativa'));
+  const itemEl = document.getElementById('aula-item-' + aula.id);
+  if (itemEl) {
+    itemEl.classList.add('ativa');
+    itemEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  // Fecha sidebar mobile
+  if (window.innerWidth <= 900) fecharSidebarMobile();
+
+  // Salva progresso (aula atual)
+  salvarProgresso();
+}
+
+// ══════════════════════════════════════
+//  MARCAR COMO CONCLUÍDA / DESCONCLUÍDA
+// ══════════════════════════════════════
+async function marcarConcluida() {
+  if (!_aulaAtiva) return;
+  const id        = _aulaAtiva.id;
+  const concluida = (_progresso.aulasCompletas || []).includes(id);
+
+  if (concluida) {
+    _progresso.aulasCompletas = _progresso.aulasCompletas.filter(x => x !== id);
+  } else {
+    _progresso.aulasCompletas = [...(_progresso.aulasCompletas || []), id];
+  }
+
+  try {
+    await window._setDoc(
+      window._doc(window._db, 'progresso', `${_user.uid}_${_cursoAtivo.id}`),
+      {
+        uid:             _user.uid,
+        cursoId:         _cursoAtivo.id,
+        aulasCompletas:  _progresso.aulasCompletas,
+        updatedAt:       window._serverTimestamp()
+      },
+      { merge: true }
+    );
+    renderPlayer();
+    selecionarAula(_aulaAtiva);
+    showToast(concluida ? 'Aula desmarcada' : '✓ Aula concluída!', concluida ? '' : 'ok');
+  } catch(err) {
+    console.error(err);
+    showToast('Erro ao salvar progresso.', 'err');
+  }
+}
+
+// ══════════════════════════════════════
+//  SALVAR PROGRESSO (aula atual)
+// ══════════════════════════════════════
+async function salvarProgresso() {
+  if (!_user || !_cursoAtivo || !_aulaAtiva) return;
+  try {
+    await window._setDoc(
+      window._doc(window._db, 'progresso', `${_user.uid}_${_cursoAtivo.id}`),
+      {
+        uid:       _user.uid,
+        cursoId:   _cursoAtivo.id,
+        aulaAtual: _aulaAtiva.id,
+        updatedAt: window._serverTimestamp()
+      },
+      { merge: true }
+    );
+  } catch(err) { /* silencioso */ }
+}
+
+// ══════════════════════════════════════
+//  BARRA DE PROGRESSO GERAL
+// ══════════════════════════════════════
+function atualizarProgressBar() {
+  const total = _todasAulas.length;
+  const done  = (_progresso.aulasCompletas || []).length;
+  const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('player-progress-fill').style.width = pct + '%';
+  document.getElementById('player-progress-pct').textContent  = pct + '%';
+}
+
+// ══════════════════════════════════════
+//  NAVEGAÇÃO PREV / NEXT
+// ══════════════════════════════════════
+function navAula(dir) {
+  const idx  = _todasAulas.findIndex(a => a.id === _aulaAtiva?.id);
+  const next = _todasAulas[idx + dir];
+  if (next) selecionarAula(next);
+}
+
+// ══════════════════════════════════════
+//  SIDEBAR MÓDULOS (toggle collapse)
+// ══════════════════════════════════════
+function toggleModulo(idx) {
+  const item  = document.getElementById('modulo-' + idx);
+  const arrow = item?.querySelector('.modulo-arrow');
+  if (!item) return;
+  item.classList.toggle('collapsed');
+}
+
+// ══════════════════════════════════════
+//  SIDEBAR MOBILE
+// ══════════════════════════════════════
+function fecharSidebarMobile() {
+  document.getElementById('player-sidebar').classList.remove('open');
+  _sidebarOpen = false;
+}
+
+document.getElementById('btn-toggle-sidebar').addEventListener('click', () => {
+  _sidebarOpen = !_sidebarOpen;
+  document.getElementById('player-sidebar').classList.toggle('open', _sidebarOpen);
+});
+
+document.getElementById('btn-voltar').addEventListener('click', () => {
+  // Para o vídeo
+  const iframe = document.getElementById('youtube-player');
+  iframe.src = '';
+  iframe.style.display = 'none';
+  document.getElementById('video-placeholder').style.display = 'flex';
+  _aulaAtiva   = null;
+  _cursoAtivo  = null;
+  carregarLista();
+  showView('lista');
+});
+
+// ══════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.className = 'toast' + (type ? ' ' + type : '');
+  document.getElementById('toast-icon').textContent = type === 'err' ? '⚠' : '✓';
+  document.getElementById('toast-msg').textContent  = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>

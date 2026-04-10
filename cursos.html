@@ -81,12 +81,15 @@ body{
    VIEW: NEGADO
 ══════════════════════════════════════ */
 #view-negado{
-  display:flex; align-items:center; justify-content:center;
+  align-items:center; justify-content:center;
   flex-direction:column; gap:0; text-align:center;
   padding:60px 24px;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(245,166,35,.06) 0%, transparent 60%),
     var(--bg);
+}
+#view-negado.active{
+  display:flex;
 }
 .negado-icon{
   width:80px; height:80px; border-radius:50%;

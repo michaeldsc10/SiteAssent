@@ -645,21 +645,29 @@ window.addEventListener('assent:authchange', async (e) => {
   _user = user;
 
   // Verifica licença de cursos
+  console.log('[ASSENT Cursos] UID do usuário:', user.uid);
+  console.log('[ASSENT Cursos] window._db disponível:', !!window._db);
+  console.log('[ASSENT Cursos] window._getDoc disponível:', !!window._getDoc);
+
   try {
     const licSnap = await window._getDoc(window._doc(window._db, 'licencas', user.uid));
+    console.log('[ASSENT Cursos] Documento licencas existe?', licSnap.exists());
+    console.log('[ASSENT Cursos] Dados do documento:', licSnap.exists() ? licSnap.data() : 'VAZIO');
     _licenca = licSnap.exists() ? licSnap.data() : {};
   } catch(err) {
-    // Erro de permissão Firestore — regras bloqueando a leitura
-    console.error('Erro ao verificar licença:', err.code, err.message);
+    console.error('[ASSENT Cursos] ERRO ao ler licença:', err.code, err.message);
     const titulo = document.querySelector('#view-negado .negado-title');
     const sub    = document.querySelector('#view-negado .negado-sub');
     if (titulo) titulo.textContent = 'Erro ao verificar acesso';
-    if (sub)    sub.textContent = 'Não foi possível ler sua licença (' + (err.code || err.message) + '). Verifique as Firestore Rules ou fale com a ASSENT.';
+    if (sub)    sub.textContent = 'Erro: ' + (err.code || err.message) + '. Fale com a ASSENT.';
     showView('negado');
     return;
   }
 
+  console.log('[ASSENT Cursos] clienteCurso:', _licenca.clienteCurso);
+
   if (!_licenca.clienteCurso) {
+    console.warn('[ASSENT Cursos] Acesso negado — clienteCurso não é true no documento.');
     showView('negado');
     return;
   }

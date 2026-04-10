@@ -652,8 +652,9 @@ function renderApps(lic) {
   const container = document.getElementById('apps-container');
 
   const apps = [
-    { key:'clienteAG', name:'ASSENT Agência',  desc:'Sistema de gestão para agências', icon:'🏢' },
-    { key:'clienteCRM', name:'ASSENT CRM',      desc:'Gestão de clientes e relacionamento', icon:'💼' },
+    { key:'clienteAG',   name:'ASSENT Agência',     desc:'Sistema de gestão para agências',       icon:'🏢', link: null },
+    { key:'clienteCRM',  name:'ASSENT CRM',          desc:'Gestão de clientes e relacionamento',   icon:'💼', link: null },
+    { key:'clienteCurso',name:'Ambiente de Cursos',  desc:'Acesso à plataforma de cursos ASSENT',  icon:'🎓', link: '/cursos' },
   ];
 
   const temAcesso = apps.some(a => lic[a.key] === true);
@@ -674,6 +675,9 @@ function renderApps(lic) {
 
   let html = apps.map(a => {
     const ok = lic[a.key] === true;
+    const statusEl = ok && a.link
+      ? `<a href="${a.link}" class="app-status ok" style="text-decoration:none;cursor:pointer;">Acessar →</a>`
+      : `<span class="app-status ${ok?'ok':'no'}">${ok?'Ativo':'Sem acesso'}</span>`;
     return `
     <div class="app-item ${ok?'active':''}">
       <div class="app-icon">${a.icon}</div>
@@ -681,7 +685,7 @@ function renderApps(lic) {
         <div class="app-name">${a.name}</div>
         <div class="app-desc">${a.desc}</div>
       </div>
-      <span class="app-status ${ok?'ok':'no'}">${ok?'Ativo':'Sem acesso'}</span>
+      ${statusEl}
     </div>`;
   }).join('');
 

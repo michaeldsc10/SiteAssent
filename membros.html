@@ -136,33 +136,7 @@ body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
 
 /* ── DASHBOARD LAYOUT ── */
-#view-dashboard{flex-direction:column;}
-
-/* TOP NAV */
-.topnav{
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;
-}
-.nav-logo{font-family:var(--heading);font-weight:800;font-size:1rem;letter-spacing:.06em;color:var(--white);text-decoration:none;}
-.nav-logo span{color:var(--gold);}
-.nav-right{display:flex;align-items:center;gap:16px;}
-.nav-avatar{
-  width:38px;height:38px;border-radius:50%;background:var(--gold);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--heading);font-weight:800;font-size:.9rem;color:#111;
-  cursor:pointer;overflow:hidden;border:2px solid transparent;
-  transition:border-color .2s;position:relative;
-}
-.nav-avatar:hover{border-color:var(--gold);}
-.nav-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.nav-btn-logout{
-  background:none;border:1px solid var(--border2);border-radius:50px;
-  padding:8px 16px;color:var(--muted);font-size:.78rem;font-weight:600;
-  cursor:pointer;letter-spacing:.06em;text-transform:uppercase;font-family:var(--heading);
-  transition:all .2s;
-}
-.nav-btn-logout:hover{border-color:var(--danger);color:var(--danger);}
+#view-dashboard{flex-direction:column;padding-top:68px;}
 
 /* DASHBOARD BODY */
 .dash-body{flex:1;padding:40px 32px;max-width:1000px;margin:0 auto;width:100%;}
@@ -341,6 +315,8 @@ body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:
 </head>
 <body>
 
+<assent-navbar></assent-navbar>
+
 <!-- LOADING -->
 <div id="loading-screen">
   <div class="loading-logo">ASSENT <span>AGÊNCIA</span></div>
@@ -461,17 +437,6 @@ body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:
      VIEW: DASHBOARD
 ══════════════════════════════════════ -->
 <div id="view-dashboard" class="view">
-
-  <!-- TOPNAV -->
-  <nav class="topnav">
-    <a href="https://assentagencia.com.br" class="nav-logo">ASSENT <span>AGÊNCIA</span></a>
-    <div class="nav-right">
-      <div class="nav-avatar" id="nav-avatar" onclick="openModal('modal-perfil')" title="Editar perfil">
-        <span id="nav-avatar-initials"></span>
-      </div>
-      <button class="nav-btn-logout" onclick="doLogout()">Sair</button>
-    </div>
-  </nav>
 
   <!-- BODY -->
   <div class="dash-body">
@@ -955,7 +920,10 @@ async function saveProfile() {
     document.getElementById('profile-nascimento-display').textContent = `${d}/${m}/${y}`;
     const initials = nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
     if (!window._perfil.fotoURL) {
-      document.getElementById('nav-avatar-initials').textContent = initials;
+      // Atualiza navbar global com o novo nome
+      document.querySelectorAll('assent-navbar').forEach(el => {
+        if (el._updateAuthUI) el._updateAuthUI(window._currentUser, window._perfil);
+      });
     }
 
     showAlert('modal-success','');
@@ -1017,15 +985,21 @@ async function handleAvatarChange(e) {
 
     await window._setDoc(window._doc(window._db, 'perfis', uid), { fotoURL: url }, { merge: true });
     window._perfil.fotoURL = url;
+    window._currentAuthPerfil = window._perfil;
 
-    // Atualiza UI
-    const imgTag = `<img src="${url}" alt="foto"/>`;
+    // Atualiza avatar do card de perfil
     const overlay = `<div class="profile-avatar-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
-    document.getElementById('profile-avatar-btn').innerHTML = imgTag + overlay;
-    document.getElementById('nav-avatar').innerHTML = `<img src="${url}" alt="foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+    document.getElementById('profile-avatar-btn').innerHTML = `<img src="${url}" alt="foto"/>` + overlay;
+
+    // Notifica a navbar global para atualizar o avatar
+    document.querySelectorAll('assent-navbar').forEach(el => {
+      if (el._updateAuthUI) el._updateAuthUI(window._currentUser, window._perfil);
+    });
+
     showToast('Foto atualizada!');
-  } catch(e) {
-    showToast('Erro ao enviar foto.','error');
+  } catch(err) {
+    console.error('Erro upload:', err);
+    showToast('Erro ao enviar foto. Verifique as regras do Storage.','error');
   }
 }
 

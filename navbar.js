@@ -1,118 +1,97 @@
-// ══════════════════════════════════════
-//  FIREBASE — init centralizado (navbar.js)
-// ══════════════════════════════════════
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  signOut,
-  onAuthStateChanged,
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  updatePassword
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  updateDoc,
-  serverTimestamp,
-  collection,
-  query,
-  where,
-  orderBy
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+/**
+ * navbar.js — ASSENT Agência
+ * ─────────────────────────────────────────────────────────────
+ * Web Component <assent-navbar> + inicialização Firebase.
+ *
+ * O que este arquivo faz:
+ *  1. Define o custom element <assent-navbar> com Shadow DOM
+ *  2. Inicializa o Firebase (Auth + Firestore) uma única vez
+ *  3. Escuta onAuthStateChanged e dispara evento `assent:authchange`
+ *     que as páginas (cursos.html, curso.html, etc.) usam para
+ *     carregar dados do usuário logado
+ *  4. Exibe avatar + botão SAIR _depois_ do CTA "Análise Gratuita"
+ *     quando o usuário está logado
+ *  5. Expõe helpers do Firestore em `window._*` para as páginas
+ *
+ * ⚙️  CONFIGURAÇÃO: Substitua FIREBASE_CONFIG com suas credenciais.
+ * ─────────────────────────────────────────────────────────────
+ */
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB9HEWiHFc8YEuj_Ab-7TxGKqdQkSRQAio",
-  authDomain: "assent-2b945.firebaseapp.com",
-  projectId: "assent-2b945",
-  storageBucket: "assent-2b945.firebasestorage.app",
-  messagingSenderId: "851051401705",
-  appId: "1:851051401705:web:fa6ebb1cc6ee5d3a737b78",
-  measurementId: "G-K7F0F7PZ8M"
+import { initializeApp }           from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut }
+                                   from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
+import {
+  getFirestore, doc, getDoc, getDocs, setDoc, addDoc,
+  collection, query, where, orderBy, serverTimestamp, deleteDoc
+} from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js';
+
+/* ══════════════════════════════════════
+   ⚙️  CONFIGURAÇÃO FIREBASE
+   Substitua com as credenciais do seu projeto.
+   Console Firebase → Configurações → Seus apps → SDK (módulo)
+══════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey:            "SUA_API_KEY_AQUI",
+  authDomain:        "SEU_PROJETO.firebaseapp.com",
+  projectId:         "SEU_PROJETO_ID",
+  storageBucket:     "SEU_PROJETO.appspot.com",
+  messagingSenderId: "SEU_SENDER_ID",
+  appId:             "SEU_APP_ID"
 };
 
-const app     = initializeApp(firebaseConfig);
-const auth    = getAuth(app);
-const db      = getFirestore(app);
-const storage = getStorage(app);
+/* ══════════════════════════════════════
+   INIT FIREBASE (uma única vez)
+══════════════════════════════════════ */
+const _app  = initializeApp(FIREBASE_CONFIG);
+const _auth = getAuth(_app);
+const _db   = getFirestore(_app);
 
-// ── Expõe no window para todos os scripts da página ──
-window._auth    = auth;
-window._db      = db;
-window._storage = storage;
+/* ══════════════════════════════════════
+   HELPERS GLOBAIS (usados pelas páginas)
+   Páginas acessam via window._getDoc, window._db, etc.
+══════════════════════════════════════ */
+window._db               = _db;
+window._doc              = doc;
+window._collection       = collection;
+window._getDoc           = getDoc;
+window._getDocs          = getDocs;
+window._setDoc           = setDoc;
+window._addDoc           = addDoc;
+window._deleteDoc        = deleteDoc;
+window._query            = query;
+window._where            = where;
+window._orderBy          = orderBy;
+window._serverTimestamp  = serverTimestamp;
 
-window._currentAuthUser   = undefined; // undefined = Firebase ainda resolvendo
-window._currentAuthPerfil = null;
+/* ══════════════════════════════════════
+   HELPER: Inicial do email para avatar
+══════════════════════════════════════ */
+function getInitial(user) {
+  if (!user) return '?';
+  if (user.displayName) return user.displayName.charAt(0).toUpperCase();
+  if (user.email)       return user.email.charAt(0).toUpperCase();
+  return '?';
+}
 
-window._EmailAuthProvider            = EmailAuthProvider;
-window._reauthenticateWithCredential = reauthenticateWithCredential;
-window._updatePassword               = updatePassword;
-window._signInWithEmailAndPassword   = signInWithEmailAndPassword;
-window._createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-window._sendPasswordResetEmail       = sendPasswordResetEmail;
-window._signOut                      = signOut;
-window._doc             = doc;
-window._setDoc          = setDoc;
-window._getDoc          = getDoc;
-window._getDocs         = getDocs;
-window._updateDoc       = updateDoc;
-window._serverTimestamp = serverTimestamp;
-window._collection      = collection;
-window._query           = query;
-window._where           = where;
-window._orderBy         = orderBy;
-window._ref             = ref;
-window._uploadBytes     = uploadBytes;
-window._getDownloadURL  = getDownloadURL;
-
-// ── Gerenciador global de auth ──
-// Dispara 'assent:authchange' em qualquer mudança de estado,
-// para que qualquer página possa reagir sem importar Firebase novamente.
-onAuthStateChanged(auth, async (user) => {
-  let perfil = null;
-  if (user) {
-    try {
-      const snap = await getDoc(doc(db, 'perfis', user.uid));
-      if (snap.exists()) perfil = snap.data();
-    } catch (e) { /* sem acesso à rede ou Firestore */ }
-  }
-  window._currentAuthUser   = user;   // null = deslogado, object = logado
-  window._currentAuthPerfil = perfil;
-
-  window.dispatchEvent(new CustomEvent('assent:authchange', { detail: { user, perfil } }));
-
-  // Atualiza componentes <assent-navbar> já montados na página
-  document.querySelectorAll('assent-navbar').forEach(el => {
-    if (el._updateAuthUI) el._updateAuthUI(user, perfil);
-  });
-});
-
-
-// ══════════════════════════════════════
-//  WEB COMPONENT
-// ══════════════════════════════════════
+/* ══════════════════════════════════════
+   WEB COMPONENT — <assent-navbar>
+══════════════════════════════════════ */
 class AssentNavbar extends HTMLElement {
   connectedCallback() {
     this.attachShadow({ mode: 'open' });
+    this._render();
+    this._setupInteractions();
+    this._listenAuth();
+  }
+
+  /* ─── HTML + CSS do componente ─── */
+  _render() {
     this.shadowRoot.innerHTML = `
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap');
 
         :host { display: block; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .ddesc { line-height: 1.6; font-size: .8rem; }
 
         /* ── LOGO ── */
         .logo {
@@ -151,12 +130,12 @@ class AssentNavbar extends HTMLElement {
         }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
         .inner {
           display: flex;
           align-items: center;
           justify-content: space-between;
           height: 68px;
-          gap: 20px;
         }
 
         /* ── LINKS ── */
@@ -165,7 +144,6 @@ class AssentNavbar extends HTMLElement {
           align-items: center;
           gap: 32px;
           list-style: none;
-          flex: 1;
         }
         .links a, .drop-trigger {
           color: rgba(255,255,255,.75);
@@ -186,66 +164,11 @@ class AssentNavbar extends HTMLElement {
         }
         .links a:hover, .drop-trigger:hover { color: #fff; }
 
-        /* ── AUTH ÁREA ── */
-        .nav-auth {
+        /* ── LADO DIREITO ── */
+        .right-side {
           display: flex;
           align-items: center;
-          gap: 10px;
-          flex-shrink: 0;
-        }
-        .nav-auth-avatar {
-          width: 34px; height: 34px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #D4AF37, #B8860B);
-          display: flex; align-items: center; justify-content: center;
-          font-family: 'Montserrat', sans-serif;
-          font-weight: 800; font-size: .72rem;
-          color: #111;
-          text-decoration: none;
-          overflow: hidden;
-          border: 2px solid rgba(212,175,55,.35);
-          transition: border-color .2s, transform .2s;
-          flex-shrink: 0;
-          cursor: pointer;
-        }
-        .nav-auth-avatar:hover { border-color: #D4AF37; transform: scale(1.06); }
-        .nav-auth-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
-        .nav-logout {
-          background: none;
-          border: 1px solid rgba(255,255,255,.15);
-          border-radius: 50px;
-          padding: 7px 14px;
-          color: rgba(255,255,255,.6);
-          font-size: .75rem; font-weight: 600;
-          cursor: pointer;
-          letter-spacing: .06em; text-transform: uppercase;
-          font-family: 'Inter', sans-serif;
-          transition: all .2s;
-          white-space: nowrap;
-        }
-        .nav-logout:hover { border-color: rgba(224,85,85,.5); color: #f08080; }
-        .nav-login-link {
-          color: rgba(255,255,255,.8);
-          text-decoration: none;
-          font-size: .8rem; font-weight: 600;
-          letter-spacing: .05em; text-transform: uppercase;
-          font-family: 'Inter', sans-serif;
-          border: 1px solid rgba(255,255,255,.2);
-          padding: 8px 16px;
-          border-radius: 50px;
-          transition: all .2s;
-          white-space: nowrap;
-        }
-        .nav-login-link:hover { color: #fff; border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.05); }
-        /* Skeleton enquanto Firebase resolve */
-        .auth-skeleton {
-          width: 34px; height: 34px; border-radius: 50%;
-          background: rgba(255,255,255,.06);
-          animation: pulse 1.4s ease-in-out infinite;
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: .4; }
-          50%       { opacity: .8; }
+          gap: 12px;
         }
 
         /* ── CTA ── */
@@ -257,13 +180,14 @@ class AssentNavbar extends HTMLElement {
           background: #F5A623;
           color: #111;
           font-family: 'Montserrat', sans-serif;
-          font-size: .82rem; font-weight: 700;
-          letter-spacing: .07em; text-transform: uppercase;
+          font-size: .82rem;
+          font-weight: 700;
+          letter-spacing: .07em;
+          text-transform: uppercase;
           text-decoration: none;
           box-shadow: 0 0 32px rgba(245,166,35,.28);
           transition: background .25s, transform .25s, box-shadow .25s;
           white-space: nowrap;
-          flex-shrink: 0;
         }
         .cta:hover {
           background: #E09820;
@@ -271,7 +195,67 @@ class AssentNavbar extends HTMLElement {
           box-shadow: 0 0 52px rgba(245,166,35,.42);
         }
 
-        /* ── DROPDOWN ── */
+        /* ── ÁREA DE AUTH (avatar + sair) — visível só quando logado ── */
+        .auth-area {
+          display: none;           /* começa oculto; JS exibe quando logado */
+          align-items: center;
+          gap: 10px;
+        }
+        .auth-area.visible { display: flex; }
+
+        /* Separador entre CTA e auth */
+        .auth-sep {
+          width: 1px;
+          height: 22px;
+          background: rgba(255,255,255,.12);
+        }
+
+        /* Avatar circular com inicial */
+        .user-avatar {
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #D4AF37, #B8860B);
+          color: #111;
+          font-family: 'Montserrat', sans-serif;
+          font-size: .82rem;
+          font-weight: 800;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          cursor: default;
+          box-shadow: 0 0 14px rgba(212,175,55,.3);
+          letter-spacing: 0;
+        }
+
+        /* Botão SAIR */
+        .btn-sair {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 16px;
+          border-radius: 50px;
+          border: 1px solid rgba(255,255,255,.15);
+          background: transparent;
+          color: rgba(255,255,255,.65);
+          font-family: 'Inter', sans-serif;
+          font-size: .78rem;
+          font-weight: 600;
+          letter-spacing: .05em;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: border-color .2s, color .2s, background .2s;
+          white-space: nowrap;
+        }
+        .btn-sair:hover {
+          border-color: rgba(224,85,85,.5);
+          color: #ff8a80;
+          background: rgba(224,85,85,.06);
+        }
+        .btn-sair svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+        /* ── DROPDOWN DE SERVIÇOS ── */
         .drop-wrap { position: relative; }
         .arrow { display: inline-flex; transition: transform .25s; }
         .drop-wrap.open .arrow { transform: rotate(180deg); }
@@ -303,34 +287,57 @@ class AssentNavbar extends HTMLElement {
         .drop-wrap.open .dropdown { display: block; }
 
         .ditem {
-          display: flex; align-items: flex-start; gap: 14px;
-          padding: 18px; border-radius: 10px;
-          text-decoration: none; transition: background .2s;
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+          padding: 18px;
+          border-radius: 10px;
+          text-decoration: none;
+          transition: background .2s;
         }
-        .ditem:hover { background: rgba(245,166,35,.07); }
         .ditem + .ditem { margin-top: 6px; }
+        .ditem:hover { background: rgba(245,166,35,.07); }
 
         .dicon {
-          width: 42px; height: 42px; flex-shrink: 0;
-          border-radius: 10px; background: rgba(245,166,35,.1);
+          width: 42px; height: 42px;
+          flex-shrink: 0;
+          border-radius: 10px;
+          background: rgba(245,166,35,.1);
           display: flex; align-items: center; justify-content: center;
           color: #B8841C;
         }
         .dicon svg { width: 22px; height: 22px; }
+
         .dtitle {
-          display: block; font-family: 'Montserrat', sans-serif;
-          font-size: .87rem; font-weight: 700; color: #B8841C; margin-bottom: 6px;
+          display: block;
+          font-family: 'Montserrat', sans-serif;
+          font-size: .87rem;
+          font-weight: 700;
+          color: #B8841C;
+          margin-bottom: 6px;
         }
-        .ddesc { font-size: .77rem; color: #666; line-height: 1.5; }
+        .ddesc {
+          font-size: .77rem;
+          color: #666;
+          line-height: 1.6;
+        }
 
         /* ── HAMBURGER ── */
         .hamburger {
-          display: none; flex-direction: column; gap: 5px;
-          cursor: pointer; background: none; border: none; padding: 8px;
+          display: none;
+          flex-direction: column;
+          gap: 5px;
+          cursor: pointer;
+          background: none;
+          border: none;
+          padding: 8px;
         }
         .hamburger span {
-          width: 24px; height: 2px; background: #fff;
-          border-radius: 2px; display: block; transition: all .3s;
+          width: 24px; height: 2px;
+          background: #fff;
+          border-radius: 2px;
+          display: block;
+          transition: all .3s;
         }
         .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .hamburger.open span:nth-child(2) { opacity: 0; }
@@ -338,47 +345,89 @@ class AssentNavbar extends HTMLElement {
 
         /* ── MOBILE MENU ── */
         .mobile-menu {
-          display: none; flex-direction: column;
+          display: none;
+          flex-direction: column;
           padding: 8px 28px 24px;
           border-top: 1px solid rgba(255,255,255,.06);
         }
         .mobile-menu.open { display: flex; }
         .mobile-menu a {
-          color: rgba(255,255,255,.8); text-decoration: none;
-          font-size: .9rem; font-weight: 500;
-          letter-spacing: .05em; text-transform: uppercase;
+          color: rgba(255,255,255,.8);
+          text-decoration: none;
+          font-size: .9rem;
+          font-weight: 500;
+          letter-spacing: .05em;
+          text-transform: uppercase;
           padding: 14px 0;
           border-bottom: 1px solid rgba(255,255,255,.05);
           transition: color .2s;
         }
         .mobile-menu a:hover { color: #F5A623; }
+
+        /* Separador no mobile quando logado */
         .mobile-auth-sep {
-          height: 1px; background: rgba(255,255,255,.08); margin: 4px 0;
+          display: none;
+          height: 1px;
+          background: rgba(255,255,255,.08);
+          margin: 8px 0;
         }
-        .mobile-logout-btn {
-          background: none; border: none;
-          color: rgba(255,255,255,.5);
-          font-size: .85rem; font-weight: 500;
-          letter-spacing: .05em; text-transform: uppercase;
-          font-family: 'Inter', sans-serif;
-          padding: 14px 0; cursor: pointer; text-align: left;
+        .mobile-auth-sep.visible { display: block; }
+
+        .mobile-user-info {
+          display: none;
+          align-items: center;
+          gap: 10px;
+          padding: 14px 0;
           border-bottom: 1px solid rgba(255,255,255,.05);
-          transition: color .2s; width: 100%;
         }
-        .mobile-logout-btn:hover { color: #f08080; }
+        .mobile-user-info.visible { display: flex; }
+        .mobile-avatar {
+          width: 30px; height: 30px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #D4AF37, #B8860B);
+          color: #111;
+          font-family: 'Montserrat', sans-serif;
+          font-size: .78rem; font-weight: 800;
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+        }
+        .mobile-user-email {
+          font-size: .78rem;
+          color: rgba(255,255,255,.5);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          flex: 1;
+          min-width: 0;
+        }
+
         .mobile-cta {
-          margin-top: 18px; text-align: center;
-          background: #F5A623 !important; color: #111 !important;
+          margin-top: 18px;
+          text-align: center;
+          background: #F5A623 !important;
+          color: #111 !important;
           border-radius: 50px;
           font-family: 'Montserrat', sans-serif !important;
           font-weight: 700 !important;
           border-bottom: none !important;
           padding: 14px 0 !important;
         }
+        .mobile-sair {
+          margin-top: 10px;
+          text-align: center;
+          color: rgba(255,255,255,.45) !important;
+          font-size: .8rem !important;
+          border-bottom: none !important;
+          padding: 10px 0 !important;
+          text-transform: none !important;
+          letter-spacing: .02em !important;
+          display: none;
+        }
+        .mobile-sair.visible { display: block; }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
-          .links, .cta, .nav-auth { display: none; }
+          .links, .right-side { display: none; }
           .hamburger { display: flex; }
         }
       </style>
@@ -387,8 +436,10 @@ class AssentNavbar extends HTMLElement {
         <div class="container">
           <div class="inner">
 
-            <a href="index.html" class="logo">ASSENT</a>
+            <!-- Logo -->
+            <a href="/" class="logo">ASSENT</a>
 
+            <!-- Links de navegação (desktop) -->
             <ul class="links">
               <li class="drop-wrap" id="dropWrap">
                 <button class="drop-trigger" id="dropBtn">
@@ -403,7 +454,7 @@ class AssentNavbar extends HTMLElement {
                   <a href="/trafego" class="ditem">
                     <div class="dicon">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 3h18v4L12 17 3 7V3z"/>
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                       </svg>
                     </div>
                     <div>
@@ -438,126 +489,165 @@ class AssentNavbar extends HTMLElement {
                   </a>
                 </div>
               </li>
+
               <li><a href="/#provas">Resultados</a></li>
               <li><a href="/#processo">Como Funciona</a></li>
               <li><a href="/#faq">Dúvidas</a></li>
             </ul>
 
-            <!-- AUTH ÁREA — preenchida dinamicamente pelo _updateAuthUI -->
-            <div class="nav-auth" id="navAuthArea">
-              <div class="auth-skeleton"></div>
+            <!-- ── LADO DIREITO: CTA + Auth ── -->
+            <div class="right-side">
+
+              <!-- CTA público (sempre visível) -->
+              <a href="https://wa.me/5562991383079?text=Olá!" class="cta" target="_blank">
+                Análise Gratuita
+              </a>
+
+              <!-- Auth: aparece DEPOIS do CTA quando logado -->
+              <div class="auth-area" id="authArea">
+                <div class="auth-sep"></div>
+                <div class="user-avatar" id="userAvatar" title="">?</div>
+                <button class="btn-sair" id="btnSair">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
+                  Sair
+                </button>
+              </div>
+
             </div>
 
-            <a href="https://wa.me/5562991383079?text=Olá!" class="cta" target="_blank">Análise Gratuita</a>
-
+            <!-- Hamburger mobile -->
             <button class="hamburger" id="hamburger">
               <span></span><span></span><span></span>
             </button>
+
           </div>
 
+          <!-- Menu mobile -->
           <div class="mobile-menu" id="mobileMenu">
+            <!-- Info do usuário (só quando logado) -->
+            <div class="mobile-user-info" id="mobileUserInfo">
+              <div class="mobile-avatar" id="mobileAvatar">?</div>
+              <span class="mobile-user-email" id="mobileUserEmail"></span>
+            </div>
+
             <a href="/trafego">Tráfego Pago</a>
             <a href="/aplicativos">Aplicativos</a>
             <a href="/fotografia">Fotografia</a>
             <a href="/#provas">Resultados</a>
             <a href="/#processo">Como Funciona</a>
             <a href="/#faq">Dúvidas</a>
-            <!-- AUTH mobile — preenchida dinamicamente -->
-            <div id="mobileAuthArea"></div>
-            <a href="https://wa.me/5562991383079?text=Olá!" class="mobile-cta" target="_blank">Análise Gratuita</a>
+            <a href="https://wa.me/5562991383079?text=Olá!" class="mobile-cta" target="_blank">
+              Análise Gratuita
+            </a>
+            <!-- Botão sair mobile (só quando logado) -->
+            <a href="#" class="mobile-sair" id="mobileSair">↩ Sair da conta</a>
           </div>
+
         </div>
       </nav>
     `;
+  }
 
-    // ── Scroll ──
-    const nav = this.shadowRoot.getElementById('nav');
+  /* ─── Interações (scroll, dropdown, hamburger) ─── */
+  _setupInteractions() {
+    const sr = this.shadowRoot;
+
+    // Scroll → classe .scrolled
+    const nav = sr.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 30);
     });
 
-    // ── Dropdown ──
-    const dropWrap = this.shadowRoot.getElementById('dropWrap');
-    const dropBtn  = this.shadowRoot.getElementById('dropBtn');
+    // Dropdown de serviços
+    const dropWrap = sr.getElementById('dropWrap');
+    const dropBtn  = sr.getElementById('dropBtn');
     dropBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       dropWrap.classList.toggle('open');
     });
     document.addEventListener('click', () => dropWrap.classList.remove('open'));
 
-    // ── Hamburger ──
-    const hamburger  = this.shadowRoot.getElementById('hamburger');
-    const mobileMenu = this.shadowRoot.getElementById('mobileMenu');
+    // Hamburger
+    const hamburger  = sr.getElementById('hamburger');
+    const mobileMenu = sr.getElementById('mobileMenu');
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('open');
       mobileMenu.classList.toggle('open');
     });
-    this.shadowRoot.querySelectorAll('.mobile-menu a').forEach(link => {
+    sr.querySelectorAll('.mobile-menu a:not(.mobile-sair)').forEach(link => {
       link.addEventListener('click', () => {
         hamburger.classList.remove('open');
         mobileMenu.classList.remove('open');
       });
     });
 
-    // ── Auth UI ──
-    this._updateAuthUI = (user, perfil) => {
-      const authArea       = this.shadowRoot.getElementById('navAuthArea');
-      const mobileAuthArea = this.shadowRoot.getElementById('mobileAuthArea');
-      if (!authArea) return;
+    // Botão SAIR (desktop)
+    sr.getElementById('btnSair').addEventListener('click', () => this._logout());
 
-      if (user) {
-        const nome     = perfil?.nome || user.email || '';
-        const initials = nome
-          ? nome.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
-          : (user.email || '?')[0].toUpperCase();
-        const avatarHTML = perfil?.fotoURL
-          ? `<img src="${perfil.fotoURL}" alt="avatar"/>`
-          : initials;
-
-        // Desktop: avatar + botão sair
-        authArea.innerHTML = `
-          <a href="/membros" class="nav-auth-avatar" title="Minha conta">${avatarHTML}</a>
-          <button class="nav-logout" id="navLogoutBtn">Sair</button>
-        `;
-        this.shadowRoot.getElementById('navLogoutBtn')
-          .addEventListener('click', () => signOut(auth));
-
-        // Mobile: minha conta + sair
-        mobileAuthArea.innerHTML = `
-          <div class="mobile-auth-sep"></div>
-          <a href="/membros">Minha Conta</a>
-          <button class="mobile-logout-btn" id="mobileLogoutBtn">Sair da conta</button>
-        `;
-        const mobileLogout = this.shadowRoot.getElementById('mobileLogoutBtn');
-        if (mobileLogout) {
-          mobileLogout.addEventListener('click', () => {
-            signOut(auth);
-            hamburger.classList.remove('open');
-            mobileMenu.classList.remove('open');
-          });
-        }
-
-      } else {
-        // Desktop: link de login
-        authArea.innerHTML = `<a href="/membros" class="nav-login-link">Login / Cadastrar-se</a>`;
-
-        // Mobile: link de login
-        mobileAuthArea.innerHTML = `
-          <div class="mobile-auth-sep"></div>
-          <a href="/membros">Login / Cadastrar-se</a>
-        `;
-      }
-    };
-
-    // Se Firebase já resolveu antes deste componente montar (improvável mas possível)
-    if (window._currentAuthUser !== undefined) {
-      this._updateAuthUI(window._currentAuthUser, window._currentAuthPerfil);
-    }
-
-    // Escuta mudanças de auth vindas do gerenciador global
-    window.addEventListener('assent:authchange', (e) => {
-      this._updateAuthUI(e.detail.user, e.detail.perfil);
+    // Botão SAIR (mobile)
+    sr.getElementById('mobileSair').addEventListener('click', (e) => {
+      e.preventDefault();
+      this._logout();
     });
+  }
+
+  /* ─── Logout ─── */
+  async _logout() {
+    try {
+      await signOut(_auth);
+      // Redireciona para home ou página de login
+      window.location.href = '/';
+    } catch (err) {
+      console.error('[Navbar] Erro ao sair:', err);
+    }
+  }
+
+  /* ─── Escuta estado de autenticação ─── */
+  _listenAuth() {
+    onAuthStateChanged(_auth, (user) => {
+      this._updateAuthUI(user);
+
+      // Dispara evento global para as páginas
+      window.dispatchEvent(new CustomEvent('assent:authchange', {
+        detail: { user }
+      }));
+    });
+  }
+
+  /* ─── Atualiza UI de auth na navbar ─── */
+  _updateAuthUI(user) {
+    const sr         = this.shadowRoot;
+    const authArea   = sr.getElementById('authArea');
+    const userAvatar = sr.getElementById('userAvatar');
+    const mobileInfo = sr.getElementById('mobileUserInfo');
+    const mobileAvt  = sr.getElementById('mobileAvatar');
+    const mobileEmail = sr.getElementById('mobileUserEmail');
+    const mobileSair = sr.getElementById('mobileSair');
+
+    if (user) {
+      const inicial = getInitial(user);
+      const email   = user.email || '';
+
+      // Desktop: mostra área de auth
+      authArea.classList.add('visible');
+      userAvatar.textContent = inicial;
+      userAvatar.title       = email;
+
+      // Mobile: mostra info do usuário e botão sair
+      mobileInfo.classList.add('visible');
+      mobileAvt.textContent    = inicial;
+      mobileEmail.textContent  = email;
+      mobileSair.classList.add('visible');
+    } else {
+      // Não logado — oculta tudo
+      authArea.classList.remove('visible');
+      mobileInfo.classList.remove('visible');
+      mobileSair.classList.remove('visible');
+    }
   }
 }
 

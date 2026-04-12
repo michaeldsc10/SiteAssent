@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <script type="module" src="/navbar.js"></script>
+<script type="module" src="/navbar.js"></script>
+<script type="module" src="/footer.js"></script>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ASSENT - Gestão de Tráfego Pago</title>
@@ -767,32 +768,8 @@
     }
     .guarantee-item svg { color: var(--green); }
 
-    /* ── FOOTER ── */
-    footer {
-      background: #0a0a0a;
-      border-top: 1px solid var(--border);
-      padding: 36px 24px;
+ 
     }
-    .footer-inner {
-      max-width: var(--max);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .footer-logo {
-      font-family: var(--heading);
-      font-weight: 800;
-      font-size: 1.15rem;
-      color: var(--gold);
-      letter-spacing: .05em;
-    }
-    .footer-links { display: flex; gap: 24px; list-style: none; }
-    .footer-links a { font-size: .84rem; color: var(--muted); transition: color .2s; }
-    .footer-links a:hover { color: var(--white); }
-    .footer-copy { font-size: .77rem; color: var(--muted); }
 
     /* ── WHATSAPP FLOAT ── */
     .wa-float {
@@ -843,7 +820,10 @@
 </head>
 <body>
 
+<!-- navbar.js carrega a navbar automaticamente -->
+<script src="navbar.js" defer></script>
 <assent-navbar></assent-navbar>
+<script type="module" src="/footer.js"></script>
 
 
 <!-- ══════════════════════════════════════
@@ -1110,8 +1090,8 @@
 
     <div class="results-intro">
       <div class="result-stat reveal">
-        <div class="num">+317%</div>
-        <div class="lab">Aumento médio de clientes em 90 dias</div>
+        <div class="num">+Autoridade</div>
+        <div class="lab">Domine sua região em até 90 dias</div>
       </div>
       <div class="result-stat reveal">
         <div class="num">R$3,80</div>
@@ -1187,7 +1167,7 @@
         </a>
         <div class="urgencia-note">
           ✓ Análise gratuita &nbsp;·&nbsp; ✓ Sem compromisso<br>
-          ✓ Resposta em até 1 hora útil
+          ✓ Resposta em até 1 dia útil
         </div>
       </div>
     </div>
@@ -1335,7 +1315,7 @@
   <div class="container">
     <div class="cta-card reveal">
       <h2>Pronto para parar de perder clientes<br><em>para seus concorrentes?</em></h2>
-      <p>A análise gratuita não custa nada e pode mudar completamente o rumo do seu negócio. Resposta em até 1 hora útil.</p>
+      <p>A análise gratuita não custa nada e pode mudar completamente o rumo do seu negócio. Resposta em até 1 dia útil.</p>
 
       <a href="https://wa.me/5562991383079?text=Olá!+Quero+uma+análise+gratuita+de+tráfego+pago+para+o+meu+negócio" class="btn-primary">
         Quero mais clientes na minha região
@@ -1359,7 +1339,7 @@
         </div>
         <div class="guarantee-item">
           <svg width="15" height="15" fill="none" viewBox="0 0 16 16"><path d="M13 4L6 11 3 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Resposta em até 1 hora útil
+          Resposta em até 1 dia útil
         </div>
       </div>
     </div>
@@ -1367,21 +1347,6 @@
 </section>
 
 
-<!-- ══════════════════════════════════════
-     FOOTER
-══════════════════════════════════════ -->
-<footer>
-  <div class="footer-inner">
-    <a href="https://assentagencia.com.br" class="footer-logo">ASSENT</a>
-    <ul class="footer-links">
-      <li><a href="https://assentagencia.com.br">Início</a></li>
-      <li><a href="https://assentagencia.com.br/#servicos">Serviços</a></li>
-      <li><a href="https://assentagencia.com.br/#provas">Resultados</a></li>
-      <li><a href="https://wa.me/5562991383079">Contato</a></li>
-    </ul>
-    <div class="footer-copy">© 2025 ASSENT AGENCIA. Todos os direitos reservados.</div>
-  </div>
-</footer>
 
 
 <!-- WhatsApp flutuante -->

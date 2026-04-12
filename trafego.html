@@ -771,6 +771,33 @@
  
     }
 
+/* ── FOOTER ── */
+    footer {
+      background: #0a0a0a;
+      border-top: 1px solid var(--border);
+      padding: 36px 24px;
+    }
+    .footer-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-logo {
+      font-family: var(--heading);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--gold);
+      letter-spacing: .05em;
+    }
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+    .footer-links a { font-size: .84rem; color: var(--muted); transition: color .2s; }
+    .footer-links a:hover { color: var(--white); }
+    .footer-copy { font-size: .77rem; color: var(--muted); }
+
     /* ── WHATSAPP FLOAT ── */
     .wa-float {
       position: fixed;
@@ -1347,6 +1374,21 @@
 </section>
 
 
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <a href="https://assentagencia.com.br" class="footer-logo">ASSENT</a>
+    <ul class="footer-links">
+      <li><a href="https://assentagencia.com.br">Início</a></li>
+      <li><a href="https://assentagencia.com.br/#servicos">Serviços</a></li>
+      <li><a href="https://assentagencia.com.br/#provas">Resultados</a></li>
+      <li><a href="https://wa.me/5562991383079">Contato</a></li>
+    </ul>
+    <div class="footer-copy">© 2025 ASSENT AGENCIA. Todos os direitos reservados.</div>
+  </div>
+</footer>
 
 
 <!-- WhatsApp flutuante -->

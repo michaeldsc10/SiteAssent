@@ -129,6 +129,22 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
 }
 .cta:hover{background:#E09820;transform:translateY(-2px);box-shadow:0 0 52px rgba(245,166,35,.42);}
 
+/* Botão ENTRAR — visível quando deslogado, some quando logado */
+.btn-entrar{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 20px;border-radius:50px;
+  border:1px solid rgba(255,255,255,.2);background:transparent;
+  color:rgba(255,255,255,.75);
+  font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;
+  text-decoration:none;white-space:nowrap;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.btn-entrar svg{width:14px;height:14px;flex-shrink:0;}
+.btn-entrar:hover{border-color:rgba(255,255,255,.4);color:#fff;background:rgba(255,255,255,.05);}
+/* Some e fica não-clicável quando logado */
+.right.logado .btn-entrar{opacity:0;pointer-events:none;width:0;padding:0;border:none;overflow:hidden;margin:0;}
+
 /* Separador vertical — só aparece quando logado */
 .sep{
   width:1px;height:22px;background:rgba(255,255,255,.12);
@@ -212,6 +228,8 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
 .mob-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#D4AF37,#B8860B);color:#111;font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .mob-email{font-size:.75rem;color:rgba(255,255,255,.45);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
 .mob-cta{margin-top:18px;text-align:center;background:#F5A623 !important;color:#111 !important;border-radius:50px;font-family:'Montserrat',sans-serif !important;font-weight:700 !important;border-bottom:none !important;padding:14px 0 !important;}
+.mob-entrar{text-align:center;color:rgba(255,255,255,.5) !important;font-size:.82rem !important;border-bottom:none !important;padding:10px 0 !important;text-transform:none !important;letter-spacing:.02em !important;margin-top:6px;}
+.mob-entrar.hide{display:none !important;}
 .mob-sair{display:none !important;text-align:center;color:rgba(255,255,255,.35) !important;font-size:.8rem !important;border-bottom:none !important;padding:10px 0 4px !important;text-transform:none !important;letter-spacing:.01em !important;}
 .mob-sair.show{display:block !important;}
 
@@ -256,9 +274,14 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
         <li><a href="/#faq">Dúvidas</a></li>
       </ul>
 
-      <!-- CTA + Avatar + Sair (desktop) -->
+      <!-- CTA + Entrar/Avatar + Sair (desktop) -->
       <div class="right" id="rightSide">
         <a href="https://wa.me/5562991383079?text=Olá!" class="cta" target="_blank">Análise Gratuita</a>
+        <!-- Botão Entrar — visível quando deslogado -->
+        <a href="/membros" class="btn-entrar" id="btnEntrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Entrar
+        </a>
         <div class="sep"></div>
         <div class="avatar" id="avatar" title=""></div>
         <button class="btn-sair" id="btnSair">
@@ -282,6 +305,7 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
       <a href="/#processo">Como Funciona</a>
       <a href="/#faq">Dúvidas</a>
       <a href="https://wa.me/5562991383079?text=Olá!" class="mob-cta" target="_blank">Análise Gratuita</a>
+      <a href="/membros" class="mob-entrar" id="mobEntrar">👤 Área do Cliente</a>
       <a href="#" class="mob-sair" id="mobSair">↩ Sair da conta</a>
     </div>
   </div>
@@ -313,26 +337,34 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
 
   _onAuth(user) {
     const sr = this.shadowRoot;
-    const right     = sr.getElementById('rightSide');
-    const avatar    = sr.getElementById('avatar');
-    const mobUser   = sr.getElementById('mobUser');
-    const mobAvatar = sr.getElementById('mobAvatar');
-    const mobEmail  = sr.getElementById('mobEmail');
-    const mobSair   = sr.getElementById('mobSair');
+    const right      = sr.getElementById('rightSide');
+    const avatar     = sr.getElementById('avatar');
+    const btnEntrar  = sr.getElementById('btnEntrar');
+    const mobUser    = sr.getElementById('mobUser');
+    const mobAvatar  = sr.getElementById('mobAvatar');
+    const mobEmail   = sr.getElementById('mobEmail');
+    const mobSair    = sr.getElementById('mobSair');
+    const mobEntrar  = sr.getElementById('mobEntrar');
 
     if (user) {
       const ini = this._initial(user);
+      // Desktop: modo logado (esconde Entrar, mostra avatar+sair)
       right.classList.add('logado');
       avatar.textContent   = ini;
       avatar.title         = user.email || '';
+      // Mobile: mostra info + sair, esconde entrar
       mobUser.classList.add('show');
       mobAvatar.textContent = ini;
       mobEmail.textContent  = user.email || '';
       mobSair.classList.add('show');
+      mobEntrar.classList.add('hide');
     } else {
+      // Desktop: modo deslogado
       right.classList.remove('logado');
+      // Mobile: esconde info + sair, mostra entrar
       mobUser.classList.remove('show');
       mobSair.classList.remove('show');
+      mobEntrar.classList.remove('hide');
     }
   }
 }

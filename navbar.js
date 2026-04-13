@@ -29,12 +29,13 @@ import {
    ⚙️  CONFIGURAÇÃO — substitua aqui
 ══════════════════════════════════════ */
 const FIREBASE_CONFIG = {
-  apiKey:            "SUA_API_KEY_AQUI",
-  authDomain:        "SEU_PROJETO.firebaseapp.com",
-  projectId:         "SEU_PROJETO_ID",
-  storageBucket:     "SEU_PROJETO.appspot.com",
-  messagingSenderId: "SEU_SENDER_ID",
-  appId:             "SEU_APP_ID"
+   apiKey: "AIzaSyB9HEWiHFc8YEuj_Ab-7TxGKqdQkSRQAio",
+  authDomain: "assent-2b945.firebaseapp.com",
+  projectId: "assent-2b945",
+  storageBucket: "assent-2b945.firebasestorage.app",
+  messagingSenderId: "851051401705",
+  appId: "1:851051401705:web:fa6ebb1cc6ee5d3a737b78",
+  measurementId: "G-K7F0F7PZ8M"
 };
 
 /* ── Firebase init ── */

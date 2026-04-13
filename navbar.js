@@ -14,8 +14,12 @@
 
 import { initializeApp, getApps, getApp }
   from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, signOut }
-  from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
+import {
+  getAuth, onAuthStateChanged, signOut,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  sendPasswordResetEmail, EmailAuthProvider,
+  reauthenticateWithCredential, updatePassword
+} from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
 import {
   getFirestore, doc, getDoc, getDocs, setDoc, addDoc,
   collection, query, where, orderBy, serverTimestamp, deleteDoc
@@ -39,6 +43,15 @@ const _auth = getAuth(_app);
 const _db   = getFirestore(_app);
 
 /* ── Helpers globais (usados pelas páginas via window._*) ── */
+window._auth            = _auth;
+window._signInWithEmailAndPassword    = signInWithEmailAndPassword;
+window._createUserWithEmailAndPassword= createUserWithEmailAndPassword;
+window._sendPasswordResetEmail        = sendPasswordResetEmail;
+window._signOut                       = signOut;
+window._EmailAuthProvider             = EmailAuthProvider;
+window._reauthenticateWithCredential  = reauthenticateWithCredential;
+window._updatePassword                = updatePassword;
+
 window._db              = _db;
 window._doc             = doc;
 window._collection      = collection;

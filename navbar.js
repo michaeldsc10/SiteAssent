@@ -12,7 +12,7 @@
  * ─────────────────────────────────────────────────────────
  */
 
-import { initializeApp }
+import { initializeApp, getApps, getApp }
   from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js';
 import { getAuth, onAuthStateChanged, signOut }
   from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
@@ -34,7 +34,7 @@ const FIREBASE_CONFIG = {
 };
 
 /* ── Firebase init ── */
-const _app  = initializeApp(FIREBASE_CONFIG);
+const _app  = getApps().length === 0 ? initializeApp(FIREBASE_CONFIG) : getApp();
 const _auth = getAuth(_app);
 const _db   = getFirestore(_app);
 

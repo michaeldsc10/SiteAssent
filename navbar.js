@@ -347,6 +347,8 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
     });
     sr.getElementById('btnSair').addEventListener('click', () => window._logout?.());
     sr.getElementById('mobSair').addEventListener('click', e => { e.preventDefault(); window._logout?.(); });
+    sr.getElementById('avatar').addEventListener('click', () => { window.location.href = '/membros'; });
+    sr.getElementById('avatar').style.cursor = 'pointer';
   }
 
   _onAuth(user) {

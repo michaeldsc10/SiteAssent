@@ -41,7 +41,6 @@ a{text-decoration:none;color:inherit;}
 
 /* ══════════════════════════════════════
    BACKGROUND GLASSMORPHISM — orbs decorativos
-   São eles que o backdrop-filter "desfoca"
 ══════════════════════════════════════ */
 #bg-canvas{
   position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
@@ -74,7 +73,6 @@ a{text-decoration:none;color:inherit;}
   top:10%;left:45%;
   animation-duration:30s;animation-delay:-12s;
 }
-/* Grade sutil por cima */
 #bg-canvas::after{
   content:'';position:absolute;inset:0;
   background-image:
@@ -91,7 +89,7 @@ a{text-decoration:none;color:inherit;}
 }
 
 /* ══════════════════════════════════════
-   CAMADA DO APP — fica sobre o fundo
+   CAMADA DO APP
 ══════════════════════════════════════ */
 #app-layer{position:relative;z-index:1;min-height:100vh;}
 
@@ -114,7 +112,7 @@ a{text-decoration:none;color:inherit;}
 .view.active{display:flex;}
 
 /* ── AUTH VIEWS ── */
-#view-login,#view-register,#view-forgot{
+#view-login,#view-register,#view-forgot,#view-verify-email{
   align-items:center;justify-content:center;
   background:transparent;padding:24px;
 }
@@ -204,9 +202,7 @@ a{text-decoration:none;color:inherit;}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 
 /* ══════════════════════════════════════
-   APP CARDS — Glassmorphism (funcional)
-   O backdrop-filter agora tem os "orbs"
-   do fundo para desfocar — efeito real.
+   APP CARDS — Glassmorphism
 ══════════════════════════════════════ */
 .apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:36px;}
 
@@ -225,14 +221,12 @@ a{text-decoration:none;color:inherit;}
   transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .3s;
   cursor:default;
 }
-/* Gradiente interno — dá profundidade extra */
 .app-card::after{
   content:'';
   position:absolute;inset:0;
   background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 50%, rgba(201,168,76,0.03) 100%);
   pointer-events:none;z-index:0;border-radius:inherit;
 }
-/* Luz branca que segue o mouse */
 .app-card::before{
   content:'';
   position:absolute;inset:0;
@@ -458,14 +452,36 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   text-transform:uppercase;transition:all .2s;
 }
 .no-access a:hover{background:#d4b05a;transform:translateY(-1px);}
+
+/* ── VERIFY EMAIL ── */
+.verify-icon{
+  font-size:3rem;margin-bottom:16px;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.1);}
+}
+.verify-steps{
+  margin:20px 0 24px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.verify-step{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px 14px;font-size:.83rem;color:rgba(255,255,255,0.6);
+}
+.verify-step-num{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(201,168,76,0.15);border:1px solid var(--gold-line);
+  color:var(--gold);font-family:var(--heading);font-size:.7rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════
-     FUNDO — orbs decorativos que dão
-     substância ao backdrop-filter dos cards
-══════════════════════════════════════ -->
+<!-- FUNDO -->
 <div id="bg-canvas" aria-hidden="true">
   <div class="bg-orb bg-orb-1"></div>
   <div class="bg-orb bg-orb-2"></div>
@@ -473,9 +489,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   <div class="bg-orb bg-orb-4"></div>
 </div>
 
-<!-- ══════════════════════════════════════
-     APP LAYER
-══════════════════════════════════════ -->
 <div id="app-layer">
 
 <!-- LOADING -->
@@ -521,7 +534,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <h2 class="auth-title">Criar conta</h2>
       <p class="auth-sub">Preencha os dados para se cadastrar</p>
       <div id="register-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-      <div id="register-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Conta criada! Redirecionando...</span></div>
+      <div id="register-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Conta criada! Enviando e-mail de confirmação...</span></div>
       <div class="form-group">
         <label class="form-label">Nome completo *</label>
         <input type="text" id="reg-nome" class="form-input" placeholder="Seu nome completo"/>
@@ -567,13 +580,35 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   </div>
 </div>
 
+<!-- VERIFICAR E-MAIL -->
+<div id="view-verify-email" class="view">
+  <div class="auth-wrap">
+    <a href="https://assentagencia.com.br" class="auth-logo-link">ASSENT&nbsp;<em>AGÊNCIA</em></a>
+    <div class="auth-card">
+      <div style="text-align:center;">
+        <div class="verify-icon">📬</div>
+        <h2 class="auth-title">Confirme seu e-mail</h2>
+        <p class="auth-sub" style="margin-bottom:0;">Enviamos um link para <strong id="verify-email-display" style="color:var(--white);"></strong></p>
+      </div>
+      <div class="verify-steps">
+        <div class="verify-step"><span class="verify-step-num">1</span>Abra sua caixa de entrada</div>
+        <div class="verify-step"><span class="verify-step-num">2</span>Clique no link "Confirmar e-mail"</div>
+        <div class="verify-step"><span class="verify-step-num">3</span>Volte aqui e faça login normalmente</div>
+      </div>
+      <div id="verify-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
+      <div id="verify-success" class="alert alert-success"><span class="alert-icon">✓</span><span>E-mail reenviado! Verifique sua caixa de entrada.</span></div>
+      <button class="btn btn-gold" id="btn-resend-verify" onclick="resendVerification()" style="margin-bottom:12px;">Reenviar e-mail de confirmação</button>
+      <div class="auth-switch">
+        <a href="#" onclick="showView('login');return false">← Voltar para o login</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════
      DASHBOARD
-     A sidebar é injetada via sidebar.js
 ══════════════════════════════════════ -->
 <div id="view-dashboard" class="view">
-
-  <!-- MAIN CONTENT -->
   <main class="dash-main" id="assent-dash-main">
 
     <!-- WELCOME -->
@@ -633,7 +668,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
         <!-- Info card -->
         <div class="card">
-          <div class="card-label">Licença & Acesso</div>
+          <div class="card-label">Licença &amp; Acesso</div>
           <div id="licenca-container"><div style="color:var(--muted);font-size:.875rem;">Carregando...</div></div>
         </div>
 
@@ -751,18 +786,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 <!-- ══════════════════════════════════════
      SCRIPTS
 ══════════════════════════════════════ -->
-
-<!--
-  sidebar.js — importado como módulo.
-  Inicializado em window.onload (abaixo) após o Firebase estar pronto.
--->
 <script type="module" src="/sidebar.js"></script>
 
 <script>
 /* ── UTILS ── */
 function showView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  const map={login:'view-login',register:'view-register',forgot:'view-forgot',dashboard:'view-dashboard'};
+  const map={
+    login:'view-login',
+    register:'view-register',
+    forgot:'view-forgot',
+    'verify-email':'view-verify-email',
+    dashboard:'view-dashboard'
+  };
   const el=document.getElementById(map[name]);
   if(el)el.classList.add('active');
 }
@@ -804,10 +840,9 @@ function firebaseError(code){
   return map[code]||'Ocorreu um erro. Tente novamente.';
 }
 
-/* ── SIDEBAR — inicialização ── */
+/* ── SIDEBAR ── */
 function initSidebar(){
   if(typeof window.AssentSidebar==='undefined'){
-    // Módulo ainda carregando, aguarda
     setTimeout(initSidebar, 50);
     return;
   }
@@ -816,8 +851,6 @@ function initSidebar(){
     navItems: [
       { key:'apps',    label:'Meus Aplicativos', icon:'apps',    href:'' },
       { key:'profile', label:'Minha Conta',       icon:'profile', href:'' },
-      // Para adicionar cursos futuramente:
-      // { key:'courses', label:'Cursos',            icon:'courses', href:'/cursos' },
     ],
     onLogout: () => doLogout(),
     onUserClick: () => {
@@ -838,6 +871,12 @@ window.addEventListener('assent:authchange',async(e)=>{
   const user=e.detail.user;
   if(window._registrando)return;
   if(user){
+    // Bloqueia acesso se e-mail não confirmado
+    if(!user.emailVerified){
+      window._currentUser=user;
+      await window._signOut(window._auth);
+      return; // Não redireciona — usuário será levado à tela de verify após o cadastro
+    }
     initSidebar();
     await loadDashboard(user);
     showView('dashboard');
@@ -857,7 +896,9 @@ async function loadDashboard(user){
   const lic=licSnap.exists()?licSnap.data():{};
   window._perfil=perfil;window._licenca=lic;
 
-  const nome=perfil.nome||user.email.split('@')[0];
+  // Prioriza licencas, fallback para perfis (compatibilidade retroativa)
+  const nome=lic.name||perfil.nome||user.email.split('@')[0];
+  const dataNasc=lic.dataNascimento||perfil.dataNascimento||'';
   const inits=nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
 
   // Foto
@@ -875,25 +916,23 @@ async function loadDashboard(user){
     setAvatarInitials(inits);
   }
 
-  // Welcome
   document.getElementById('welcome-name').textContent=nome.split(' ')[0];
-  document.getElementById('prof-name').textContent=perfil.nome||'—';
+  document.getElementById('prof-name').textContent=nome||'—';
   document.getElementById('prof-email').textContent=user.email;
 
-  // Sidebar user info
   if(window.AssentSidebar){
     window.AssentSidebar.setUser({nome,email:user.email,fotoBase64:window._fotoBase64});
   }
 
-  if(perfil.dataNascimento){
-    const[y,m,d]=perfil.dataNascimento.split('-');
+  if(dataNasc){
+    const[y,m,d]=dataNasc.split('-');
     document.getElementById('prof-nasc').textContent=`${d}/${m}/${y}`;
   }
   const since=user.metadata.creationTime
     ?new Date(user.metadata.creationTime).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}):'—';
   document.getElementById('prof-since').textContent=since;
-  document.getElementById('edit-nome').value=perfil.nome||'';
-  document.getElementById('edit-nascimento').value=perfil.dataNascimento||'';
+  document.getElementById('edit-nome').value=nome||'';
+  document.getElementById('edit-nascimento').value=dataNasc||'';
 
   renderApps(lic);
   renderLicenca(lic);
@@ -1030,7 +1069,7 @@ async function saveCrop(){
     const base64=out.toDataURL('image/jpeg',0.85);
     await salvarFotoFirestore(base64);
     window._fotoBase64=base64;
-    const nome=window._perfil?.nome||window._currentUser?.email?.split('@')[0]||'?';
+    const nome=window._licenca?.name||window._perfil?.nome||window._currentUser?.email?.split('@')[0]||'?';
     const inits=nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
     setAvatarImg(base64,inits);
     if(window.AssentSidebar)window.AssentSidebar.setUser({nome,email:window._currentUser.email,fotoBase64:base64});
@@ -1057,7 +1096,7 @@ async function removerFoto(){
       {merge:true}
     );
     window._fotoBase64=null;
-    const nome=window._perfil?.nome||window._currentUser?.email?.split('@')[0]||'?';
+    const nome=window._licenca?.name||window._perfil?.nome||window._currentUser?.email?.split('@')[0]||'?';
     const inits=nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
     setAvatarInitials(inits);
     if(window.AssentSidebar)window.AssentSidebar.setUser({nome,email:window._currentUser.email,fotoBase64:null});
@@ -1072,10 +1111,31 @@ async function doLogin(){
   const pass=document.getElementById('login-password').value;
   if(!email||!pass){showAlert('login-alert','Preencha e-mail e senha.');return;}
   setLoading('btn-login',true);
-  try{await window._signInWithEmailAndPassword(window._auth,email,pass);}
+  try{
+    const cred=await window._signInWithEmailAndPassword(window._auth,email,pass);
+    if(!cred.user.emailVerified){
+      // Guarda referência para poder reenviar o e-mail se necessário
+      window._currentUser=cred.user;
+      await window._signOut(window._auth);
+      showAlert('login-alert','Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.');
+      // Mostra link para reenviar
+      document.getElementById('login-alert').querySelector('span:last-child').innerHTML =
+        'Confirme seu e-mail antes de entrar. <a href="#" onclick="goToVerifyFromLogin(\''+email+'\');return false" style="color:var(--gold);font-weight:700;">Reenviar e-mail</a>';
+      setLoading('btn-login',false);
+      return;
+    }
+  }
   catch(e){showAlert('login-alert',firebaseError(e.code));}
   setLoading('btn-login',false);
 }
+
+// Abre a tela de verificação a partir do login
+function goToVerifyFromLogin(email){
+  const el=document.getElementById('verify-email-display');
+  if(el)el.textContent=email;
+  showView('verify-email');
+}
+
 async function doRegister(){
   hideAlert('register-alert');
   const nome=document.getElementById('reg-nome').value.trim();
@@ -1092,14 +1152,48 @@ async function doRegister(){
   try{
     const cred=await window._createUserWithEmailAndPassword(window._auth,email,pass);
     const uid=cred.user.uid;
-    await window._setDoc(window._doc(window._db,'licencas',uid),{ativo:true,clienteAG:false,clienteCRM:false,email,name:nome,expira:'nunca',criadoEm:window._serverTimestamp()});
-    await window._setDoc(window._doc(window._db,'perfis',uid),{nome,dataNascimento:nasc,criadoEm:window._serverTimestamp()});
-    document.getElementById('register-success').classList.add('show');
+
+    // Salva em licencas com TODOS os campos conforme estrutura do Firestore
+    await window._setDoc(window._doc(window._db,'licencas',uid),{
+      ativo: true,
+      clienteAG: false,
+      clienteCRM: false,
+      criadoEm: window._serverTimestamp(),
+      dataNascimento: nasc,
+      email: email,
+      expira: 'nunca',
+      name: nome,
+    });
+
+    // Salva em perfis também (compatibilidade retroativa)
+    await window._setDoc(window._doc(window._db,'perfis',uid),{
+      nome: nome,
+      dataNascimento: nasc,
+      criadoEm: window._serverTimestamp(),
+    });
+
+    // Envia e-mail de verificação
+    await window._sendEmailVerification(cred.user);
+
     window._registrando=false;
-    initSidebar();
-    await loadDashboard(cred.user);showView('dashboard');
-  }catch(e){window._registrando=false;showAlert('register-alert',firebaseError(e.code));setLoading('btn-register',false);}
+    window._currentUser=cred.user;
+
+    // Atualiza o e-mail exibido na tela de verificação
+    const emailDisplay=document.getElementById('verify-email-display');
+    if(emailDisplay)emailDisplay.textContent=email;
+
+    document.getElementById('register-success').classList.add('show');
+
+    // Pequeno delay para o usuário ver o alerta de sucesso
+    setTimeout(()=>showView('verify-email'), 1200);
+
+  }catch(e){
+    window._registrando=false;
+    showAlert('register-alert',firebaseError(e.code));
+    setLoading('btn-register',false);
+  }
 }
+
 async function doForgot(){
   hideAlert('forgot-alert');
   document.getElementById('forgot-success').style.display='none';
@@ -1110,7 +1204,23 @@ async function doForgot(){
   catch(e){showAlert('forgot-alert',firebaseError(e.code));}
   setLoading('btn-forgot',false);
 }
+
 async function doLogout(){await window._signOut(window._auth);showView('login');}
+
+/* ── REENVIAR VERIFICAÇÃO ── */
+async function resendVerification(){
+  hideAlert('verify-alert');
+  document.getElementById('verify-success').classList.remove('show');
+  if(!window._currentUser){showView('login');return;}
+  setLoading('btn-resend-verify',true);
+  try{
+    await window._sendEmailVerification(window._currentUser);
+    document.getElementById('verify-success').classList.add('show');
+  }catch(e){
+    showAlert('verify-alert','Erro ao reenviar. Aguarde alguns minutos e tente novamente.');
+  }
+  setLoading('btn-resend-verify',false);
+}
 
 /* ── SAVE PROFILE ── */
 async function saveProfile(){
@@ -1122,8 +1232,13 @@ async function saveProfile(){
   setLoading('btn-save-profile',true);
   try{
     const uid=window._currentUser.uid;
-    await window._setDoc(window._doc(window._db,'perfis',uid),{nome,dataNascimento:nasc},{merge:true});
+    // Salva nos dois lugares simultaneamente
+    await Promise.all([
+      window._setDoc(window._doc(window._db,'licencas',uid),{name:nome,dataNascimento:nasc},{merge:true}),
+      window._setDoc(window._doc(window._db,'perfis',uid),{nome,dataNascimento:nasc},{merge:true}),
+    ]);
     window._perfil.nome=nome;window._perfil.dataNascimento=nasc;
+    if(window._licenca){window._licenca.name=nome;window._licenca.dataNascimento=nasc;}
     document.getElementById('welcome-name').textContent=nome.split(' ')[0];
     document.getElementById('prof-name').textContent=nome;
     if(window.AssentSidebar)window.AssentSidebar.setUser({nome,email:window._currentUser.email,fotoBase64:window._fotoBase64});

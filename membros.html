@@ -789,6 +789,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 <script type="module" src="/sidebar.js"></script>
 
 <script>
+/* ── CONFIGURAÇÃO DE VERIFICAÇÃO DE E-MAIL ── */
+const ACTION_CODE_SETTINGS = {
+  url: 'https://assentagencia.com.br/email-confirmado',
+  handleCodeInApp: false,
+};
+
 /* ── UTILS ── */
 function showView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -1172,8 +1178,8 @@ async function doRegister(){
       criadoEm: window._serverTimestamp(),
     });
 
-    // Envia e-mail de verificação
-    await window._sendEmailVerification(cred.user);
+    // Envia e-mail de verificação com redirect para página própria
+    await window._sendEmailVerification(cred.user, ACTION_CODE_SETTINGS);
 
     window._registrando=false;
     window._currentUser=cred.user;
@@ -1214,7 +1220,7 @@ async function resendVerification(){
   if(!window._currentUser){showView('login');return;}
   setLoading('btn-resend-verify',true);
   try{
-    await window._sendEmailVerification(window._currentUser);
+    await window._sendEmailVerification(window._currentUser, ACTION_CODE_SETTINGS);
     document.getElementById('verify-success').classList.add('show');
   }catch(e){
     showAlert('verify-alert','Erro ao reenviar. Aguarde alguns minutos e tente novamente.');

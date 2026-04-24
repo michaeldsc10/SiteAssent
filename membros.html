@@ -24,6 +24,7 @@
   --danger:    #c0392b;
   --success:   #27ae60;
   --sidebar:   240px;
+  --sidebar-collapsed: 64px;
   --heading:   'Montserrat', sans-serif;
   --body:      'DM Sans', sans-serif;
   --r:         10px;
@@ -132,17 +133,34 @@ a{text-decoration:none;color:inherit;}
   background:var(--surface);border-right:1px solid var(--border);
   display:flex;flex-direction:column;
   position:fixed;top:0;left:0;bottom:0;z-index:100;
-  transition:transform .3s;
+  transition:width .3s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
 }
+.sidebar.collapsed{width:var(--sidebar-collapsed);}
 .sidebar-logo{
-  padding:28px 24px 20px;
+  padding:20px 20px 16px;
   font-family:var(--heading);font-weight:900;font-size:1rem;letter-spacing:.14em;
   border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  white-space:nowrap;min-height:64px;
 }
 .sidebar-logo em{color:var(--gold);font-style:normal;}
+.sidebar-logo-text{transition:opacity .2s, width .2s;overflow:hidden;}
+.sidebar.collapsed .sidebar-logo-text{opacity:0;width:0;}
+.sidebar-toggle{
+  background:none;border:1px solid var(--border2);
+  color:var(--muted);width:28px;height:28px;border-radius:8px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .2s;
+}
+.sidebar-toggle:hover{border-color:var(--gold-line);color:var(--gold);}
+.sidebar-toggle svg{transition:transform .3s;width:14px;height:14px;}
+.sidebar.collapsed .sidebar-toggle svg{transform:rotate(180deg);}
+
 .sidebar-user{
-  padding:20px 20px 16px;border-bottom:1px solid var(--border);
+  padding:16px 12px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:12px;cursor:pointer;
+  white-space:nowrap;overflow:hidden;
 }
 .sidebar-user:hover .sidebar-user-name{color:var(--gold);}
 .sidebar-avatar{
@@ -153,30 +171,56 @@ a{text-decoration:none;color:inherit;}
   border:2px solid var(--gold-line);position:relative;
 }
 .sidebar-avatar img{width:100%;height:100%;object-fit:cover;}
+.sidebar-user-info{transition:opacity .2s;overflow:hidden;}
+.sidebar.collapsed .sidebar-user-info{opacity:0;width:0;}
 .sidebar-user-name{font-family:var(--heading);font-weight:700;font-size:.85rem;transition:color .2s;line-height:1.2;}
 .sidebar-user-email{font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;}
-.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto;}
+.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto;overflow-x:hidden;}
 .nav-item{
-  display:flex;align-items:center;gap:10px;padding:11px 20px;
+  display:flex;align-items:center;gap:10px;padding:11px 22px;
   font-size:.82rem;font-weight:500;color:var(--muted);
   cursor:pointer;transition:all .2s;position:relative;border-radius:0;
+  white-space:nowrap;overflow:hidden;
 }
 .nav-item:hover{color:var(--white);background:rgba(255,255,255,.03);}
 .nav-item.active{color:var(--gold);background:rgba(201,168,76,.06);}
 .nav-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);border-radius:0 2px 2px 0;}
 .nav-icon{width:18px;height:18px;flex-shrink:0;}
-.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);}
+.nav-label{transition:opacity .2s;}
+.sidebar.collapsed .nav-label{opacity:0;}
+.sidebar.collapsed .nav-item{padding:11px 0;justify-content:center;}
+.sidebar.collapsed .nav-item.active::before{display:none;}
+.sidebar.collapsed .nav-item.active{border-left:3px solid var(--gold);}
+
+/* tooltip on collapsed */
+.sidebar.collapsed .nav-item{position:relative;}
+.sidebar.collapsed .nav-item:hover::after{
+  content:attr(data-label);
+  position:absolute;left:calc(var(--sidebar-collapsed) - 8px);top:50%;transform:translateY(-50%);
+  background:var(--surface3);color:var(--white);font-size:.75rem;font-weight:600;
+  padding:5px 12px;border-radius:8px;white-space:nowrap;z-index:200;
+  border:1px solid var(--border2);pointer-events:none;
+}
+
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border);}
 .btn-sair-side{
   width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
   padding:10px;border-radius:50px;
   background:transparent;border:1px solid var(--border2);
   color:var(--muted);font-size:.78rem;font-weight:600;font-family:var(--heading);
   letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .2s;
+  white-space:nowrap;overflow:hidden;
 }
 .btn-sair-side:hover{border-color:rgba(192,57,43,.4);color:#e87070;}
+.sidebar.collapsed .btn-sair-side{padding:10px 0;border-radius:50%;}
+.btn-sair-side .sair-label{transition:opacity .2s,max-width .2s;max-width:120px;overflow:hidden;}
+.sidebar.collapsed .btn-sair-side .sair-label{opacity:0;max-width:0;}
 
 /* ── MAIN ── */
-.dash-main{margin-left:var(--sidebar);flex:1;padding:40px 36px;min-height:100vh;}
+.dash-main{margin-left:var(--sidebar);flex:1;padding:40px 36px;min-height:100vh;transition:margin-left .3s cubic-bezier(.4,0,.2,1);}
+.sidebar.collapsed + .sidebar-overlay + .dash-main,
+#dash-main{transition:margin-left .3s cubic-bezier(.4,0,.2,1);}
+body.sidebar-collapsed .dash-main{margin-left:var(--sidebar-collapsed);}
 .welcome-row{margin-bottom:36px;}
 .welcome-row h1{font-family:var(--heading);font-size:1.8rem;font-weight:900;letter-spacing:-.02em;}
 .welcome-row h1 em{font-style:normal;color:var(--gold);}
@@ -195,55 +239,61 @@ a{text-decoration:none;color:inherit;}
 
 .app-card{
   position:relative;
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.10);
   border-radius:20px;
   overflow:hidden;
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:
+    0 4px 24px rgba(0,0,0,0.4),
+    0 1px 0 rgba(255,255,255,0.08) inset,
+    0 -1px 0 rgba(0,0,0,0.2) inset;
   transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .3s;
   cursor:default;
 }
-
+/* pseudo-background for glassmorphism effect */
+.app-card::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 50%, rgba(201,168,76,0.03) 100%);
+  pointer-events:none;z-index:0;border-radius:inherit;
+}
 /* luz branca que segue o mouse */
 .app-card::before{
   content:'';
   position:absolute;
   inset:0;
-  background:radial-gradient(600px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.07) 0%, transparent 60%);
+  background:radial-gradient(600px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.09) 0%, transparent 60%);
   opacity:0;
   transition:opacity .4s;
   pointer-events:none;
-  z-index:0;
+  z-index:1;
   border-radius:inherit;
-}
-/* linha de brilho no topo */
-.app-card::after{
-  content:'';
-  position:absolute;
-  top:0;left:10%;right:10%;
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);
-  opacity:0;
-  transition:opacity .35s;
 }
 
 .app-card:hover{
   transform:translateY(-5px);
-  border-color:rgba(255,255,255,0.14);
-  box-shadow:0 24px 60px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.05) inset;
+  border-color:rgba(255,255,255,0.18);
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.6),
+    0 1px 0 rgba(255,255,255,0.12) inset,
+    0 0 0 1px rgba(201,168,76,0.08);
 }
 .app-card:hover::before{opacity:1;}
-.app-card:hover::after{opacity:1;}
 
 .app-card.active-card{
-  border-color:rgba(255,255,255,0.1);
+  border-color:rgba(201,168,76,0.15);
+  box-shadow:
+    0 4px 24px rgba(0,0,0,0.4),
+    0 1px 0 rgba(255,255,255,0.08) inset,
+    0 0 20px rgba(201,168,76,0.04);
 }
 
 .app-card-top{
   height:130px;
   display:flex;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
+  position:relative;overflow:hidden;z-index:2;
 }
 .app-card-top::before{
   content:'';position:absolute;inset:0;
@@ -257,14 +307,15 @@ a{text-decoration:none;color:inherit;}
   background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
   position:relative;z-index:1;
 }
-.app-card-body{padding:16px 20px 18px;position:relative;z-index:1;}
+.app-card-body{padding:16px 20px 18px;position:relative;z-index:2;}
 .app-card-name{font-family:var(--heading);font-weight:800;font-size:.92rem;margin-bottom:5px;letter-spacing:-.01em;color:#fff;}
 .app-card-desc{color:rgba(255,255,255,0.38);font-size:.76rem;line-height:1.65;}
 .app-card-foot{
   padding:12px 20px;
-  border-top:1px solid rgba(255,255,255,0.05);
+  border-top:1px solid rgba(255,255,255,0.07);
   display:flex;align-items:center;justify-content:space-between;
-  position:relative;z-index:1;
+  position:relative;z-index:2;
+  background:rgba(0,0,0,0.1);
 }
 .app-badge{
   font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
@@ -429,15 +480,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
 @media(max-width:900px){
-  .sidebar{transform:translateX(-100%);}
+  .sidebar{transform:translateX(-100%);width:var(--sidebar) !important;}
   .sidebar.open{transform:translateX(0);}
-  .dash-main{margin-left:0;padding:80px 16px 32px;}
+  .dash-main{margin-left:0 !important;padding:80px 16px 32px;}
   .mob-topbar{display:flex;}
   .apps-grid{grid-template-columns:1fr;}
   .profile-grid{grid-template-columns:1fr;}
+  .sidebar-toggle{display:none;}
 }
 @media(min-width:901px) and (max-width:1100px){
   .apps-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:480px){
+  .dash-main{padding:72px 12px 24px;}
+  .welcome-row h1{font-size:1.4rem;}
+  .profile-grid{grid-template-columns:1fr;}
 }
 
 /* ── NO ACCESS ── */
@@ -567,41 +624,46 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">ASSENT&nbsp;<em>AGÊNCIA</em></div>
+    <div class="sidebar-logo">
+      <span class="sidebar-logo-text">ASSENT&nbsp;<em>AGÊNCIA</em></span>
+      <button class="sidebar-toggle" id="sidebar-toggle-btn" onclick="toggleSidebarCollapse()" title="Recolher menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
 
     <div class="sidebar-user" onclick="scrollToProfile()">
       <div class="sidebar-avatar" id="sb-avatar">A</div>
-      <div>
+      <div class="sidebar-user-info">
         <div class="sidebar-user-name" id="sb-name">Carregando...</div>
         <div class="sidebar-user-email" id="sb-email"></div>
       </div>
     </div>
 
     <nav class="sidebar-nav">
-      <div class="nav-item active" onclick="goSection('apps')">
+      <div class="nav-item active" data-label="Meus Aplicativos" onclick="goSection('apps')">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="9" height="9" rx="1"/><rect x="13" y="3" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>
-        Meus Aplicativos
+        <span class="nav-label">Meus Aplicativos</span>
       </div>
-      <div class="nav-item" onclick="goSection('profile')">
+      <div class="nav-item" data-label="Minha Conta" onclick="goSection('profile')">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        Minha Conta
+        <span class="nav-label">Minha Conta</span>
       </div>
     </nav>
 
     <div class="sidebar-footer">
       <button class="btn-sair-side" onclick="doLogout()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Sair da conta
+        <span class="sair-label">Sair da conta</span>
       </button>
     </div>
   </aside>
 
   <!-- MAIN CONTENT -->
-  <main class="dash-main">
+  <main class="dash-main" id="dash-main">
 
     <!-- WELCOME -->
     <div class="welcome-row">
-      <h1>Olá, <em id="welcome-name">Membro</em> 👋</h1>
+      <h1>Olá, <em id="welcome-name">Membro</em></h1>
       <p>Bem-vindo à sua área de membros da ASSENT</p>
     </div>
 
@@ -1149,6 +1211,24 @@ async function doForgot(){
   catch(e){showAlert('forgot-alert',firebaseError(e.code));}
   setLoading('btn-forgot',false);
 }
+/* ── SIDEBAR COLLAPSE (desktop) ── */
+function toggleSidebarCollapse(){
+  const sidebar=document.getElementById('sidebar');
+  const main=document.getElementById('dash-main');
+  const isCollapsed=sidebar.classList.toggle('collapsed');
+  if(main){main.style.marginLeft=isCollapsed?'var(--sidebar-collapsed)':'var(--sidebar)';}
+  localStorage.setItem('sidebar-collapsed',isCollapsed?'1':'0');
+}
+// restore on load
+(function(){
+  if(localStorage.getItem('sidebar-collapsed')==='1'){
+    const sidebar=document.getElementById('sidebar');
+    const main=document.getElementById('dash-main');
+    if(sidebar){sidebar.classList.add('collapsed');}
+    if(main){main.style.marginLeft='var(--sidebar-collapsed)';}
+  }
+})();
+
 async function doLogout(){await window._signOut(window._auth);showView('login');}
 
 /* ── SAVE PROFILE ── */

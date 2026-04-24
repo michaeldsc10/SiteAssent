@@ -5,374 +5,453 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Área de Membros — ASSENT AGÊNCIA</title>
 <script type="module" src="/navbar.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg: #111111;
-  --surface: #1a1a1a;
-  --surface2: #222222;
-  --surface3: #2a2a2a;
-  --gold: #F5A623;
-  --gold-dark: #E09820;
-  --gold-glow: rgba(245,166,35,0.18);
-  --white: #FFFFFF;
-  --muted: #777777;
-  --muted2: #555555;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --danger: #e05555;
-  --success: #4CAF50;
-  --heading: 'Montserrat', sans-serif;
-  --body: 'Inter', sans-serif;
-  --radius: 14px;
-  --radius-sm: 8px;
+:root{
+  --bg:        #000000;
+  --surface:   #0d0d0d;
+  --surface2:  #141414;
+  --surface3:  #1c1c1c;
+  --border:    rgba(255,255,255,0.06);
+  --border2:   rgba(255,255,255,0.1);
+  --gold:      #C9A84C;
+  --gold-dim:  #a8883a;
+  --gold-glow: rgba(201,168,76,0.15);
+  --gold-line: rgba(201,168,76,0.3);
+  --white:     #FFFFFF;
+  --muted:     #666666;
+  --muted2:    #444444;
+  --danger:    #c0392b;
+  --success:   #27ae60;
+  --sidebar:   240px;
+  --heading:   'Montserrat', sans-serif;
+  --body:      'DM Sans', sans-serif;
+  --r:         10px;
+  --r-lg:      16px;
 }
-
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden;line-height:1.6;}
+body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:2px;}
+img{display:block;}
+a{text-decoration:none;color:inherit;}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:6px;}
-::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px;}
-
-/* ── UTILS ── */
-.highlight{color:var(--gold);}
-.muted{color:var(--muted);}
-
-/* ── LOADING SCREEN ── */
+/* ── LOADING ── */
 #loading-screen{
   position:fixed;inset:0;background:var(--bg);z-index:9999;
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;
-  transition:opacity .4s ease;
+  transition:opacity .5s ease;
 }
 #loading-screen.hide{opacity:0;pointer-events:none;}
-.loading-logo{font-family:var(--heading);font-weight:800;font-size:1.4rem;letter-spacing:.06em;color:var(--white);}
-.loading-logo span{color:var(--gold);}
-.spinner{width:36px;height:36px;border:3px solid var(--surface3);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
+.load-logo{font-family:var(--heading);font-size:1.5rem;font-weight:900;letter-spacing:.12em;color:var(--white);}
+.load-logo em{color:var(--gold);font-style:normal;}
+.spinner{width:32px;height:32px;border:2px solid var(--surface3);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ── VIEWS ── */
+/* ══════════════════════════════════════
+   VIEWS
+══════════════════════════════════════ */
 .view{display:none;min-height:100vh;}
 .view.active{display:flex;}
 
-/* ── AUTH LAYOUT ── */
-#view-login, #view-register, #view-forgot {
+/* ── AUTH VIEWS ── */
+#view-login,#view-register,#view-forgot{
   align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at 60% 0%, rgba(245,166,35,0.06) 0%, transparent 60%),
-             radial-gradient(ellipse at 10% 100%, rgba(245,166,35,0.04) 0%, transparent 50%),
-             var(--bg);
-  padding:24px;
+  background:var(--bg);padding:24px;
 }
+.auth-wrap{
+  width:100%;max-width:420px;
+  animation:fadeUp .45s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+.auth-logo-link{
+  display:flex;align-items:center;justify-content:center;margin-bottom:36px;
+  font-family:var(--heading);font-weight:900;font-size:1.1rem;letter-spacing:.14em;color:var(--white);
+}
+.auth-logo-link em{color:var(--gold);font-style:normal;}
 .auth-card{
-  width:100%;max-width:440px;
-  background:var(--surface);
-  border:1px solid var(--border2);
-  border-radius:24px;
-  padding:44px 40px;
-  box-shadow:0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,166,35,0.05);
-  animation:cardIn .5s ease;
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:20px;padding:40px 36px;
+  box-shadow:0 0 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.04);
 }
-@keyframes cardIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
-.auth-logo{
-  font-family:var(--heading);font-weight:800;font-size:1.1rem;
-  letter-spacing:.06em;color:var(--white);text-decoration:none;
-  display:flex;align-items:center;gap:0;margin-bottom:36px;
-}
-.auth-logo span{color:var(--gold);}
-.auth-title{font-family:var(--heading);font-size:1.5rem;font-weight:800;margin-bottom:6px;letter-spacing:-.02em;}
-.auth-sub{color:var(--muted);font-size:.875rem;margin-bottom:32px;}
+.auth-title{font-family:var(--heading);font-size:1.55rem;font-weight:800;letter-spacing:-.02em;margin-bottom:6px;}
+.auth-sub{color:var(--muted);font-size:.875rem;margin-bottom:28px;}
+.auth-divider{height:1px;background:var(--border);margin:24px 0;}
+.auth-switch{text-align:center;margin-top:22px;font-size:.875rem;color:var(--muted);}
+.auth-switch a{color:var(--gold);font-weight:600;}
 
 /* ── FORM ── */
-.form-group{margin-bottom:18px;}
-.form-label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;}
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:7px;}
 .form-input{
   width:100%;background:var(--surface2);border:1px solid var(--border2);
-  border-radius:var(--radius-sm);padding:14px 16px;
+  border-radius:var(--r);padding:13px 15px;
   color:var(--white);font-family:var(--body);font-size:.9rem;
   outline:none;transition:border-color .2s,box-shadow .2s;
 }
-.form-input:focus{border-color:rgba(245,166,35,0.5);box-shadow:0 0 0 3px rgba(245,166,35,0.08);}
+.form-input:focus{border-color:var(--gold-line);box-shadow:0 0 0 3px var(--gold-glow);}
 .form-input::placeholder{color:var(--muted2);}
 .form-input[type="date"]{color-scheme:dark;}
 
+/* ── BUTTONS ── */
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  padding:15px 28px;border-radius:50px;font-weight:700;font-size:.875rem;
-  cursor:pointer;text-decoration:none;transition:all .2s ease;border:none;
-  font-family:var(--heading);letter-spacing:.06em;text-transform:uppercase;
-  width:100%;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 24px;border-radius:50px;font-weight:700;font-size:.85rem;
+  cursor:pointer;border:none;font-family:var(--heading);
+  letter-spacing:.07em;text-transform:uppercase;
+  width:100%;transition:all .2s;
 }
-.btn-primary{background:var(--gold);color:#111;box-shadow:0 0 30px rgba(245,166,35,0.25);}
-.btn-primary:hover{background:var(--gold-dark);transform:translateY(-1px);box-shadow:0 0 50px rgba(245,166,35,0.4);}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border2);width:auto;padding:10px 20px;}
-.btn-ghost:hover{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.04);}
-.btn-danger{background:var(--danger);color:#fff;width:auto;padding:10px 20px;}
-.btn-danger:hover{background:#c44444;}
-.btn-sm{padding:9px 18px;font-size:.78rem;}
+.btn-gold{background:var(--gold);color:#000;box-shadow:0 0 28px rgba(201,168,76,0.2);}
+.btn-gold:hover{background:#d4b05a;transform:translateY(-1px);box-shadow:0 0 42px rgba(201,168,76,0.35);}
+.btn-gold:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border2);width:auto;padding:9px 18px;font-size:.78rem;}
+.btn-ghost:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.04);}
+.btn-danger-outline{background:transparent;border:1px solid rgba(192,57,43,0.4);color:#e74c3c;width:auto;padding:9px 18px;font-size:.78rem;}
+.btn-danger-outline:hover{background:rgba(192,57,43,0.08);}
 
-.auth-switch{text-align:center;margin-top:24px;font-size:.875rem;color:var(--muted);}
-.auth-switch a{color:var(--gold);text-decoration:none;font-weight:600;}
-.auth-switch a:hover{text-decoration:underline;}
-
-.forgot-link{display:block;text-align:right;font-size:.8rem;color:var(--muted);text-decoration:none;margin-top:-10px;margin-bottom:18px;}
+/* ── ALERTS ── */
+.alert{padding:11px 15px;border-radius:var(--r);font-size:.84rem;margin-bottom:16px;display:none;align-items:flex-start;gap:9px;line-height:1.5;}
+.alert.show{display:flex;}
+.alert-error{background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);color:#e87070;}
+.alert-success{background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.2);color:#6fcf97;}
+.alert-icon{flex-shrink:0;margin-top:1px;}
+.forgot-link{display:block;text-align:right;font-size:.8rem;color:var(--muted);margin-top:-8px;margin-bottom:16px;transition:color .2s;}
 .forgot-link:hover{color:var(--gold);}
 
-/* ── ALERT ── */
-.alert{
-  padding:12px 16px;border-radius:var(--radius-sm);font-size:.85rem;margin-bottom:18px;
-  display:none;align-items:flex-start;gap:10px;line-height:1.5;
+/* ══════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════ */
+#view-dashboard{flex-direction:column;}
+
+/* ── SIDEBAR ── */
+.dash-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;z-index:100;
+  transition:transform .3s;
 }
-.alert.show{display:flex;}
-.alert-error{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.25);color:#f08080;}
-.alert-success{background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.25);color:#81c784;}
-.alert-info{background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);color:var(--gold);}
-.alert-icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
-
-/* ── DIVIDER ── */
-.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted2);font-size:.78rem;}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-
-/* ── DASHBOARD LAYOUT ── */
-#view-dashboard{flex-direction:column;padding-top:68px;}
-
-/* DASHBOARD BODY */
-.dash-body{flex:1;padding:40px 32px;max-width:1000px;margin:0 auto;width:100%;}
-
-/* WELCOME */
-.welcome-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px;}
-.welcome-text h1{font-family:var(--heading);font-size:1.6rem;font-weight:800;letter-spacing:-.02em;}
-.welcome-text p{color:var(--muted);font-size:.9rem;margin-top:4px;}
-
-/* GRID */
-.dash-grid{display:grid;grid-template-columns:320px 1fr;gap:24px;}
-@media(max-width:768px){
-  .dash-grid{grid-template-columns:1fr;}
-  .topnav{padding:0 16px;}
-  .dash-body{padding:24px 16px;}
+.sidebar-logo{
+  padding:28px 24px 20px;
+  font-family:var(--heading);font-weight:900;font-size:1rem;letter-spacing:.14em;
+  border-bottom:1px solid var(--border);
 }
+.sidebar-logo em{color:var(--gold);font-style:normal;}
+.sidebar-user{
+  padding:20px 20px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;cursor:pointer;
+}
+.sidebar-user:hover .sidebar-user-name{color:var(--gold);}
+.sidebar-avatar{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;overflow:hidden;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-dim) 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--heading);font-weight:800;font-size:.85rem;color:#000;
+  border:2px solid var(--gold-line);position:relative;
+}
+.sidebar-avatar img{width:100%;height:100%;object-fit:cover;}
+.sidebar-user-name{font-family:var(--heading);font-weight:700;font-size:.85rem;transition:color .2s;line-height:1.2;}
+.sidebar-user-email{font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;}
+.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:11px 20px;
+  font-size:.82rem;font-weight:500;color:var(--muted);
+  cursor:pointer;transition:all .2s;position:relative;border-radius:0;
+}
+.nav-item:hover{color:var(--white);background:rgba(255,255,255,.03);}
+.nav-item.active{color:var(--gold);background:rgba(201,168,76,.06);}
+.nav-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);border-radius:0 2px 2px 0;}
+.nav-icon{width:18px;height:18px;flex-shrink:0;}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);}
+.btn-sair-side{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px;border-radius:50px;
+  background:transparent;border:1px solid var(--border2);
+  color:var(--muted);font-size:.78rem;font-weight:600;font-family:var(--heading);
+  letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .2s;
+}
+.btn-sair-side:hover{border-color:rgba(192,57,43,.4);color:#e87070;}
 
-/* CARDS */
-.card{
+/* ── MAIN ── */
+.dash-main{margin-left:var(--sidebar);flex:1;padding:40px 36px;min-height:100vh;}
+.welcome-row{margin-bottom:36px;}
+.welcome-row h1{font-family:var(--heading);font-size:1.8rem;font-weight:900;letter-spacing:-.02em;}
+.welcome-row h1 em{font-style:normal;color:var(--gold);}
+.welcome-row p{color:var(--muted);font-size:.9rem;margin-top:6px;}
+
+/* ── SECTION TITLE ── */
+.section-title{
+  font-family:var(--heading);font-size:.7rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── APP CARDS ── */
+.apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:36px;}
+.app-card{
   background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius);padding:28px;
+  border-radius:var(--r-lg);overflow:hidden;
+  transition:border-color .3s,transform .25s,box-shadow .3s;position:relative;
 }
-.card-title{
-  font-family:var(--heading);font-size:.78rem;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-  margin-bottom:20px;display:flex;align-items:center;gap:8px;
-}
-.card-title::before{content:'';width:3px;height:14px;background:var(--gold);border-radius:2px;display:block;}
-
-/* PROFILE CARD */
-.profile-avatar-wrap{
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-  margin-bottom:24px;
-}
-.profile-avatar{
-  width:90px;height:90px;border-radius:50%;background:var(--gold);
+.app-card:hover{border-color:var(--gold-line);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.5);}
+.app-card.active-card{border-color:rgba(201,168,76,.25);}
+.app-card-top{
+  height:140px;background:var(--surface2);
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--heading);font-weight:800;font-size:1.8rem;color:#111;
-  overflow:hidden;border:3px solid rgba(245,166,35,0.3);
-  position:relative;cursor:pointer;
+  position:relative;overflow:hidden;
 }
-.profile-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.profile-avatar-overlay{
-  position:absolute;inset:0;background:rgba(0,0,0,0.55);border-radius:50%;
+.app-card-top::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 100%,rgba(201,168,76,.06) 0%,transparent 70%);
+}
+.app-card-logo{width:80px;height:80px;object-fit:contain;position:relative;z-index:1;}
+.app-card-logo-fallback{
+  width:80px;height:80px;border-radius:20px;
   display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity .2s;
+  font-family:var(--heading);font-size:1.1rem;font-weight:900;color:var(--gold);
+  background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);
 }
-.profile-avatar:hover .profile-avatar-overlay{opacity:1;}
-.profile-avatar-overlay svg{width:22px;height:22px;color:#fff;}
-#avatar-input{display:none;}
-
-.profile-name{font-family:var(--heading);font-weight:800;font-size:1.1rem;text-align:center;}
-.profile-email{color:var(--muted);font-size:.8rem;text-align:center;margin-top:2px;}
-.profile-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.25);
-  color:var(--gold);font-size:.72rem;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-top:8px;
-}
-.profile-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);}
-
-.profile-info{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
-.info-row{display:flex;flex-direction:column;gap:4px;}
-.info-label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
-.info-value{font-size:.9rem;color:var(--white);}
-
-.btn-edit-profile{
-  width:100%;background:var(--surface2);border:1px solid var(--border2);
-  border-radius:50px;padding:11px;color:var(--white);font-family:var(--heading);
-  font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn-edit-profile:hover{border-color:rgba(245,166,35,0.4);color:var(--gold);}
-
-/* APPS CARD */
-.app-item{
-  display:flex;align-items:center;gap:16px;padding:16px;
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);
-  margin-bottom:12px;transition:border-color .2s;
-}
-.app-item:last-child{margin-bottom:0;}
-.app-item.active{border-color:rgba(245,166,35,0.25);}
-.app-icon{
-  width:44px;height:44px;border-radius:10px;background:var(--surface3);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;
-}
-.app-item.active .app-icon{background:rgba(245,166,35,0.12);}
-.app-info{flex:1;}
-.app-name{font-family:var(--heading);font-weight:700;font-size:.9rem;}
-.app-desc{color:var(--muted);font-size:.78rem;margin-top:2px;}
-.app-status{
-  font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  padding:4px 10px;border-radius:100px;
-}
-.app-status.ok{background:rgba(76,175,80,0.12);color:#81c784;border:1px solid rgba(76,175,80,0.2);}
-.app-status.no{background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid var(--border);}
-
-.no-apps-box{
-  text-align:center;padding:32px 20px;
-  background:var(--surface2);border:1px dashed var(--border2);border-radius:var(--radius-sm);
-}
-.no-apps-box p{color:var(--muted);font-size:.875rem;margin-bottom:16px;line-height:1.7;}
-.no-apps-box a{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--gold);color:#111;border-radius:50px;padding:12px 24px;
-  font-family:var(--heading);font-weight:700;font-size:.82rem;letter-spacing:.06em;
-  text-transform:uppercase;text-decoration:none;transition:all .2s;
-}
-.no-apps-box a:hover{background:var(--gold-dark);transform:translateY(-1px);}
-
-/* EXPIRY ROW */
-.expiry-row{
+.app-card-body{padding:18px 20px 20px;}
+.app-card-name{font-family:var(--heading);font-weight:800;font-size:.95rem;margin-bottom:4px;letter-spacing:-.01em;}
+.app-card-desc{color:var(--muted);font-size:.78rem;line-height:1.6;}
+.app-card-foot{
+  padding:14px 20px;border-top:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;background:var(--surface2);border-radius:var(--radius-sm);
-  border:1px solid var(--border);margin-top:12px;
 }
-.expiry-label{font-size:.78rem;color:var(--muted);}
-.expiry-value{font-size:.82rem;font-weight:600;color:var(--gold);}
+.app-badge{
+  font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:3px 10px;border-radius:100px;
+}
+.app-badge.ok{background:rgba(39,174,96,.12);color:#6fcf97;border:1px solid rgba(39,174,96,.2);}
+.app-badge.no{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border);}
+.app-access-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--heading);font-size:.7rem;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--gold);
+  background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);
+  border-radius:50px;padding:5px 12px;transition:all .2s;
+}
+.app-access-btn:hover{background:rgba(201,168,76,.16);}
+.app-access-btn svg{width:11px;height:11px;}
 
-/* ── MODAL ── */
+/* ── LICENÇA ROW ── */
+.licenca-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px 20px;margin-top:4px;
+}
+.lic-label{font-size:.78rem;color:var(--muted);}
+.lic-value{font-size:.85rem;font-weight:600;color:var(--gold);}
+
+/* ── PROFILE SECTION ── */
+.profile-grid{display:grid;grid-template-columns:280px 1fr;gap:16px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;}
+.card-label{font-family:var(--heading);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.card-label::before{content:'';width:3px;height:12px;background:var(--gold);border-radius:2px;flex-shrink:0;}
+
+/* Profile avatar */
+.prof-av-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:22px;}
+.prof-av{
+  width:96px;height:96px;border-radius:50%;overflow:hidden;
+  background:linear-gradient(135deg,var(--gold),var(--gold-dim));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--heading);font-weight:900;font-size:2rem;color:#000;
+  border:2px solid var(--gold-line);cursor:pointer;position:relative;
+  transition:box-shadow .25s;
+}
+.prof-av:hover{box-shadow:0 0 0 4px var(--gold-glow);}
+.prof-av img{width:100%;height:100%;object-fit:cover;}
+.prof-av-overlay{
+  position:absolute;inset:0;background:rgba(0,0,0,.6);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .2s;border-radius:50%;
+}
+.prof-av:hover .prof-av-overlay{opacity:1;}
+.prof-av-overlay svg{width:20px;height:20px;}
+.prof-name{font-family:var(--heading);font-weight:800;font-size:1.05rem;text-align:center;}
+.prof-email{font-size:.78rem;color:var(--muted);text-align:center;margin-top:2px;}
+.prof-badge{
+  display:inline-flex;align-items:center;gap:6px;margin-top:4px;
+  background:rgba(201,168,76,.08);border:1px solid var(--gold-line);
+  color:var(--gold);font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  padding:3px 10px;border-radius:100px;
+}
+.prof-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 5px var(--gold);}
+
+.info-list{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.info-row{display:flex;flex-direction:column;gap:3px;}
+.info-label{font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;}
+.info-value{font-size:.88rem;}
+.btn-edit{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--surface2);border:1px solid var(--border2);border-radius:50px;
+  padding:10px;color:var(--white);font-family:var(--heading);font-size:.75rem;
+  font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all .2s;
+}
+.btn-edit:hover{border-color:var(--gold-line);color:var(--gold);}
+
+/* ── MODAL BASE ── */
 .modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;
+  position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;
   display:none;align-items:center;justify-content:center;padding:24px;
-  backdrop-filter:blur(4px);
+  backdrop-filter:blur(6px);
 }
 .modal-overlay.open{display:flex;}
 .modal{
-  background:var(--surface);border:1px solid var(--border2);border-radius:24px;
-  padding:36px;width:100%;max-width:460px;
-  animation:cardIn .3s ease;
-  max-height:90vh;overflow-y:auto;
+  background:var(--surface);border:1px solid var(--border2);border-radius:20px;
+  padding:32px;width:100%;max-width:460px;
+  animation:fadeUp .3s ease;max-height:90vh;overflow-y:auto;
 }
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
-.modal-title{font-family:var(--heading);font-weight:800;font-size:1.15rem;letter-spacing:-.01em;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.modal-title{font-family:var(--heading);font-weight:800;font-size:1.1rem;}
 .modal-close{
   background:var(--surface2);border:none;color:var(--muted);
-  width:32px;height:32px;border-radius:50%;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
-  transition:all .2s;
+  width:30px;height:30px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s;
 }
 .modal-close:hover{background:var(--surface3);color:var(--white);}
+.sec-divider{height:1px;background:var(--border);margin:22px 0;}
+.sec-label{font-family:var(--heading);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.modal-btns{display:flex;gap:10px;margin-top:6px;}
+.modal-btns .btn{width:auto;flex:1;}
 
-/* PASSWORD SECTION */
-.section-divider{
-  height:1px;background:var(--border);margin:24px 0;
+/* ── PHOTO MODAL ── */
+#modal-foto{z-index:600;}
+#modal-foto .modal{max-width:500px;text-align:center;}
+.foto-viewer{
+  width:200px;height:200px;border-radius:50%;overflow:hidden;
+  border:3px solid var(--gold-line);margin:0 auto 24px;
+  background:var(--surface2);display:flex;align-items:center;justify-content:center;
 }
-.section-label{
-  font-family:var(--heading);font-size:.78rem;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;
-}
+.foto-viewer img{width:100%;height:100%;object-fit:cover;}
+.foto-btns{display:flex;gap:10px;justify-content:center;}
 
-/* TOAST */
+/* ── CROP MODAL ── */
+#modal-crop{z-index:700;}
+#modal-crop .modal{max-width:520px;}
+.crop-area{
+  width:100%;aspect-ratio:1;background:#111;border-radius:var(--r);overflow:hidden;
+  position:relative;cursor:grab;user-select:none;margin-bottom:16px;
+}
+.crop-area:active{cursor:grabbing;}
+#crop-canvas{width:100%;height:100%;display:block;}
+.crop-circle-mask{
+  position:absolute;inset:0;pointer-events:none;
+}
+.crop-overlay{position:absolute;inset:0;pointer-events:none;}
+.zoom-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.zoom-wrap label{font-size:.78rem;color:var(--muted);flex-shrink:0;}
+input[type=range]{
+  flex:1;-webkit-appearance:none;height:3px;background:var(--surface3);border-radius:2px;outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;}
+.crop-btns{display:flex;gap:10px;}
+.crop-btns .btn{flex:1;}
+
+/* ── TOAST ── */
 .toast{
   position:fixed;bottom:24px;right:24px;z-index:9999;
-  background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);
-  padding:14px 20px;font-size:.875rem;color:var(--white);
-  box-shadow:0 8px 32px rgba(0,0,0,0.4);
-  transform:translateY(20px);opacity:0;
-  transition:all .3s ease;pointer-events:none;
-  display:flex;align-items:center;gap:10px;max-width:320px;
+  background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);
+  padding:13px 18px;font-size:.875rem;color:var(--white);
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+  transform:translateY(20px);opacity:0;transition:all .3s ease;pointer-events:none;
+  display:flex;align-items:center;gap:10px;max-width:300px;
 }
 .toast.show{transform:translateY(0);opacity:1;}
-.toast.success{border-color:rgba(76,175,80,0.3);}
-.toast.error{border-color:rgba(224,85,85,0.3);}
-.toast-icon{font-size:1.1rem;}
+.toast.success{border-color:rgba(39,174,96,.3);}
+.toast.error{border-color:rgba(192,57,43,.3);}
 
-/* FORGOT PASSWORD VIEW */
-#view-forgot .auth-sub{margin-bottom:24px;}
+/* ── MOBILE ── */
+.mob-topbar{display:none;position:fixed;top:0;left:0;right:0;z-index:200;background:var(--surface);border-bottom:1px solid var(--border);height:56px;align-items:center;justify-content:space-between;padding:0 16px;}
+.mob-topbar-logo{font-family:var(--heading);font-weight:900;font-size:.9rem;letter-spacing:.12em;}
+.mob-topbar-logo em{color:var(--gold);font-style:normal;}
+.hamburger{background:none;border:none;cursor:pointer;padding:4px;display:flex;flex-direction:column;gap:5px;}
+.hamburger span{width:22px;height:2px;background:var(--white);border-radius:2px;display:block;transition:all .3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
-/* PAGE LOAD ANIM */
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
-.card{animation:fadeUp .5s ease both;}
-.card:nth-child(2){animation-delay:.08s;}
-.card:nth-child(3){animation-delay:.16s;}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .dash-main{margin-left:0;padding:80px 16px 32px;}
+  .mob-topbar{display:flex;}
+  .apps-grid{grid-template-columns:1fr;}
+  .profile-grid{grid-template-columns:1fr;}
+}
+@media(min-width:901px) and (max-width:1100px){
+  .apps-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+/* ── NO ACCESS ── */
+.no-access{
+  background:var(--surface);border:1px dashed var(--border2);border-radius:var(--r-lg);
+  padding:36px 24px;text-align:center;
+}
+.no-access p{color:var(--muted);margin-bottom:20px;line-height:1.7;}
+.no-access a{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--gold);color:#000;border-radius:50px;padding:12px 28px;
+  font-family:var(--heading);font-weight:700;font-size:.82rem;letter-spacing:.07em;
+  text-transform:uppercase;transition:all .2s;
+}
+.no-access a:hover{background:#d4b05a;transform:translateY(-1px);}
+
+/* sidebar overlay mobile */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;}
+.sidebar-overlay.open{display:block;}
 </style>
 </head>
 <body>
 
-<assent-navbar></assent-navbar>
-
 <!-- LOADING -->
 <div id="loading-screen">
-  <div class="loading-logo">ASSENT <span>AGÊNCIA</span></div>
+  <div class="load-logo">ASSENT <em>AGÊNCIA</em></div>
   <div class="spinner"></div>
 </div>
 
 <!-- ══════════════════════════════════════
-     VIEW: LOGIN
+     AUTH VIEWS
 ══════════════════════════════════════ -->
+
+<!-- LOGIN -->
 <div id="view-login" class="view">
-  <div class="auth-card">
-    <a href="https://assentagencia.com.br" class="auth-logo">ASSENT <span>AGÊNCIA</span></a>
-    <h2 class="auth-title">Bem-vindo de volta</h2>
-    <p class="auth-sub">Acesse sua área de membros</p>
-
-    <div id="login-alert" class="alert alert-error">
-      <span class="alert-icon">⚠</span>
-      <span id="login-alert-msg"></span>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">E-mail</label>
-      <input type="email" id="login-email" class="form-input" placeholder="seu@email.com" autocomplete="email"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Senha</label>
-      <input type="password" id="login-password" class="form-input" placeholder="••••••••" autocomplete="current-password"/>
-    </div>
-    <a href="#" class="forgot-link" onclick="showView('forgot')">Esqueci minha senha</a>
-
-    <button class="btn btn-primary" id="btn-login" onclick="doLogin()">Entrar na minha conta</button>
-
-    <div class="auth-switch">
-      Ainda não tem conta? <a href="#" onclick="showView('register')">Cadastre-se grátis</a>
+  <div class="auth-wrap">
+    <a href="https://assentagencia.com.br" class="auth-logo-link">ASSENT&nbsp;<em>AGÊNCIA</em></a>
+    <div class="auth-card">
+      <h2 class="auth-title">Bem-vindo de volta</h2>
+      <p class="auth-sub">Acesse sua área de membros</p>
+      <div id="login-alert" class="alert alert-error">
+        <span class="alert-icon">⚠</span><span></span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">E-mail</label>
+        <input type="email" id="login-email" class="form-input" placeholder="seu@email.com" autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input type="password" id="login-password" class="form-input" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <a href="#" class="forgot-link" onclick="showView('forgot');return false">Esqueci minha senha</a>
+      <button class="btn btn-gold" id="btn-login" onclick="doLogin()">Entrar na minha conta</button>
+      <div class="auth-switch">Ainda não tem conta? <a href="#" onclick="showView('register');return false">Cadastre-se grátis</a></div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     VIEW: REGISTER
-══════════════════════════════════════ -->
+<!-- REGISTER -->
 <div id="view-register" class="view">
-  <div class="auth-card">
-      <a href="https://assentagencia.com.br" class="auth-logo">ASSENT <span>AGÊNCIA</span></a>
+  <div class="auth-wrap">
+    <a href="https://assentagencia.com.br" class="auth-logo-link">ASSENT&nbsp;<em>AGÊNCIA</em></a>
+    <div class="auth-card">
       <h2 class="auth-title">Criar conta</h2>
-      <p class="auth-sub">Preencha os dados abaixo para se cadastrar</p>
-
-      <div id="register-alert" class="alert alert-error">
-        <span class="alert-icon">⚠</span>
-        <span id="register-alert-msg"></span>
-      </div>
-      <div id="register-success" class="alert alert-success">
-        <span class="alert-icon">✓</span>
-        <span>Conta criada com sucesso! Redirecionando...</span>
-      </div>
-
+      <p class="auth-sub">Preencha os dados para se cadastrar</p>
+      <div id="register-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
+      <div id="register-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Conta criada! Redirecionando...</span></div>
       <div class="form-group">
         <label class="form-label">Nome completo *</label>
         <input type="text" id="reg-nome" class="form-input" placeholder="Seu nome completo"/>
@@ -389,123 +468,149 @@ body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:
         <label class="form-label">Senha *</label>
         <input type="password" id="reg-password" class="form-input" placeholder="Mínimo 6 caracteres"/>
       </div>
-      <div class="form-group" style="margin-bottom:24px;">
+      <div class="form-group" style="margin-bottom:22px;">
         <label class="form-label">Confirmar senha *</label>
         <input type="password" id="reg-password2" class="form-input" placeholder="Repita a senha"/>
       </div>
-
-      <button class="btn btn-primary" id="btn-register" onclick="doRegister()">Criar minha conta</button>
-
-      <div class="auth-switch">
-        Já tem conta? <a href="#" onclick="showView('login')">Entrar</a>
-      </div>
+      <button class="btn btn-gold" id="btn-register" onclick="doRegister()">Criar minha conta</button>
+      <div class="auth-switch">Já tem conta? <a href="#" onclick="showView('login');return false">Entrar</a></div>
+    </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     VIEW: FORGOT PASSWORD
-══════════════════════════════════════ -->
+<!-- FORGOT -->
 <div id="view-forgot" class="view">
-  <div class="auth-card">
-    <a href="https://assentagencia.com.br" class="auth-logo">ASSENT <span>AGÊNCIA</span></a>
-    <h2 class="auth-title">Recuperar senha</h2>
-    <p class="auth-sub">Enviaremos um link de redefinição para o seu e-mail</p>
-
-      <div id="forgot-alert" class="alert alert-error">
-        <span class="alert-icon">⚠</span>
-        <span id="forgot-alert-msg"></span>
-      </div>
-      <div id="forgot-success" class="alert alert-success" style="display:none;">
-        <span class="alert-icon">✓</span>
-        <span>E-mail enviado! Verifique sua caixa de entrada (e o spam).</span>
-      </div>
-
-      <div class="form-group">
+  <div class="auth-wrap">
+    <a href="https://assentagencia.com.br" class="auth-logo-link">ASSENT&nbsp;<em>AGÊNCIA</em></a>
+    <div class="auth-card">
+      <h2 class="auth-title">Recuperar senha</h2>
+      <p class="auth-sub">Enviaremos um link de redefinição para seu e-mail</p>
+      <div id="forgot-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
+      <div id="forgot-success" class="alert alert-success" style="display:none;"><span class="alert-icon">✓</span><span>E-mail enviado! Verifique sua caixa de entrada.</span></div>
+      <div class="form-group" style="margin-bottom:22px;">
         <label class="form-label">E-mail da conta</label>
         <input type="email" id="forgot-email" class="form-input" placeholder="seu@email.com"/>
       </div>
-
-      <button class="btn btn-primary" id="btn-forgot" onclick="doForgot()">Enviar e-mail de recuperação</button>
-
-      <div class="auth-switch" style="margin-top:20px;">
-        <a href="#" onclick="showView('login')">← Voltar para o login</a>
-      </div>
+      <button class="btn btn-gold" id="btn-forgot" onclick="doForgot()">Enviar e-mail de recuperação</button>
+      <div class="auth-switch"><a href="#" onclick="showView('login');return false">← Voltar para o login</a></div>
+    </div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════
-     VIEW: DASHBOARD
+     DASHBOARD
 ══════════════════════════════════════ -->
 <div id="view-dashboard" class="view">
 
-  <!-- BODY -->
-  <div class="dash-body">
+  <!-- Mobile topbar -->
+  <div class="mob-topbar">
+    <span class="mob-topbar-logo">ASSENT&nbsp;<em>AGÊNCIA</em></span>
+    <button class="hamburger" id="mob-ham" onclick="toggleSidebar()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 
-    <div class="welcome-row">
-      <div class="welcome-text">
-        <h1>Olá, <span class="highlight" id="welcome-name">Membro</span> 👋</h1>
-        <p class="muted">Bem-vindo à sua área de membros</p>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">ASSENT&nbsp;<em>AGÊNCIA</em></div>
+
+    <div class="sidebar-user" onclick="scrollToProfile()">
+      <div class="sidebar-avatar" id="sb-avatar">A</div>
+      <div>
+        <div class="sidebar-user-name" id="sb-name">Carregando...</div>
+        <div class="sidebar-user-email" id="sb-email"></div>
       </div>
     </div>
 
-    <div class="dash-grid">
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="goSection('apps')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="9" height="9" rx="1"/><rect x="13" y="3" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>
+        Meus Aplicativos
+      </div>
+      <div class="nav-item" onclick="goSection('profile')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Minha Conta
+      </div>
+    </nav>
 
-      <!-- COLUNA ESQUERDA: PERFIL -->
-      <div>
+    <div class="sidebar-footer">
+      <button class="btn-sair-side" onclick="doLogout()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair da conta
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="dash-main">
+
+    <!-- WELCOME -->
+    <div class="welcome-row">
+      <h1>Olá, <em id="welcome-name">Membro</em> 👋</h1>
+      <p>Bem-vindo à sua área de membros da ASSENT</p>
+    </div>
+
+    <!-- APPS -->
+    <div id="section-apps">
+      <div class="section-title">Meus Aplicativos</div>
+      <div id="apps-container">
+        <div style="color:var(--muted);font-size:.875rem;padding:20px 0;">Carregando...</div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="section-profile" style="margin-top:36px;">
+      <div class="section-title">Minha Conta</div>
+      <div class="profile-grid">
+
+        <!-- Avatar card -->
         <div class="card">
-          <div class="card-title">Meu Perfil</div>
-
-          <div class="profile-avatar-wrap">
-            <div class="profile-avatar" id="profile-avatar-btn" onclick="document.getElementById('avatar-input').click()">
-              <span id="profile-avatar-initials"></span>
-              <div class="profile-avatar-overlay">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
-                </svg>
+          <div class="card-label">Perfil</div>
+          <div class="prof-av-wrap">
+            <div class="prof-av" id="prof-av-btn" onclick="handleAvatarClick()">
+              <span id="prof-av-initials">A</span>
+              <div class="prof-av-overlay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
               </div>
             </div>
-            <input type="file" id="avatar-input" accept="image/*" onchange="handleAvatarChange(event)"/>
+            <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="onFileSelected(event)"/>
             <div>
-              <div class="profile-name" id="profile-name-display">—</div>
-              <div class="profile-email" id="profile-email-display">—</div>
-              <div style="display:flex;justify-content:center;">
-                <div class="profile-badge">Membro Ativo</div>
+              <div class="prof-name" id="prof-name">—</div>
+              <div class="prof-email" id="prof-email">—</div>
+              <div style="display:flex;justify-content:center;margin-top:6px;">
+                <span class="prof-badge">Membro Ativo</span>
               </div>
             </div>
           </div>
 
-          <div class="profile-info">
+          <div class="info-list">
             <div class="info-row">
               <span class="info-label">Data de Nascimento</span>
-              <span class="info-value" id="profile-nascimento-display">—</span>
+              <span class="info-value" id="prof-nasc">—</span>
             </div>
             <div class="info-row">
               <span class="info-label">Membro desde</span>
-              <span class="info-value" id="profile-since-display">—</span>
+              <span class="info-value" id="prof-since">—</span>
             </div>
           </div>
-
-          <button class="btn-edit-profile" onclick="openModal('modal-perfil')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
+          <button class="btn-edit" onclick="openModal('modal-perfil')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
             Editar perfil
           </button>
         </div>
-      </div>
 
-      <!-- COLUNA DIREITA: APPS -->
-      <div>
+        <!-- Info card -->
         <div class="card">
-          <div class="card-title">Meus Aplicativos</div>
-          <div id="apps-container">
-            <div style="text-align:center;padding:20px;color:var(--muted);font-size:.875rem;">Carregando...</div>
-          </div>
+          <div class="card-label">Licença & Acesso</div>
+          <div id="licenca-container"><div style="color:var(--muted);font-size:.875rem;">Carregando...</div></div>
         </div>
-      </div>
 
+      </div>
     </div>
-  </div>
+
+  </main>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -517,18 +622,10 @@ body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:
       <h3 class="modal-title">Editar Perfil</h3>
       <button class="modal-close" onclick="closeModal('modal-perfil')">✕</button>
     </div>
+    <div id="modal-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
+    <div id="modal-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Perfil atualizado!</span></div>
 
-    <div id="modal-alert" class="alert alert-error" style="margin-bottom:16px;">
-      <span class="alert-icon">⚠</span>
-      <span id="modal-alert-msg"></span>
-    </div>
-    <div id="modal-success" class="alert alert-success" style="margin-bottom:16px;">
-      <span class="alert-icon">✓</span>
-      <span id="modal-success-msg">Perfil atualizado com sucesso!</span>
-    </div>
-
-    <!-- DADOS PESSOAIS -->
-    <p class="section-label">Dados Pessoais</p>
+    <p class="sec-label">Dados Pessoais</p>
     <div class="form-group">
       <label class="form-label">Nome completo *</label>
       <input type="text" id="edit-nome" class="form-input" placeholder="Seu nome completo"/>
@@ -537,20 +634,12 @@ body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:
       <label class="form-label">Data de nascimento *</label>
       <input type="date" id="edit-nascimento" class="form-input"/>
     </div>
-    <button class="btn btn-primary" id="btn-save-profile" onclick="saveProfile()">Salvar alterações</button>
+    <button class="btn btn-gold" id="btn-save-profile" onclick="saveProfile()">Salvar alterações</button>
 
-    <div class="section-divider"></div>
-
-    <!-- ALTERAR SENHA -->
-    <p class="section-label">Alterar Senha</p>
-    <div id="senha-alert" class="alert alert-error" style="margin-bottom:16px;">
-      <span class="alert-icon">⚠</span>
-      <span id="senha-alert-msg"></span>
-    </div>
-    <div id="senha-success" class="alert alert-success" style="margin-bottom:16px;">
-      <span class="alert-icon">✓</span>
-      <span>Senha alterada com sucesso!</span>
-    </div>
+    <div class="sec-divider"></div>
+    <p class="sec-label">Alterar Senha</p>
+    <div id="senha-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
+    <div id="senha-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Senha alterada!</span></div>
     <div class="form-group">
       <label class="form-label">Senha atual</label>
       <input type="password" id="senha-atual" class="form-input" placeholder="Sua senha atual"/>
@@ -563,453 +652,508 @@ body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:
       <label class="form-label">Confirmar nova senha</label>
       <input type="password" id="senha-nova2" class="form-input" placeholder="Repita a nova senha"/>
     </div>
-    <button class="btn btn-primary" id="btn-change-password" onclick="changePassword()" style="background:var(--surface2);color:var(--white);border:1px solid var(--border2);">
-      Alterar senha
-    </button>
+    <button class="btn btn-ghost" id="btn-change-password" onclick="changePassword()" style="width:100%;">Alterar senha</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL: FOTO (visualizar/remover/alterar)
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-foto">
+  <div class="modal" style="text-align:center;max-width:420px;">
+    <div class="modal-header">
+      <h3 class="modal-title">Foto de Perfil</h3>
+      <button class="modal-close" onclick="closeModal('modal-foto')">✕</button>
+    </div>
+    <div class="foto-viewer">
+      <img id="foto-viewer-img" src="" alt="Foto de perfil"/>
+    </div>
+    <div class="foto-btns">
+      <button class="btn btn-danger-outline" onclick="removerFoto()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        Remover
+      </button>
+      <button class="btn btn-ghost" onclick="document.getElementById('avatar-input').click();closeModal('modal-foto')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Alterar foto
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL: CROP / ZOOM
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-crop">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <h3 class="modal-title">Enquadrar foto</h3>
+      <button class="modal-close" onclick="cancelCrop()">✕</button>
+    </div>
+    <div class="crop-area" id="crop-area">
+      <canvas id="crop-canvas"></canvas>
+      <!-- SVG overlay with circular mask -->
+      <svg class="crop-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <mask id="hole">
+            <rect width="100" height="100" fill="white"/>
+            <circle cx="50" cy="50" r="42" fill="black"/>
+          </mask>
+        </defs>
+        <rect width="100" height="100" fill="rgba(0,0,0,0.55)" mask="url(#hole)"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="0.5"/>
+      </svg>
+    </div>
+    <div class="zoom-wrap">
+      <label>Zoom</label>
+      <input type="range" id="zoom-slider" min="1" max="5" step="0.05" value="1" oninput="onZoomChange()"/>
+    </div>
+    <div class="crop-btns">
+      <button class="btn btn-ghost" onclick="cancelCrop()">Cancelar</button>
+      <button class="btn btn-gold" id="btn-crop-save" onclick="saveCrop()">Salvar foto</button>
+    </div>
   </div>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast">
-  <span class="toast-icon" id="toast-icon"></span>
+  <span id="toast-icon"></span>
   <span id="toast-msg"></span>
 </div>
 
-<!-- Firebase é inicializado pelo navbar.js (carregado no <head>).
-     Este script usa window._* expostos por ele e escuta o evento assent:authchange. -->
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
 <script>
-// ══════════════════════════════════════
-//  LOAD DASHBOARD
-//  (usa window._* do navbar.js)
-// ══════════════════════════════════════
-async function loadDashboard(user) {
-  window._currentUser = user;
+/* ── UTILS ── */
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const map={login:'view-login',register:'view-register',forgot:'view-forgot',dashboard:'view-dashboard'};
+  const el=document.getElementById(map[name]);
+  if(el)el.classList.add('active');
+}
+function showAlert(id,msg){
+  const el=document.getElementById(id);if(!el)return;
+  el.querySelector('span:last-child').textContent=msg;el.classList.add('show');
+}
+function hideAlert(id){const el=document.getElementById(id);if(el)el.classList.remove('show');}
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.className=`toast ${type}`;
+  document.getElementById('toast-icon').textContent=type==='success'?'✓':'⚠';
+  document.getElementById('toast-msg').textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+function setLoading(btnId,loading){
+  const btn=document.getElementById(btnId);if(!btn)return;
+  btn.disabled=loading;
+  if(loading)btn.dataset.orig=btn.textContent;
+  btn.textContent=loading?'Aguarde...':(btn.dataset.orig||btn.textContent);
+}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeModal(o.id);}));
 
-  // Busca perfil e licença via window._ expostos pelo navbar.js
-  const perfilSnap = await window._getDoc(window._doc(window._db, 'perfis', user.uid));
-  const licSnap    = await window._getDoc(window._doc(window._db, 'licencas', user.uid));
-
-  const perfil = perfilSnap.exists() ? perfilSnap.data() : {};
-  const lic    = licSnap.exists() ? licSnap.data() : {};
-
-  window._perfil = perfil;
-  window._licenca = lic;
-
-  const nome = perfil.nome || user.email.split('@')[0];
-  const initials = nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-
-  // Welcome
-  document.getElementById('welcome-name').textContent = nome.split(' ')[0];
-
-  // Profile card
-  const profAv = document.getElementById('profile-avatar-btn');
-  if (perfil.fotoURL) {
-    profAv.innerHTML = `<img src="${perfil.fotoURL}" alt="foto"/>
-    <div class="profile-avatar-overlay">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
-      </svg>
-    </div>`;
-  } else {
-    profAv.innerHTML = `<span>${initials}</span>
-    <div class="profile-avatar-overlay">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
-      </svg>
-    </div>`;
-  }
-
-  document.getElementById('profile-name-display').textContent = perfil.nome || '—';
-  document.getElementById('profile-email-display').textContent = user.email;
-
-  if (perfil.dataNascimento) {
-    const [y,m,d] = perfil.dataNascimento.split('-');
-    document.getElementById('profile-nascimento-display').textContent = `${d}/${m}/${y}`;
-  }
-
-  const since = user.metadata.creationTime 
-    ? new Date(user.metadata.creationTime).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})
-    : '—';
-  document.getElementById('profile-since-display').textContent = since;
-
-  // Preenche modal
-  document.getElementById('edit-nome').value = perfil.nome || '';
-  document.getElementById('edit-nascimento').value = perfil.dataNascimento || '';
-
-  // APPS
-  renderApps(lic);
+function firebaseError(code){
+  const map={
+    'auth/invalid-email':'E-mail inválido.',
+    'auth/user-not-found':'Usuário não encontrado.',
+    'auth/wrong-password':'Senha incorreta.',
+    'auth/email-already-in-use':'Este e-mail já está em uso.',
+    'auth/weak-password':'A senha deve ter pelo menos 6 caracteres.',
+    'auth/too-many-requests':'Muitas tentativas. Aguarde e tente novamente.',
+    'auth/network-request-failed':'Erro de conexão.',
+    'auth/invalid-credential':'E-mail ou senha incorretos.',
+    'auth/requires-recent-login':'Por segurança, faça login novamente.',
+  };
+  return map[code]||'Ocorreu um erro. Tente novamente.';
 }
 
-function renderApps(lic) {
-  const container = document.getElementById('apps-container');
+/* ── SIDEBAR / NAV ── */
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const h=document.getElementById('mob-ham');
+  const o=document.getElementById('sidebar-overlay');
+  s.classList.toggle('open');h.classList.toggle('open');o.classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('mob-ham').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+function goSection(name){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const map={apps:'section-apps',profile:'section-profile'};
+  const el=document.getElementById(map[name]);
+  if(el){const top=el.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top,behavior:'smooth'});}
+  closeSidebar();
+}
+function scrollToProfile(){
+  const el=document.getElementById('section-profile');
+  if(el){const top=el.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top,behavior:'smooth'});}
+  closeSidebar();
+}
 
-  const apps = [
-    { key:'clienteAG',   name:'ASSENT Agência',     desc:'Sistema de gestão para agências',       icon:'🏢', link: null },
-    { key:'clienteCRM',  name:'ASSENT CRM',          desc:'Gestão de clientes e relacionamento',   icon:'💼', link: null },
-    { key:'clienteCurso',name:'Ambiente de Cursos',  desc:'Acesso à plataforma de cursos ASSENT',  icon:'🎓', link: '/cursos' },
+/* ── AUTH EVENTS ── */
+window.addEventListener('assent:authchange',async(e)=>{
+  document.getElementById('loading-screen').classList.add('hide');
+  const user=e.detail.user;
+  if(window._registrando)return;
+  if(user){await loadDashboard(user);showView('dashboard');}
+  else{showView('login');}
+});
+
+/* ── LOAD DASHBOARD ── */
+async function loadDashboard(user){
+  window._currentUser=user;
+  const [perfilSnap,licSnap]=await Promise.all([
+    window._getDoc(window._doc(window._db,'perfis',user.uid)),
+    window._getDoc(window._doc(window._db,'licencas',user.uid)),
+  ]);
+  const perfil=perfilSnap.exists()?perfilSnap.data():{};
+  const lic=licSnap.exists()?licSnap.data():{};
+  window._perfil=perfil;window._licenca=lic;
+
+  const nome=perfil.nome||user.email.split('@')[0];
+  const inits=nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+
+  // Tenta carregar foto base64 da subcoleção
+  try{
+    const fotoSnap=await window._getDoc(window._doc(window._db,'licencas',user.uid,'foto','avatar'));
+    if(fotoSnap.exists()&&fotoSnap.data().base64){
+      window._fotoBase64=fotoSnap.data().base64;
+      setAvatarImg(fotoSnap.data().base64,inits);
+    } else {
+      window._fotoBase64=null;
+      setAvatarInitials(inits);
+    }
+  }catch(err){
+    window._fotoBase64=null;
+    setAvatarInitials(inits);
+  }
+
+  // Welcome & sidebar
+  document.getElementById('welcome-name').textContent=nome.split(' ')[0];
+  document.getElementById('sb-name').textContent=nome.split(' ')[0];
+  document.getElementById('sb-email').textContent=user.email;
+  document.getElementById('prof-name').textContent=perfil.nome||'—';
+  document.getElementById('prof-email').textContent=user.email;
+
+  if(perfil.dataNascimento){
+    const[y,m,d]=perfil.dataNascimento.split('-');
+    document.getElementById('prof-nasc').textContent=`${d}/${m}/${y}`;
+  }
+  const since=user.metadata.creationTime
+    ?new Date(user.metadata.creationTime).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}):'—';
+  document.getElementById('prof-since').textContent=since;
+  document.getElementById('edit-nome').value=perfil.nome||'';
+  document.getElementById('edit-nascimento').value=perfil.dataNascimento||'';
+
+  renderApps(lic);
+  renderLicenca(lic);
+}
+
+function setAvatarImg(base64,inits){
+  const av=document.getElementById('prof-av-btn');
+  const sbAv=document.getElementById('sb-avatar');
+  av.innerHTML=`<img src="${base64}" alt="foto"/><div class="prof-av-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
+  sbAv.innerHTML=`<img src="${base64}" alt="foto"/>`;
+}
+function setAvatarInitials(inits){
+  const av=document.getElementById('prof-av-btn');
+  const sbAv=document.getElementById('sb-avatar');
+  av.innerHTML=`<span id="prof-av-initials">${inits}</span><div class="prof-av-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
+  sbAv.textContent=inits;
+}
+
+/* ── APPS ── */
+function renderApps(lic){
+  const container=document.getElementById('apps-container');
+  const apps=[
+    {key:'clienteAG',  name:'ASSENT Gestão',   desc:'Gestão completa do seu negócio local em um só lugar.',       logo:'/public/logo_ag.png',  logoFb:'AG',  link:null},
+    {key:'clienteCRM', name:'ASSENT CRM',       desc:'Relacionamento inteligente com clientes e automações.',      logo:'/public/logo_crm.png', logoFb:'CRM', link:null},
+    {key:'clienteCurso',name:'ASSENT Cursos',   desc:'Acesso à plataforma de cursos e conteúdos exclusivos.',      logo:'/public/logo_cursos.png',logoFb:'🎓',link:'/cursos'},
   ];
-
-  const temAcesso = apps.some(a => lic[a.key] === true);
-
-  if (!temAcesso) {
-    container.innerHTML = `
-      <div class="no-apps-box">
-        <p>Você ainda não tem acesso aos nossos aplicativos.</p>
-        <a href="https://assentagencia.com.br/aplicativos" target="_blank">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-          </svg>
-          CLIQUE AQUI para conhecer nossos apps
-        </a>
-      </div>`;
+  const temAcesso=apps.some(a=>lic[a.key]===true);
+  if(!temAcesso){
+    container.innerHTML=`<div class="no-access"><p>Você ainda não tem acesso aos nossos aplicativos.<br/>Conheça o que temos para o seu negócio crescer.</p><a href="https://assentagencia.com.br/aplicativos" target="_blank">Conhecer aplicativos →</a></div>`;
     return;
   }
-
-  let html = apps.map(a => {
-    const ok = lic[a.key] === true;
-    const statusEl = ok && a.link
-      ? `<a href="${a.link}" class="app-status ok" style="text-decoration:none;cursor:pointer;">Acessar →</a>`
-      : `<span class="app-status ${ok?'ok':'no'}">${ok?'Ativo':'Sem acesso'}</span>`;
-    return `
-    <div class="app-item ${ok?'active':''}">
-      <div class="app-icon">${a.icon}</div>
-      <div class="app-info">
-        <div class="app-name">${a.name}</div>
-        <div class="app-desc">${a.desc}</div>
+  container.innerHTML=`<div class="apps-grid">${apps.map(a=>{
+    const ok=lic[a.key]===true;
+    const logoHtml=`<img class="app-card-logo" src="${a.logo}" alt="${a.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="app-card-logo-fallback" style="display:none;">${a.logoFb}</div>`;
+    const actionBtn=ok&&a.link
+      ?`<a href="${a.link}" class="app-access-btn">Acessar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>`
+      :``;
+    return `<div class="app-card${ok?' active-card':''}">
+      <div class="app-card-top">${logoHtml}</div>
+      <div class="app-card-body">
+        <div class="app-card-name">${a.name}</div>
+        <div class="app-card-desc">${a.desc}</div>
       </div>
-      ${statusEl}
+      <div class="app-card-foot">
+        <span class="app-badge ${ok?'ok':'no'}">${ok?'Ativo':'Sem acesso'}</span>
+        ${actionBtn}
+      </div>
     </div>`;
-  }).join('');
-
-  // Expiração
-  const expira = lic.expira || '—';
-  html += `
-    <div class="expiry-row">
-      <span class="expiry-label">Validade da licença</span>
-      <span class="expiry-value">${expira === 'nunca' ? '∞ Nunca expira' : expira}</span>
-    </div>`;
-
-  container.innerHTML = html;
+  }).join('')}</div>`;
 }
 
-window._loadDashboard = loadDashboard;
-window._renderApps = renderApps;
+function renderLicenca(lic){
+  const container=document.getElementById('licenca-container');
+  const expira=lic.expira||'—';
+  container.innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="licenca-row"><span class="lic-label">Validade da licença</span><span class="lic-value">${expira==='nunca'?'∞ Nunca expira':expira}</span></div>
+      ${lic.email?`<div class="licenca-row"><span class="lic-label">E-mail da licença</span><span class="lic-value" style="font-size:.8rem;color:var(--muted);">${lic.email}</span></div>`:''}
+    </div>`;
+}
 
-// ══════════════════════════════════════
-//  AUTH STATE — via evento do navbar.js
-//  navbar.js inicializa o Firebase e
-//  dispara 'assent:authchange' em toda
-//  mudança de auth em qualquer página.
-// ══════════════════════════════════════
-window.addEventListener('assent:authchange', async (e) => {
-  document.getElementById('loading-screen').classList.add('hide');
-  const user = e.detail.user;
-  // Se cadastro em andamento, doRegister cuida do redirect
-  if (window._registrando) return;
-  if (user) {
-    await loadDashboard(user);
-    showView('dashboard');
+/* ── AVATAR CLICK ── */
+function handleAvatarClick(){
+  if(window._fotoBase64){
+    // Tem foto: abre viewer
+    document.getElementById('foto-viewer-img').src=window._fotoBase64;
+    openModal('modal-foto');
   } else {
-    showView('login');
+    // Sem foto: abre seletor
+    document.getElementById('avatar-input').click();
   }
-});
-</script>
-
-<script>
-// ══════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════
-function showView(name) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  const map = { login:'view-login', register:'view-register', forgot:'view-forgot', dashboard:'view-dashboard' };
-  const el = document.getElementById(map[name]);
-  if (el) el.classList.add('active');
 }
 
-function showAlert(id, msg) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.querySelector('span:last-child').textContent = msg;
-  el.classList.add('show');
-}
-function hideAlert(id) {
-  const el = document.getElementById(id);
-  if (el) el.classList.remove('show');
-}
-
-function showToast(msg, type='success') {
-  const t = document.getElementById('toast');
-  t.className = `toast ${type}`;
-  document.getElementById('toast-icon').textContent = type==='success' ? '✓' : '⚠';
-  document.getElementById('toast-msg').textContent = msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 3500);
-}
-
-function setLoading(btnId, loading) {
-  const btn = document.getElementById(btnId);
-  if (!btn) return;
-  btn.disabled = loading;
-  if (loading) btn.dataset.original = btn.textContent;
-  btn.textContent = loading ? 'Aguarde...' : (btn.dataset.original || btn.textContent);
-}
-
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-  hideAlert('modal-alert');
-  hideAlert('modal-success');
-  hideAlert('senha-alert');
-  hideAlert('senha-success');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-// Fecha modal ao clicar no overlay
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeModal(overlay.id);
-  });
-});
-
-// ── TRADUZ ERROS FIREBASE ──
-function firebaseError(code) {
-  const map = {
-    'auth/invalid-email':            'E-mail inválido.',
-    'auth/user-not-found':           'Usuário não encontrado.',
-    'auth/wrong-password':           'Senha incorreta.',
-    'auth/email-already-in-use':     'Este e-mail já está em uso.',
-    'auth/weak-password':            'A senha deve ter pelo menos 6 caracteres.',
-    'auth/too-many-requests':        'Muitas tentativas. Aguarde e tente novamente.',
-    'auth/network-request-failed':   'Erro de conexão. Verifique sua internet.',
-    'auth/invalid-credential':       'E-mail ou senha incorretos.',
-    'auth/requires-recent-login':    'Por segurança, faça login novamente antes de alterar a senha.',
+/* ── FILE SELECTED → OPEN CROP ── */
+function onFileSelected(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  if(file.size>10*1024*1024){showToast('Imagem deve ter até 10MB.','error');return;}
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    openCropModal(ev.target.result);
   };
-  return map[code] || 'Ocorreu um erro. Tente novamente.';
+  reader.readAsDataURL(file);
+  e.target.value=''; // reset input
 }
 
-// ══════════════════════════════════════
-//  LOGIN
-// ══════════════════════════════════════
-async function doLogin() {
+/* ── CROP MODAL ── */
+let cropState={img:null,zoom:1,offsetX:0,offsetY:0,dragging:false,lastX:0,lastY:0};
+
+function openCropModal(src){
+  closeModal('modal-foto');
+  openModal('modal-crop');
+  const img=new Image();
+  img.onload=()=>{
+    cropState={img,zoom:1,offsetX:0,offsetY:0,dragging:false,lastX:0,lastY:0};
+    document.getElementById('zoom-slider').value=1;
+    initCropCanvas();
+    drawCrop();
+  };
+  img.src=src;
+}
+function initCropCanvas(){
+  const area=document.getElementById('crop-area');
+  const canvas=document.getElementById('crop-canvas');
+  const size=area.clientWidth;
+  canvas.width=size;canvas.height=size;
+}
+function drawCrop(){
+  const canvas=document.getElementById('crop-canvas');
+  const ctx=canvas.getContext('2d');
+  const{img,zoom,offsetX,offsetY}=cropState;
+  const s=canvas.width;
+  ctx.clearRect(0,0,s,s);
+  const scale=Math.max(s/img.width,s/img.height)*zoom;
+  const w=img.width*scale,h=img.height*scale;
+  const x=(s-w)/2+offsetX,y=(s-h)/2+offsetY;
+  ctx.drawImage(img,x,y,w,h);
+}
+function onZoomChange(){
+  cropState.zoom=parseFloat(document.getElementById('zoom-slider').value);
+  drawCrop();
+}
+function cancelCrop(){closeModal('modal-crop');}
+
+// Drag events
+const cropArea=document.getElementById('crop-area');
+cropArea.addEventListener('mousedown',e=>{cropState.dragging=true;cropState.lastX=e.clientX;cropState.lastY=e.clientY;});
+cropArea.addEventListener('touchstart',e=>{cropState.dragging=true;cropState.lastX=e.touches[0].clientX;cropState.lastY=e.touches[0].clientY;},{passive:true});
+window.addEventListener('mousemove',e=>{
+  if(!cropState.dragging)return;
+  cropState.offsetX+=e.clientX-cropState.lastX;
+  cropState.offsetY+=e.clientY-cropState.lastY;
+  cropState.lastX=e.clientX;cropState.lastY=e.clientY;
+  drawCrop();
+});
+window.addEventListener('touchmove',e=>{
+  if(!cropState.dragging)return;
+  cropState.offsetX+=e.touches[0].clientX-cropState.lastX;
+  cropState.offsetY+=e.touches[0].clientY-cropState.lastY;
+  cropState.lastX=e.touches[0].clientX;cropState.lastY=e.touches[0].clientY;
+  drawCrop();
+},{passive:true});
+window.addEventListener('mouseup',()=>{cropState.dragging=false;});
+window.addEventListener('touchend',()=>{cropState.dragging=false;});
+
+async function saveCrop(){
+  setLoading('btn-crop-save',true);
+  try{
+    // Gera canvas circular final 400x400
+    const out=document.createElement('canvas');
+    out.width=400;out.height=400;
+    const ctx=out.getContext('2d');
+    // Recorta a área visível do canvas de crop
+    const src=document.getElementById('crop-canvas');
+    const srcSize=src.width;
+    ctx.beginPath();ctx.arc(200,200,200,0,Math.PI*2);ctx.clip();
+    ctx.drawImage(src,0,0,srcSize,srcSize,0,0,400,400);
+    const base64=out.toDataURL('image/jpeg',0.85);
+    await salvarFotoFirestore(base64);
+    window._fotoBase64=base64;
+    const nome=window._perfil?.nome||window._currentUser?.email?.split('@')[0]||'?';
+    const inits=nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    setAvatarImg(base64,inits);
+    closeModal('modal-crop');
+    showToast('Foto atualizada com sucesso!');
+  }catch(err){
+    console.error(err);
+    showToast('Erro ao salvar foto.','error');
+  }
+  setLoading('btn-crop-save',false);
+}
+
+async function salvarFotoFirestore(base64){
+  const uid=window._currentUser.uid;
+  // Salva na subcoleção licencas/{uid}/foto/avatar
+  await window._setDoc(
+    window._doc(window._db,'licencas',uid,'foto','avatar'),
+    {base64,updatedAt:window._serverTimestamp()},
+    {merge:true}
+  );
+}
+
+async function removerFoto(){
+  try{
+    const uid=window._currentUser.uid;
+    await window._setDoc(
+      window._doc(window._db,'licencas',uid,'foto','avatar'),
+      {base64:null,updatedAt:window._serverTimestamp()},
+      {merge:true}
+    );
+    window._fotoBase64=null;
+    const nome=window._perfil?.nome||window._currentUser?.email?.split('@')[0]||'?';
+    const inits=nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    setAvatarInitials(inits);
+    closeModal('modal-foto');
+    showToast('Foto removida.');
+  }catch(err){
+    showToast('Erro ao remover foto.','error');
+  }
+}
+
+/* ── LOGIN / REGISTER / FORGOT ── */
+async function doLogin(){
   hideAlert('login-alert');
-  const email = document.getElementById('login-email').value.trim();
-  const pass  = document.getElementById('login-password').value;
-  if (!email || !pass) { showAlert('login-alert','Preencha e-mail e senha.'); return; }
-  setLoading('btn-login', true);
-  try {
-    await window._signInWithEmailAndPassword(window._auth, email, pass);
-    // onAuthStateChanged cuida do redirect
-  } catch(e) {
-    showAlert('login-alert', firebaseError(e.code));
-    setLoading('btn-login', false);
-  }
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-password').value;
+  if(!email||!pass){showAlert('login-alert','Preencha e-mail e senha.');return;}
+  setLoading('btn-login',true);
+  try{
+    await window._signInWithEmailAndPassword(window._auth,email,pass);
+  }catch(e){showAlert('login-alert',firebaseError(e.code));}
+  setLoading('btn-login',false);
 }
-
-// ══════════════════════════════════════
-//  REGISTER
-// ══════════════════════════════════════
-async function doRegister() {
+async function doRegister(){
   hideAlert('register-alert');
-  document.getElementById('register-success').classList.remove('show');
-  const nome  = document.getElementById('reg-nome').value.trim();
-  const nasc  = document.getElementById('reg-nascimento').value;
-  const email = document.getElementById('reg-email').value.trim();
-  const pass  = document.getElementById('reg-password').value;
-  const pass2 = document.getElementById('reg-password2').value;
-
-  if (!nome)  { showAlert('register-alert','Informe seu nome.'); return; }
-  if (!nasc)  { showAlert('register-alert','Informe sua data de nascimento.'); return; }
-  if (!email) { showAlert('register-alert','Informe seu e-mail.'); return; }
-  if (pass.length < 6) { showAlert('register-alert','A senha deve ter ao menos 6 caracteres.'); return; }
-  if (pass !== pass2)  { showAlert('register-alert','As senhas não coincidem.'); return; }
-
-  // Sinaliza que o cadastro está em andamento (bloqueia onAuthStateChanged)
-  window._registrando = true;
-  setLoading('btn-register', true);
-  try {
-    const cred = await window._createUserWithEmailAndPassword(window._auth, email, pass);
-    const uid  = cred.user.uid;
-
-    // Cria documento de licença
-    await window._setDoc(window._doc(window._db, 'licencas', uid), {
-      ativo:      true,
-      clienteAG:  false,
-      clienteCRM: false,
-      email:      email,
-      name:       nome,
-      expira:     'nunca',
-      criadoEm:   window._serverTimestamp()
-    });
-
-    // Cria perfil
-    await window._setDoc(window._doc(window._db, 'perfis', uid), {
-      nome:           nome,
-      dataNascimento: nasc,
-      fotoURL:        '',
-      criadoEm:       window._serverTimestamp()
-    });
-
+  const nome=document.getElementById('reg-nome').value.trim();
+  const nasc=document.getElementById('reg-nascimento').value;
+  const email=document.getElementById('reg-email').value.trim();
+  const pass=document.getElementById('reg-password').value;
+  const pass2=document.getElementById('reg-password2').value;
+  if(!nome){showAlert('register-alert','Informe seu nome.');return;}
+  if(!nasc){showAlert('register-alert','Informe sua data de nascimento.');return;}
+  if(!email){showAlert('register-alert','Informe seu e-mail.');return;}
+  if(pass.length<6){showAlert('register-alert','A senha deve ter ao menos 6 caracteres.');return;}
+  if(pass!==pass2){showAlert('register-alert','As senhas não coincidem.');return;}
+  window._registrando=true;setLoading('btn-register',true);
+  try{
+    const cred=await window._createUserWithEmailAndPassword(window._auth,email,pass);
+    const uid=cred.user.uid;
+    await window._setDoc(window._doc(window._db,'licencas',uid),{ativo:true,clienteAG:false,clienteCRM:false,email,name:nome,expira:'nunca',criadoEm:window._serverTimestamp()});
+    await window._setDoc(window._doc(window._db,'perfis',uid),{nome,dataNascimento:nasc,criadoEm:window._serverTimestamp()});
     document.getElementById('register-success').classList.add('show');
-
-    // Agora redireciona com tudo gravado
-    window._registrando = false;
-    await window._loadDashboard(cred.user);
-    showView('dashboard');
-
-  } catch(e) {
-    window._registrando = false;
-    showAlert('register-alert', firebaseError(e.code));
-    setLoading('btn-register', false);
-  }
+    window._registrando=false;
+    await loadDashboard(cred.user);showView('dashboard');
+  }catch(e){window._registrando=false;showAlert('register-alert',firebaseError(e.code));setLoading('btn-register',false);}
 }
-
-// ══════════════════════════════════════
-//  FORGOT PASSWORD
-// ══════════════════════════════════════
-async function doForgot() {
+async function doForgot(){
   hideAlert('forgot-alert');
   document.getElementById('forgot-success').style.display='none';
-  const email = document.getElementById('forgot-email').value.trim();
-  if (!email) { showAlert('forgot-alert','Informe seu e-mail.'); return; }
-  setLoading('btn-forgot', true);
-  try {
-    await window._sendPasswordResetEmail(window._auth, email);
-    document.getElementById('forgot-success').style.display='flex';
-  } catch(e) {
-    showAlert('forgot-alert', firebaseError(e.code));
-  }
-  setLoading('btn-forgot', false);
+  const email=document.getElementById('forgot-email').value.trim();
+  if(!email){showAlert('forgot-alert','Informe seu e-mail.');return;}
+  setLoading('btn-forgot',true);
+  try{await window._sendPasswordResetEmail(window._auth,email);document.getElementById('forgot-success').style.display='flex';}
+  catch(e){showAlert('forgot-alert',firebaseError(e.code));}
+  setLoading('btn-forgot',false);
 }
+async function doLogout(){await window._signOut(window._auth);showView('login');}
 
-// ══════════════════════════════════════
-//  LOGOUT
-// ══════════════════════════════════════
-async function doLogout() {
-  await window._signOut(window._auth);
-  showView('login');
-}
-
-// ══════════════════════════════════════
-//  SAVE PROFILE
-// ══════════════════════════════════════
-async function saveProfile() {
-  hideAlert('modal-alert');
-  hideAlert('modal-success');
-  const nome = document.getElementById('edit-nome').value.trim();
-  const nasc = document.getElementById('edit-nascimento').value;
-  if (!nome) { showAlert('modal-alert','Informe seu nome.'); return; }
-  if (!nasc) { showAlert('modal-alert','Informe sua data de nascimento.'); return; }
-  setLoading('btn-save-profile', true);
-
-  try {
-    const uid = window._currentUser.uid;
-    await window._setDoc(window._doc(window._db, 'perfis', uid), {
-      nome, dataNascimento: nasc
-    }, { merge: true });
-    window._perfil.nome = nome;
-    window._perfil.dataNascimento = nasc;
-
-    // Atualiza UI
-    document.getElementById('welcome-name').textContent = nome.split(' ')[0];
-    document.getElementById('profile-name-display').textContent = nome;
-    const [y,m,d] = nasc.split('-');
-    document.getElementById('profile-nascimento-display').textContent = `${d}/${m}/${y}`;
-    const initials = nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    if (!window._perfil.fotoURL) {
-      // Atualiza navbar global com o novo nome
-      document.querySelectorAll('assent-navbar').forEach(el => {
-        if (el._updateAuthUI) el._updateAuthUI(window._currentUser, window._perfil);
-      });
-    }
-
-    showAlert('modal-success','');
-    document.getElementById('modal-success').querySelector('span:last-child').textContent = 'Perfil atualizado com sucesso!';
+/* ── SAVE PROFILE ── */
+async function saveProfile(){
+  hideAlert('modal-alert');hideAlert('modal-success');
+  const nome=document.getElementById('edit-nome').value.trim();
+  const nasc=document.getElementById('edit-nascimento').value;
+  if(!nome){showAlert('modal-alert','Informe seu nome.');return;}
+  if(!nasc){showAlert('modal-alert','Informe sua data de nascimento.');return;}
+  setLoading('btn-save-profile',true);
+  try{
+    const uid=window._currentUser.uid;
+    await window._setDoc(window._doc(window._db,'perfis',uid),{nome,dataNascimento:nasc},{merge:true});
+    window._perfil.nome=nome;window._perfil.dataNascimento=nasc;
+    document.getElementById('welcome-name').textContent=nome.split(' ')[0];
+    document.getElementById('sb-name').textContent=nome.split(' ')[0];
+    document.getElementById('prof-name').textContent=nome;
+    const[y,m,d]=nasc.split('-');
+    document.getElementById('prof-nasc').textContent=`${d}/${m}/${y}`;
     document.getElementById('modal-success').classList.add('show');
     showToast('Perfil atualizado!');
-  } catch(e) {
-    showAlert('modal-alert', 'Erro ao salvar. Tente novamente.');
-  }
-  setLoading('btn-save-profile', false);
+  }catch(e){showAlert('modal-alert','Erro ao salvar. Tente novamente.');}
+  setLoading('btn-save-profile',false);
 }
 
-// ══════════════════════════════════════
-//  CHANGE PASSWORD
-// ══════════════════════════════════════
-async function changePassword() {
-  hideAlert('senha-alert');
-  hideAlert('senha-success');
-  const atual = document.getElementById('senha-atual').value;
-  const nova  = document.getElementById('senha-nova').value;
-  const nova2 = document.getElementById('senha-nova2').value;
-
-  if (!atual)          { showAlert('senha-alert','Informe sua senha atual.'); return; }
-  if (nova.length < 6) { showAlert('senha-alert','A nova senha deve ter ao menos 6 caracteres.'); return; }
-  if (nova !== nova2)  { showAlert('senha-alert','As senhas não coincidem.'); return; }
-
-  setLoading('btn-change-password', true);
-  try {
-    const user = window._currentUser;
-    const cred = window._EmailAuthProvider.credential(user.email, atual);
-    await window._reauthenticateWithCredential(user, cred);
-    await window._updatePassword(user, nova);
-
+/* ── CHANGE PASSWORD ── */
+async function changePassword(){
+  hideAlert('senha-alert');hideAlert('senha-success');
+  const atual=document.getElementById('senha-atual').value;
+  const nova=document.getElementById('senha-nova').value;
+  const nova2=document.getElementById('senha-nova2').value;
+  if(!atual){showAlert('senha-alert','Informe sua senha atual.');return;}
+  if(nova.length<6){showAlert('senha-alert','A nova senha deve ter ao menos 6 caracteres.');return;}
+  if(nova!==nova2){showAlert('senha-alert','As senhas não coincidem.');return;}
+  setLoading('btn-change-password',true);
+  try{
+    const user=window._currentUser;
+    const cred=window._EmailAuthProvider.credential(user.email,atual);
+    await window._reauthenticateWithCredential(user,cred);
+    await window._updatePassword(user,nova);
     document.getElementById('senha-success').classList.add('show');
-    document.getElementById('senha-atual').value = '';
-    document.getElementById('senha-nova').value  = '';
-    document.getElementById('senha-nova2').value = '';
-    showToast('Senha alterada com sucesso!');
-  } catch(e) {
-    showAlert('senha-alert', firebaseError(e.code));
-  }
-  setLoading('btn-change-password', false);
+    document.getElementById('senha-atual').value='';
+    document.getElementById('senha-nova').value='';
+    document.getElementById('senha-nova2').value='';
+    showToast('Senha alterada!');
+  }catch(e){showAlert('senha-alert',firebaseError(e.code));}
+  setLoading('btn-change-password',false);
 }
 
-// ══════════════════════════════════════
-//  AVATAR UPLOAD
-// ══════════════════════════════════════
-async function handleAvatarChange(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (file.size > 5 * 1024 * 1024) { showToast('Imagem deve ter até 5MB.','error'); return; }
-
-  showToast('Enviando foto...','success');
-  try {
-    const uid     = window._currentUser.uid;
-    const storRef = window._ref(window._storage, `avatares/${uid}`);
-    await window._uploadBytes(storRef, file);
-    const url = await window._getDownloadURL(storRef);
-
-    await window._setDoc(window._doc(window._db, 'perfis', uid), { fotoURL: url }, { merge: true });
-    window._perfil.fotoURL = url;
-    window._currentAuthPerfil = window._perfil;
-
-    // Atualiza avatar do card de perfil
-    const overlay = `<div class="profile-avatar-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
-    document.getElementById('profile-avatar-btn').innerHTML = `<img src="${url}" alt="foto"/>` + overlay;
-
-    // Notifica a navbar global para atualizar o avatar
-    document.querySelectorAll('assent-navbar').forEach(el => {
-      if (el._updateAuthUI) el._updateAuthUI(window._currentUser, window._perfil);
-    });
-
-    showToast('Foto atualizada!');
-  } catch(err) {
-    console.error('Erro upload:', err);
-    showToast('Erro ao enviar foto. Verifique as regras do Storage.','error');
-  }
-}
-
-// Enter para login
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const login   = document.getElementById('view-login');
-  const reg     = document.getElementById('view-register');
-  const forgot  = document.getElementById('view-forgot');
-  if (login?.classList.contains('active'))   doLogin();
-  else if (reg?.classList.contains('active')) doRegister();
-  else if (forgot?.classList.contains('active')) doForgot();
+/* ── ENTER KEY ── */
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  if(document.getElementById('view-login')?.classList.contains('active'))doLogin();
+  else if(document.getElementById('view-register')?.classList.contains('active'))doRegister();
+  else if(document.getElementById('view-forgot')?.classList.contains('active'))doForgot();
 });
+
+window._loadDashboard=loadDashboard;
 </script>
 </body>
 </html>

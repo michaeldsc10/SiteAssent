@@ -17,7 +17,7 @@ import { initializeApp, getApps, getApp }
 import {
   getAuth, onAuthStateChanged, signOut,
   signInWithEmailAndPassword, createUserWithEmailAndPassword,
-  sendPasswordResetEmail, EmailAuthProvider,
+  sendPasswordResetEmail, sendEmailVerification, EmailAuthProvider,
   reauthenticateWithCredential, updatePassword
 } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
 import {
@@ -52,6 +52,7 @@ window._signOut                       = signOut;
 window._EmailAuthProvider             = EmailAuthProvider;
 window._reauthenticateWithCredential  = reauthenticateWithCredential;
 window._updatePassword                = updatePassword;
+window._sendEmailVerification         = sendEmailVerification;
 
 window._db              = _db;
 window._doc             = doc;

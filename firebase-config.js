@@ -12,14 +12,19 @@
  * ⚠️  NUNCA versione este arquivo com credenciais reais em repositórios públicos.
  */
 
-const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyB9HEWiHFc8YEuj_Ab-7TxGKqdQkSRQAio",
-  authDomain:        "assent-2b945.firebaseapp.com",
-  projectId:         "assent-2b945",
-  storageBucket:     "assent-2b945.firebasestorage.app",
-  messagingSenderId: "851051401705",
-  appId:             "1:851051401705:web:fa6ebb1cc6ee5d3a737b78"
+// firebase-config.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-app.js";
+
+const firebaseConfig = {
+  apiKey: "%%FIREBASE_API_KEY%%",
+  authDomain: "%%FIREBASE_AUTH_DOMAIN%%",
+  projectId: "%%FIREBASE_PROJECT_ID%%",
+  storageBucket: "%%FIREBASE_STORAGE_BUCKET%%",
+  messagingSenderId: "%%FIREBASE_MESSAGING_SENDER_ID%%",
+  appId: "%%FIREBASE_APP_ID%%"
 };
+
+export const app = initializeApp(firebaseConfig);
 
 // Expõe globalmente para o admin-cursos.html
 window.FIREBASE_CONFIG = FIREBASE_CONFIG;

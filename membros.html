@@ -811,6 +811,17 @@ function showView(name){
   };
   const el=document.getElementById(map[name]);
   if(el)el.classList.add('active');
+
+  // ── Oculta sidebar e topbar mobile em views de autenticação ──
+  // Impede que dados de sessão anterior fiquem visíveis para outro usuário.
+  const authViews=['login','register','forgot','verify-email'];
+  const isAuth=authViews.includes(name);
+  const sidebarEl=document.getElementById('assent-sidebar');
+  const topbarEl=document.querySelector('.assent-mob-topbar');
+  const overlayEl=document.getElementById('assent-sb-overlay');
+  if(sidebarEl)  sidebarEl.style.visibility = isAuth ? 'hidden' : 'visible';
+  if(topbarEl)   topbarEl.style.display      = isAuth ? 'none'   : '';
+  if(overlayEl && isAuth) overlayEl.classList.remove('open');
 }
 function showAlert(id,msg){
   const el=document.getElementById(id);if(!el)return;
@@ -1218,7 +1229,15 @@ async function doForgot(){
   setLoading('btn-forgot',false);
 }
 
-async function doLogout(){await window._signOut(window._auth);showView('login');}
+async function doLogout(){
+  // Limpa dados do usuário anterior na sidebar ANTES do signOut
+  // Garante que nenhuma informação pessoal fique exposta entre sessões.
+  if(window.AssentSidebar){
+    window.AssentSidebar.setUser({nome:'—',email:'',fotoBase64:null});
+  }
+  await window._signOut(window._auth);
+  showView('login');
+}
 
 /* ── REENVIAR VERIFICAÇÃO ── */
 async function resendVerification(){

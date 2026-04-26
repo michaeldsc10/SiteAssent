@@ -1174,11 +1174,9 @@ async function doRegister(){
       criadoEm: window._serverTimestamp(),
     });
 
-    // Subcoleção licencas/{uid}/pro/pro
-    await window._setDoc(window._doc(window._db,'licencas',uid,'pro','pro'),{
-      pro: false,
-      premium: false,
-    });
+    // Subcoleção licencas/{uid}/plano/pro e licencas/{uid}/plano/premium
+    await window._setDoc(window._doc(window._db,'licencas',uid,'plano','pro'),{ pro: false });
+    await window._setDoc(window._doc(window._db,'licencas',uid,'plano','premium'),{ premium: false });
 
     // Salva em perfis também (compatibilidade retroativa)
     await window._setDoc(window._doc(window._db,'perfis',uid),{

@@ -187,6 +187,13 @@ let _sidebarEl = null;
 function buildSidebar(cfg) {
   _cfg = cfg;
 
+  // Remove elementos de sidebar de uma sessão anterior antes de reconstruir.
+  // Sem isso, se um novo usuário logar após outro, a sidebar antiga permanece
+  // no DOM com os dados do usuário anterior.
+  document.getElementById('assent-sidebar')?.remove();
+  document.getElementById('assent-sb-overlay')?.remove();
+  document.querySelector('.assent-mob-topbar')?.remove();
+
   // Overlay mobile
   const overlay = document.createElement('div');
   overlay.className = 'assent-sb-overlay';

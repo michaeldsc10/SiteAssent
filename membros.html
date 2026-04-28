@@ -556,7 +556,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <input type="password" id="reg-password2" class="form-input" placeholder="Repita a senha"/>
       </div>
       <div class="form-group" style="margin-bottom:22px;">
-        <label class="form-label">Telefone</label>
+        <label class="form-label">Telefone *</label>
         <input type="tel" id="reg-telefone" class="form-input" placeholder="(00) 00000-0000" maxlength="15" oninput="maskTel(this)"/>
       </div>
       <button class="btn btn-gold" id="btn-register" onclick="doRegister()">Criar minha conta</button>
@@ -1004,10 +1004,37 @@ function renderApps(lic){
 
 function renderLicenca(lic){
   const container=document.getElementById('licenca-container');
-  const expira=lic.expira||'—';
+  const plano=lic.plano||'trial';
+
+  // Label e cor por plano
+  const planoLabel={ trial:'Trial', essencial:'Essencial', profissional:'Profissional' }[plano] || plano;
+  const planoColor={ trial:'var(--muted)', essencial:'var(--gold)', profissional:'var(--gold)' }[plano] || 'var(--muted)';
+
+  // Validade
+  let validadeHtml='';
+  if(plano==='trial'&&lic.trialExpira){
+    const exp=lic.trialExpira.toDate ? lic.trialExpira.toDate() : new Date(lic.trialExpira);
+    const hoje=new Date();
+    const dias=Math.ceil((exp-hoje)/86400000);
+    const dataFmt=exp.toLocaleDateString('pt-BR');
+    if(dias>0){
+      validadeHtml=`<div class="licenca-row"><span class="lic-label">Trial expira em</span><span class="lic-value" style="color:${dias<=3?'#e87070':'var(--gold)'};">${dataFmt} (${dias} dia${dias!==1?'s':''})</span></div>`;
+    } else {
+      validadeHtml=`<div class="licenca-row"><span class="lic-label">Trial</span><span class="lic-value" style="color:#e87070;">Expirado</span></div>`;
+    }
+  } else if(plano!=='trial'){
+    // Para planos pagos, tenta ler dataVencimento do subdoc (disponível após ativação)
+    const expira=lic.expira||'—';
+    validadeHtml=`<div class="licenca-row"><span class="lic-label">Validade</span><span class="lic-value">${expira==='nunca'?'∞ Nunca expira':expira}</span></div>`;
+  }
+
   container.innerHTML=`
     <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="licenca-row"><span class="lic-label">Validade da licença</span><span class="lic-value">${expira==='nunca'?'∞ Nunca expira':expira}</span></div>
+      <div class="licenca-row">
+        <span class="lic-label">Plano atual</span>
+        <span class="lic-value" style="color:${planoColor};">${planoLabel}</span>
+      </div>
+      ${validadeHtml}
       ${lic.email?`<div class="licenca-row"><span class="lic-label">E-mail da licença</span><span class="lic-value" style="font-size:.8rem;color:var(--muted);">${lic.email}</span></div>`:''}
     </div>`;
 }
@@ -1170,24 +1197,52 @@ async function doRegister(){
   if(!email){showAlert('register-alert','Informe seu e-mail.');return;}
   if(pass.length<6){showAlert('register-alert','A senha deve ter ao menos 6 caracteres.');return;}
   if(pass!==pass2){showAlert('register-alert','As senhas não coincidem.');return;}
+  if(!telefone){showAlert('register-alert','Informe seu telefone.');return;}
   window._registrando=true;setLoading('btn-register',true);
   try{
     const cred=await window._createUserWithEmailAndPassword(window._auth,email,pass);
     const uid=cred.user.uid;
 
-    // Salva em licencas/{uid}
+    // ── Doc raiz: licencas/{uid} ──────────────────────────────────────
+    const trialExpira = new Date(Date.now() + 14 * 86_400_000); // 14 dias a partir de agora
     await window._setDoc(window._doc(window._db,'licencas',uid),{
-      name: nome,
-      email: email,
+      name:           nome,
+      email:          email,
       dataNascimento: nasc,
-      telefone: telefone||'',
-      ativo: true,
-      criadoEm: window._serverTimestamp(),
+      telefone:       telefone,
+      ativo:          true,
+      plano:          'trial',
+      trialInicio:    window._serverTimestamp(),
+      trialExpira:    trialExpira,
+      // flags de produto (painel admin usa esses campos para liberar acesso)
+      clienteAG:      false,
+      clienteCRM:     false,
+      clienteCurso:   false,
+      criadoEm:       window._serverTimestamp(),
     });
 
-    // Subcoleção licencas/{uid}/plano/pro e licencas/{uid}/plano/premium
-    await window._setDoc(window._doc(window._db,'licencas',uid,'plano','pro'),{ pro: false });
-    await window._setDoc(window._doc(window._db,'licencas',uid,'plano','premium'),{ premium: false });
+    // ── Subdocs de plano — criados com ativo:false, aguardando assinatura ──
+    const now = new Date();
+    const baseSubdoc = {
+      ativo:          false,
+      dataInicio:     null,
+      dataVencimento: null,
+      contagem:       { vendasMes: 0, resetAt: now },
+    };
+    await Promise.all([
+      window._setDoc(window._doc(window._db,'licencas',uid,'plano','essencial'), {
+        ...baseSubdoc,
+        slug:     'essencial',
+        limites:  { loginsExtras: 5,  vendasMes: 500  },
+        features: { instaInsights: false },
+      }),
+      window._setDoc(window._doc(window._db,'licencas',uid,'plano','profissional'), {
+        ...baseSubdoc,
+        slug:     'profissional',
+        limites:  { loginsExtras: 15, vendasMes: 2500 },
+        features: { instaInsights: true },
+      }),
+    ]);
 
     // Salva em perfis também (compatibilidade retroativa)
     await window._setDoc(window._doc(window._db,'perfis',uid),{

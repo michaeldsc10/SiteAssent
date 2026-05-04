@@ -1,31 +1,20 @@
 /**
  * footer.js — ASSENT Agência
  * ─────────────────────────────────────────────────────────
- * Rodapé global + botão flutuante WhatsApp.
+ * Rodapé global.
  *
  * USO — coloque no <head> ou antes de </body>:
  *   <script type="module" src="/footer.js"></script>
  *   <assent-footer></assent-footer>
  *
- * O componente injeta o footer e o botão WA diretamente
- * no final do <body>, então não importa onde a tag esteja.
- *
  * ATRIBUTOS OPCIONAIS:
- *   wa-text="Mensagem personalizada"  — texto no WhatsApp
- *   hide-wa-float                     — oculta o botão flutuante
- *
- * EXEMPLOS:
- *   <assent-footer></assent-footer>
- *   <assent-footer wa-text="Vim da página de tráfego"></assent-footer>
- *   <assent-footer hide-wa-float></assent-footer>
+ *   wa-text="Mensagem personalizada"  — texto no WhatsApp (ícone social)
  * ─────────────────────────────────────────────────────────
  */
 
 class AssentFooter extends HTMLElement {
 
   connectedCallback() {
-    /* Garante que o footer vai para o final do body,
-       independente de onde <assent-footer> foi colocado */
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this._inject());
     } else {
@@ -34,20 +23,16 @@ class AssentFooter extends HTMLElement {
   }
 
   _inject() {
-    /* Remove a tag placeholder do fluxo — ela não renderiza nada */
     this.style.display = 'none';
 
-    const waText  = this.getAttribute('wa-text')
+    const waText = this.getAttribute('wa-text')
       || 'Olá! Vim pelo site da Assent Agência e gostaria de saber mais sobre os serviços.';
-    const waHref  = `https://wa.me/5562991383079?text=${encodeURIComponent(waText)}`;
-    const hideWa  = this.hasAttribute('hide-wa-float');
+    const waHref = `https://wa.me/5562991383079?text=${encodeURIComponent(waText)}`;
 
-    /* ── Estilos globais (injetados uma única vez) ── */
     if (!document.getElementById('assent-footer-styles')) {
       const style = document.createElement('style');
       style.id = 'assent-footer-styles';
       style.textContent = `
-        /* ── FOOTER ── */
         assent-footer-el {
           display: block;
           background: #0a0a0a;
@@ -146,59 +131,18 @@ class AssentFooter extends HTMLElement {
           flex-shrink: 0;
         }
 
-        /* ── WA FLOAT ── */
-        .assent-wa-float {
-          position: fixed;
-          bottom: 28px; right: 28px;
-          z-index: 9998;
-          width: 60px; height: 60px;
-          background: #25D366;
-          border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 4px 24px rgba(37,211,102,0.4);
-          animation: assentWaFloat 2.5s ease-in-out infinite;
-          cursor: pointer;
-          text-decoration: none;
-        }
-        .assent-wa-float svg { width: 30px; height: 30px; fill: #fff; }
-        @keyframes assentWaFloat {
-          0%,100% { transform: translateY(0) scale(1); }
-          50%      { transform: translateY(-6px) scale(1.04); }
-        }
-        .assent-wa-tooltip {
-          position: absolute;
-          right: 72px;
-          background: #1a1a1a;
-          border: 1px solid rgba(255,255,255,.08);
-          color: #fff;
-          padding: 10px 16px;
-          border-radius: 10px;
-          font-size: .82rem;
-          font-family: 'Inter', sans-serif;
-          white-space: nowrap;
-          opacity: 0;
-          pointer-events: none;
-          transition: opacity .3s;
-        }
-        .assent-wa-float:hover .assent-wa-tooltip { opacity: 1; }
-
-        /* ── RESPONSIVE ── */
         @media (max-width: 640px) {
           assent-footer-el .ft-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
           assent-footer-el .ft-bottom { flex-direction: column; align-items: flex-start; }
           assent-footer-el .ft-links { gap: 16px; }
-          .assent-wa-float { bottom: 20px; right: 20px; width: 52px; height: 52px; }
-          .assent-wa-float svg { width: 26px; height: 26px; }
         }
       `;
       document.head.appendChild(style);
     }
 
-    /* ── Elemento do footer ── */
     const footer = document.createElement('assent-footer-el');
     footer.innerHTML = `
       <div class="ft-container">
-        <!-- Linha superior -->
         <div class="ft-inner">
           <a href="/" class="ft-logo">ASSENT <span>AGÊNCIA</span></a>
           <nav class="ft-links">
@@ -210,7 +154,6 @@ class AssentFooter extends HTMLElement {
             <a href="/#faq">FAQ</a>
           </nav>
           <div class="ft-social">
-            <!-- Instagram -->
             <a href="https://instagram.com/assentagencia" target="_blank" rel="noopener" aria-label="Instagram">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -218,7 +161,6 @@ class AssentFooter extends HTMLElement {
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
               </svg>
             </a>
-            <!-- WhatsApp -->
             <a href="${waHref}" target="_blank" rel="noopener" aria-label="WhatsApp">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -229,7 +171,6 @@ class AssentFooter extends HTMLElement {
 
         <div class="ft-divider"></div>
 
-        <!-- Linha inferior -->
         <div class="ft-bottom">
           <div class="ft-copy">
             © 2025 ASSENT AGÊNCIA — Especialistas em crescimento de negócios locais.<br>
@@ -243,25 +184,7 @@ class AssentFooter extends HTMLElement {
       </div>
     `;
 
-    /* Appenda o footer no final do body */
     document.body.appendChild(footer);
-
-    /* ── Botão flutuante WhatsApp ── */
-    if (!hideWa) {
-      const wa = document.createElement('a');
-      wa.href      = waHref;
-      wa.target    = '_blank';
-      wa.rel       = 'noopener';
-      wa.className = 'assent-wa-float';
-      wa.setAttribute('aria-label', 'Falar no WhatsApp');
-      wa.innerHTML = `
-        <div class="assent-wa-tooltip">Fale com a gente agora 👋</div>
-        <svg viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-      `;
-      document.body.appendChild(wa);
-    }
   }
 }
 

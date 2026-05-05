@@ -909,12 +909,24 @@ window.addEventListener('assent:authchange',async(e)=>{
 /* ── LOAD DASHBOARD ── */
 async function loadDashboard(user){
   window._currentUser=user;
-  const [perfilSnap,licSnap]=await Promise.all([
+  const [perfilSnap,licSnap,planoEssSnap,planoProfSnap]=await Promise.all([
     window._getDoc(window._doc(window._db,'perfis',user.uid)),
     window._getDoc(window._doc(window._db,'licencas',user.uid)),
+    window._getDoc(window._doc(window._db,'licencas',user.uid,'plano','essencial')),
+    window._getDoc(window._doc(window._db,'licencas',user.uid,'plano','profissional')),
   ]);
   const perfil=perfilSnap.exists()?perfilSnap.data():{};
   const lic=licSnap.exists()?licSnap.data():{};
+  const planoEss=planoEssSnap.exists()?planoEssSnap.data():{};
+  const planoProf=planoProfSnap.exists()?planoProfSnap.data():{};
+  // Determina plano ativo pelos subdocs
+  const essAtivo=planoEss.ativo===true;
+  const profAtivo=planoProf.ativo===true;
+  lic._planoEssencial=planoEss;
+  lic._planoProfissional=planoProf;
+  lic._clienteAG=essAtivo||profAtivo;
+  if(profAtivo) lic.plano='profissional';
+  else if(essAtivo) lic.plano='essencial';
   window._perfil=perfil;window._licenca=lic;
 
   // Prioriza licencas, fallback para perfis (compatibilidade retroativa)
@@ -973,9 +985,8 @@ function setAvatarInitials(inits){
 function renderApps(lic){
   const container=document.getElementById('apps-container');
   const apps=[
-    {key:'clienteAG',   name:'ASSENT Gestão',  desc:'Gestão completa do seu negócio local em um só lugar.',      logo:'/public/logo_ag.png',     logoFb:'AG',  link:null},
-    {key:'clienteCRM',  name:'ASSENT CRM',      desc:'Relacionamento inteligente com clientes e automações.',     logo:'/public/logo_crm.png',    logoFb:'CRM', link:null},
-    {key:'clienteCurso',name:'ASSENT Cursos',   desc:'Acesso à plataforma de cursos e conteúdos exclusivos.',    logo:'/public/logo_cursos.png', logoFb:'🎓', link:'/cursos'},
+    {key:'_clienteAG',  name:'ASSENT Gestão',  desc:'Gestão completa do seu negócio local em um só lugar.',   logo:'/public/logo_ag.png',     logoFb:'AG', link:null},
+    {key:'clienteCurso',name:'ASSENT Cursos',   desc:'Acesso à plataforma de cursos e conteúdos exclusivos.', logo:'/public/logo_cursos.png', logoFb:'🎓', link:'/cursos'},
   ];
   const temAcesso=apps.some(a=>lic[a.key]===true);
   if(!temAcesso){
@@ -1214,10 +1225,6 @@ async function doRegister(){
       plano:          'trial',
       trialInicio:    window._serverTimestamp(),
       trialExpira:    trialExpira,
-      // flags de produto (painel admin usa esses campos para liberar acesso)
-      clienteAG:      false,
-      clienteCRM:     false,
-      clienteCurso:   false,
       criadoEm:       window._serverTimestamp(),
     });
 

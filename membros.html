@@ -1326,13 +1326,27 @@ async function saveProfile(){
   setLoading('btn-save-profile',true);
   try{
     const uid=window._currentUser.uid;
-    // Salva nos dois lugares simultaneamente
+    // Se licencas/{uid} nao existe, cria com campos minimos obrigatorios
+    // Se ja existe, faz merge apenas dos campos de perfil
+    const licDocRef=window._doc(window._db,'licencas',uid);
+    const licExiste=window._licenca&&(window._licenca.ativo!==undefined||window._licenca.email);
+    const licPromise=licExiste
+      ?window._setDoc(licDocRef,{name:nome,dataNascimento:nasc},{merge:true})
+      :window._setDoc(licDocRef,{
+          name:nome,
+          email:window._currentUser.email,
+          dataNascimento:nasc,
+          ativo:true,
+          plano:'trial',
+          criadoEm:window._serverTimestamp(),
+        },{merge:true});
     await Promise.all([
-      window._setDoc(window._doc(window._db,'licencas',uid),{name:nome,dataNascimento:nasc},{merge:true}),
+      licPromise,
       window._setDoc(window._doc(window._db,'perfis',uid),{nome,dataNascimento:nasc},{merge:true}),
     ]);
     window._perfil.nome=nome;window._perfil.dataNascimento=nasc;
     if(window._licenca){window._licenca.name=nome;window._licenca.dataNascimento=nasc;}
+    else{window._licenca={name:nome,email:window._currentUser.email,dataNascimento:nasc,ativo:true,plano:'trial'};}
     document.getElementById('welcome-name').textContent=nome.split(' ')[0];
     document.getElementById('prof-name').textContent=nome;
     if(window.AssentSidebar)window.AssentSidebar.setUser({nome,email:window._currentUser.email,fotoBase64:window._fotoBase64});

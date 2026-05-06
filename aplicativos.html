@@ -1604,5 +1604,92 @@ function App() {
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 </script>
+<canvas id="cursor-trail" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99999;"></canvas>
+<script>
+(function(){
+  const canvas = document.getElementById('cursor-trail');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+  resize();
+  window.addEventListener('resize', resize);
+
+  const mouse = {x: -999, y: -999};
+  window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+  const TRAIL_LEN = 55;
+
+  const STRANDS = [
+    { speed: 0.55, width: 1.8, alpha: 0.95 },
+    { speed: 0.40, width: 1.2, alpha: 0.75 },
+    { speed: 0.28, width: 0.9, alpha: 0.55 },
+    { speed: 0.20, width: 0.7, alpha: 0.40 },
+    { speed: 0.14, width: 0.5, alpha: 0.28 },
+    { speed: 0.10, width: 0.4, alpha: 0.18 },
+  ].map(s => ({
+    ...s,
+    pts: Array.from({length: TRAIL_LEN}, () => ({x: -999, y: -999}))
+  }));
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function getColor(newest) {
+    // newest=1 → gold, newest=0 → silver
+    const r = Math.round(lerp(160, 212, newest));
+    const g = Math.round(lerp(160, 175, newest));
+    const b = Math.round(lerp(160,  55, newest));
+    return {r, g, b};
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Update each strand independently
+    for (const s of STRANDS) {
+      s.pts[0].x = lerp(s.pts[0].x, mouse.x, s.speed);
+      s.pts[0].y = lerp(s.pts[0].y, mouse.y, s.speed);
+      for (let i = 1; i < TRAIL_LEN; i++) {
+        s.pts[i].x = lerp(s.pts[i].x, s.pts[i-1].x, s.speed * 0.85);
+        s.pts[i].y = lerp(s.pts[i].y, s.pts[i-1].y, s.speed * 0.85);
+      }
+    }
+
+    // Draw each strand as smooth curve
+    for (const s of STRANDS) {
+      const pts = s.pts;
+      if (pts[0].x < -900) continue;
+
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < TRAIL_LEN - 1; i++) {
+        const mx = (pts[i].x + pts[i+1].x) / 2;
+        const my = (pts[i].y + pts[i+1].y) / 2;
+        ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+      }
+
+      // Gradient along the stroke: gold at head → silver → transparent at tail
+      const head = pts[0], tail = pts[TRAIL_LEN - 1];
+      const grad = ctx.createLinearGradient(head.x, head.y, tail.x, tail.y);
+      const {r: r0, g: g0, b: b0} = getColor(1);
+      const {r: r1, g: g1, b: b1} = getColor(0.3);
+      grad.addColorStop(0,    `rgba(${r0},${g0},${b0},${s.alpha})`);
+      grad.addColorStop(0.35, `rgba(${r1},${g1},${b1},${s.alpha * 0.5})`);
+      grad.addColorStop(1,    `rgba(${r1},${g1},${b1},0)`);
+
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = s.width;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.shadowBlur = s.width > 1.2 ? 10 : 0;
+      ctx.shadowColor = `rgba(212,175,55,0.5)`;
+      ctx.stroke();
+    }
+
+    ctx.shadowBlur = 0;
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
 </body>
 </html>

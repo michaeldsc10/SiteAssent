@@ -297,7 +297,6 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
 
       <!-- CTA + Entrar/Avatar + Sair (desktop) -->
       <div class="right" id="rightSide">
-        <a href="https://wa.me/5562991383079?text=Olá!" class="cta" target="_blank">Análise Gratuita</a>
         <!-- Botão Entrar — visível quando deslogado -->
         <a href="/membros" class="btn-entrar" id="btnEntrar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -325,7 +324,6 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
       <a href="/#provas">Resultados</a>
       <a href="/#processo">Como Funciona</a>
       <a href="/#faq">Dúvidas</a>
-      <a href="https://wa.me/5562991383079?text=Olá!" class="mob-cta" target="_blank">Análise Gratuita</a>
       <a href="/membros" class="mob-entrar" id="mobEntrar">👤 Área do Cliente</a>
       <a href="#" class="mob-sair" id="mobSair">↩ Sair da conta</a>
     </div>

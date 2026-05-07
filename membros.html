@@ -1003,7 +1003,7 @@ function setAvatarInitials(inits){
 function renderApps(lic){
   const container=document.getElementById('apps-container');
   const apps=[
-    {key:'_clienteAG',  name:'ASSENT Gestão',  desc:'Gestão completa do seu negócio local em um só lugar.',   logo:'/public/logo_ag.png',     logoFb:'AG', link:null},
+    {key:'_clienteAG',  name:'ASSENT Gestão',  desc:'Gestão completa do seu negócio local em um só lugar.',   logo:'/public/logo_ag.png',     logoFb:'AG', link:'https://ag.assentagencia.com.br'},
     {key:'clienteCurso',name:'ASSENT Cursos',   desc:'Acesso à plataforma de cursos e conteúdos exclusivos.', logo:'/public/logo_cursos.png', logoFb:'🎓', link:'/cursos'},
   ];
   const temAcesso=apps.some(a=>lic[a.key]===true);

@@ -152,6 +152,14 @@ a{text-decoration:none;color:inherit;}
 .form-input:focus{border-color:var(--gold-line);box-shadow:0 0 0 3px var(--gold-glow);}
 .form-input::placeholder{color:var(--muted2);}
 .form-input[type="date"]{color-scheme:dark;}
+.pass-wrap{position:relative;}
+.pass-wrap .form-input{padding-right:44px;}
+.pass-toggle{
+  position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;padding:4px;
+  color:var(--muted);transition:color .2s;display:flex;align-items:center;
+}
+.pass-toggle:hover{color:var(--gold);}
 
 /* ── BUTTONS ── */
 .btn{
@@ -549,11 +557,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       </div>
       <div class="form-group">
         <label class="form-label">Senha *</label>
-        <input type="password" id="reg-password" class="form-input" placeholder="Mínimo 6 caracteres"/>
+        <div class="pass-wrap">
+          <input type="password" id="reg-password" class="form-input" placeholder="Mínimo 6 caracteres"/>
+          <button type="button" class="pass-toggle" onclick="togglePass('reg-password',this)" tabindex="-1" aria-label="Mostrar senha">
+            <svg id="eye-reg-password" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Confirmar senha *</label>
-        <input type="password" id="reg-password2" class="form-input" placeholder="Repita a senha"/>
+        <div class="pass-wrap">
+          <input type="password" id="reg-password2" class="form-input" placeholder="Repita a senha"/>
+          <button type="button" class="pass-toggle" onclick="togglePass('reg-password2',this)" tabindex="-1" aria-label="Mostrar senha">
+            <svg id="eye-reg-password2" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
       </div>
       <div class="form-group" style="margin-bottom:22px;">
         <label class="form-label">Telefone *</label>
@@ -1210,12 +1228,30 @@ async function doRegister(){
   if(pass!==pass2){showAlert('register-alert','As senhas não coincidem.');return;}
   if(!telefone){showAlert('register-alert','Informe seu telefone.');return;}
   window._registrando=true;setLoading('btn-register',true);
-  try{
-    const cred=await window._createUserWithEmailAndPassword(window._auth,email,pass);
-    const uid=cred.user.uid;
 
-    // ── Doc raiz: licencas/{uid} ──────────────────────────────────────
-    const trialExpira = new Date(Date.now() + 14 * 86_400_000); // 14 dias a partir de agora
+  // ── 1. Criar conta — se falhar, mostra erro e para ────────────────────
+  let cred;
+  try{
+    cred=await window._createUserWithEmailAndPassword(window._auth,email,pass);
+  }catch(e){
+    window._registrando=false;
+    showAlert('register-alert',firebaseError(e.code));
+    setLoading('btn-register',false);
+    return;
+  }
+
+  // ── 2. Redireciona IMEDIATAMENTE — independente do que vier depois ─────
+  const uid=cred.user.uid;
+  window._currentUser=cred.user;
+  window._registrando=false;
+  const emailDisplay=document.getElementById('verify-email-display');
+  if(emailDisplay)emailDisplay.textContent=email;
+  showView('verify-email');
+  setLoading('btn-register',false);
+
+  // ── 3. Firestore + e-mail de verificação — erros são silenciosos ──────
+  try{
+    const trialExpira=new Date(Date.now()+14*86_400_000);
     await window._setDoc(window._doc(window._db,'licencas',uid),{
       name:           nome,
       email:          email,
@@ -1227,56 +1263,28 @@ async function doRegister(){
       trialExpira:    trialExpira,
       criadoEm:       window._serverTimestamp(),
     });
-
-    // ── Subdocs de plano — criados com ativo:false, aguardando assinatura ──
-    const now = new Date();
-    const baseSubdoc = {
-      ativo:          false,
-      dataInicio:     null,
-      dataVencimento: null,
-      contagem:       { vendasMes: 0, resetAt: now },
+    const now=new Date();
+    const baseSubdoc={
+      ativo:false,dataInicio:null,dataVencimento:null,
+      contagem:{vendasMes:0,resetAt:now},
     };
     await Promise.all([
-      window._setDoc(window._doc(window._db,'licencas',uid,'plano','essencial'), {
-        ...baseSubdoc,
-        slug:     'essencial',
-        limites:  { loginsExtras: 5,  vendasMes: 500  },
-        features: { instaInsights: false },
+      window._setDoc(window._doc(window._db,'licencas',uid,'plano','essencial'),{
+        ...baseSubdoc,slug:'essencial',
+        limites:{loginsExtras:5,vendasMes:500},features:{instaInsights:false},
       }),
-      window._setDoc(window._doc(window._db,'licencas',uid,'plano','profissional'), {
-        ...baseSubdoc,
-        slug:     'profissional',
-        limites:  { loginsExtras: 15, vendasMes: 2500 },
-        features: { instaInsights: true },
+      window._setDoc(window._doc(window._db,'licencas',uid,'plano','profissional'),{
+        ...baseSubdoc,slug:'profissional',
+        limites:{loginsExtras:15,vendasMes:2500},features:{instaInsights:true},
       }),
     ]);
-
-    // Salva em perfis também (compatibilidade retroativa)
     await window._setDoc(window._doc(window._db,'perfis',uid),{
-      nome: nome,
-      dataNascimento: nasc,
-      criadoEm: window._serverTimestamp(),
+      nome:nome,dataNascimento:nasc,criadoEm:window._serverTimestamp(),
     });
-
-    // Envia e-mail de verificação com redirect para página própria
-    await window._sendEmailVerification(cred.user, ACTION_CODE_SETTINGS);
-
-    window._registrando=false;
-    window._currentUser=cred.user;
-
-    // Atualiza o e-mail exibido na tela de verificação
-    const emailDisplay=document.getElementById('verify-email-display');
-    if(emailDisplay)emailDisplay.textContent=email;
-
-    document.getElementById('register-success').classList.add('show');
-
-    // Pequeno delay para o usuário ver o alerta de sucesso
-    setTimeout(()=>showView('verify-email'), 1200);
-
+    await window._sendEmailVerification(cred.user,ACTION_CODE_SETTINGS);
   }catch(e){
-    window._registrando=false;
-    showAlert('register-alert',firebaseError(e.code));
-    setLoading('btn-register',false);
+    // Conta criada, usuário já na tela de verificação — loga apenas
+    console.warn('[doRegister] pós-criação:',e.code,e.message);
   }
 }
 
@@ -1402,6 +1410,16 @@ document.addEventListener('mousemove',e=>{
 });
 
 window._loadDashboard=loadDashboard;
+
+/* ── TOGGLE SENHA ── */
+function togglePass(id,btn){
+  const inp=document.getElementById(id);
+  const show=inp.type==='password';
+  inp.type=show?'text':'password';
+  btn.querySelector('svg').innerHTML=show
+    ?'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    :'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+}
 
 /* ── MÁSCARA TELEFONE ── */
 function maskTel(el){

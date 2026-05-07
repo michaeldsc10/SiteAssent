@@ -1240,16 +1240,18 @@ async function doRegister(){
     return;
   }
 
-  // ── 2. Redireciona IMEDIATAMENTE — independente do que vier depois ─────
+  // ── 2. Redireciona imediatamente (mantém _registrando=true para evitar signOut automático) ─
   const uid=cred.user.uid;
   window._currentUser=cred.user;
-  window._registrando=false;
   const emailDisplay=document.getElementById('verify-email-display');
   if(emailDisplay)emailDisplay.textContent=email;
   showView('verify-email');
   setLoading('btn-register',false);
 
-  // ── 3. Firestore + e-mail de verificação — erros são silenciosos ──────
+  // ── 3. Firestore + e-mail de verificação — AINDA com user autenticado ─
+  // IMPORTANTE: _registrando permanece true até aqui terminar.
+  // O handler assent:authchange faz signOut quando emailVerified===false,
+  // mas respeita _registrando=true e pula. Sem isso as writes falham.
   try{
     const trialExpira=new Date(Date.now()+14*86_400_000);
     await window._setDoc(window._doc(window._db,'licencas',uid),{
@@ -1283,8 +1285,10 @@ async function doRegister(){
     });
     await window._sendEmailVerification(cred.user,ACTION_CODE_SETTINGS);
   }catch(e){
-    // Conta criada, usuário já na tela de verificação — loga apenas
     console.warn('[doRegister] pós-criação:',e.code,e.message);
+  }finally{
+    // Só aqui o authchange pode agir normalmente
+    window._registrando=false;
   }
 }
 

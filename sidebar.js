@@ -8,15 +8,10 @@
  *   AssentSidebar.setUser({ nome, email, fotoBase64 })
  *   AssentSidebar.setActive(key)
  *
- * Uso padrão (ordem recomendada):
- *   AssentSidebar.init({
- *     activePage: 'profile',
- *     onLogout: () => { ... },
- *     navItems: [
- *       { key: 'profile', label: 'Minha Conta', icon: 'profile', href: 'https://assentagencia.com.br/membros' },
- *       { key: 'courses', label: 'Cursos',       icon: 'courses', href: 'https://assentagencia.com.br/cursos' },
- *     ]
- *   });
+ * Uso padrão (navItems já embutidos — não precisa passar):
+ *   AssentSidebar.init({ activePage: 'profile', onLogout: () => { ... } });
+ *
+ * Para sobrescrever os itens, passe navItems manualmente.
  */
 
 const SIDEBAR_CSS = `
@@ -225,7 +220,11 @@ function buildSidebar(cfg) {
   sidebar.id = 'assent-sidebar';
 
   // Nav items HTML
-  const navItems = (cfg.navItems || []).map(item => {
+  const DEFAULT_NAV_ITEMS = [
+    { key: 'profile', label: 'Minha Conta', icon: 'profile', href: 'https://assentagencia.com.br/membros' },
+    { key: 'courses', label: 'Cursos',      icon: 'courses', href: 'https://assentagencia.com.br/cursos' },
+  ];
+  const navItems = (cfg.navItems || DEFAULT_NAV_ITEMS).map(item => {
     const icon = ICONS[item.icon] || '';
     return `<div class="sb-nav-item${item.key === cfg.activePage ? ' active' : ''}"
       data-key="${item.key}"

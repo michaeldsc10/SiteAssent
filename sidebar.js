@@ -129,7 +129,19 @@ const SIDEBAR_CSS = `
 }
 
 /* Footer */
-.sb-footer { padding: 16px 12px; border-top: 1px solid var(--border); }
+.sb-footer { padding: 16px 12px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+.sb-btn-site {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px; border-radius: 50px;
+  background: transparent; border: 1px solid var(--gold-line);
+  color: var(--gold); font-size: .78rem; font-weight: 600; font-family: var(--heading);
+  letter-spacing: .05em; text-transform: uppercase; cursor: pointer; transition: all .2s;
+  white-space: nowrap; overflow: hidden; text-decoration: none;
+}
+.sb-btn-site:hover { background: rgba(201,168,76,.08); border-color: var(--gold); }
+.assent-sidebar.collapsed .sb-btn-site { padding: 10px 0; border-radius: 50%; }
+.sb-site-label { transition: opacity .2s, max-width .2s; max-width: 120px; overflow: hidden; }
+.assent-sidebar.collapsed .sb-site-label { opacity: 0; max-width: 0; }
 .sb-btn-sair {
   width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 10px; border-radius: 50px;
@@ -182,6 +194,7 @@ const ICONS = {
   profile: `<svg class="sb-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
   courses: `<svg class="sb-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
   logout: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
+  site: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
   chevron: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`,
 };
 
@@ -256,6 +269,10 @@ function buildSidebar(cfg) {
       ${navItems}
     </nav>
     <div class="sb-footer">
+      <a class="sb-btn-site" href="https://assentagencia.com.br/" target="_blank" rel="noopener noreferrer" aria-label="Voltar ao site">
+        ${ICONS.site}
+        <span class="sb-site-label">Voltar ao site</span>
+      </a>
       <button class="sb-btn-sair" id="assent-sb-logout" aria-label="Sair da conta">
         ${ICONS.logout}
         <span class="sb-sair-label">Sair da conta</span>

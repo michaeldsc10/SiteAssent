@@ -1,1456 +1,362 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Área de Membros — ASSENT AGÊNCIA</title>
-<script type="module" src="/navbar.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-:root{
-  --bg:        #000000;
-  --surface:   #0d0d0d;
-  --surface2:  #141414;
-  --surface3:  #1c1c1c;
-  --border:    rgba(255,255,255,0.06);
-  --border2:   rgba(255,255,255,0.1);
-  --gold:      #C9A84C;
-  --gold-dim:  #a8883a;
-  --gold-glow: rgba(201,168,76,0.15);
-  --gold-line: rgba(201,168,76,0.3);
-  --white:     #FFFFFF;
-  --muted:     #666666;
-  --muted2:    #444444;
-  --danger:    #c0392b;
-  --success:   #27ae60;
-  --sidebar:   240px;
+/**
+ * sidebar.js — ASSENT AGÊNCIA
+ * Sidebar reutilizável. Importar com:
+ *   <script type="module" src="/sidebar.js"></script>
+ *
+ * Expõe:
+ *   AssentSidebar.init({ navItems, onLogout, activePage })
+ *   AssentSidebar.setUser({ nome, email, fotoBase64 })
+ *   AssentSidebar.setActive(key)
+ */
+
+const SIDEBAR_CSS = `
+:root {
+  --sidebar: 240px;
   --sidebar-collapsed: 64px;
-  --heading:   'Montserrat', sans-serif;
-  --body:      'DM Sans', sans-serif;
-  --r:         10px;
-  --r-lg:      16px;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden;}
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:2px;}
-img{display:block;}
-a{text-decoration:none;color:inherit;}
-
-/* ══════════════════════════════════════
-   BACKGROUND GLASSMORPHISM — orbs decorativos
-══════════════════════════════════════ */
-#bg-canvas{
-  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
-}
-.bg-orb{
-  position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;
-  animation:orbFloat 18s ease-in-out infinite alternate;
-}
-.bg-orb-1{
-  width:600px;height:600px;
-  background:radial-gradient(circle, rgba(201,168,76,0.5) 0%, transparent 70%);
-  top:-100px;left:-150px;
-  animation-duration:20s;
-}
-.bg-orb-2{
-  width:500px;height:500px;
-  background:radial-gradient(circle, rgba(80,60,200,0.35) 0%, transparent 70%);
-  top:30%;right:-100px;
-  animation-duration:25s;animation-delay:-8s;
-}
-.bg-orb-3{
-  width:400px;height:400px;
-  background:radial-gradient(circle, rgba(201,168,76,0.25) 0%, transparent 70%);
-  bottom:-80px;left:30%;
-  animation-duration:22s;animation-delay:-4s;
-}
-.bg-orb-4{
-  width:300px;height:300px;
-  background:radial-gradient(circle, rgba(40,160,120,0.2) 0%, transparent 70%);
-  top:10%;left:45%;
-  animation-duration:30s;animation-delay:-12s;
-}
-#bg-canvas::after{
-  content:'';position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-  background-size:60px 60px;
-  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-}
-@keyframes orbFloat{
-  0%  {transform:translate(0,0) scale(1);}
-  33% {transform:translate(30px,-40px) scale(1.05);}
-  66% {transform:translate(-20px,20px) scale(.96);}
-  100%{transform:translate(15px,-15px) scale(1.03);}
-}
-
-/* ══════════════════════════════════════
-   CAMADA DO APP
-══════════════════════════════════════ */
-#app-layer{position:relative;z-index:1;min-height:100vh;}
-
-/* ── LOADING ── */
-#loading-screen{
-  position:fixed;inset:0;background:var(--bg);z-index:9999;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;
-  transition:opacity .5s ease;
-}
-#loading-screen.hide{opacity:0;pointer-events:none;}
-.load-logo{font-family:var(--heading);font-size:1.5rem;font-weight:900;letter-spacing:.12em;color:var(--white);}
-.load-logo em{color:var(--gold);font-style:normal;}
-.spinner{width:32px;height:32px;border:2px solid var(--surface3);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* ══════════════════════════════════════
-   VIEWS
-══════════════════════════════════════ */
-.view{display:none;min-height:100vh;}
-.view.active{display:flex;}
-
-/* ── AUTH VIEWS ── */
-#view-login,#view-register,#view-forgot,#view-verify-email{
-  align-items:center;justify-content:center;
-  background:transparent;padding:24px;
-}
-.auth-wrap{
-  width:100%;max-width:420px;
-  animation:fadeUp .45s ease;
-}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
-.auth-logo-link{
-  display:flex;align-items:center;justify-content:center;margin-bottom:36px;
-  font-family:var(--heading);font-weight:900;font-size:1.1rem;letter-spacing:.14em;color:var(--white);
-}
-.auth-logo-link em{color:var(--gold);font-style:normal;}
-.auth-card{
-  background:rgba(13,13,13,0.72);
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:20px;padding:40px 36px;
-  box-shadow:0 0 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.06);
-  backdrop-filter:blur(28px) saturate(180%);
-  -webkit-backdrop-filter:blur(28px) saturate(180%);
-}
-.auth-title{font-family:var(--heading);font-size:1.55rem;font-weight:800;letter-spacing:-.02em;margin-bottom:6px;}
-.auth-sub{color:var(--muted);font-size:.875rem;margin-bottom:28px;}
-.auth-divider{height:1px;background:var(--border);margin:24px 0;}
-.auth-switch{text-align:center;margin-top:22px;font-size:.875rem;color:var(--muted);}
-.auth-switch a{color:var(--gold);font-weight:600;}
-
-/* ── FORM ── */
-.form-group{margin-bottom:16px;}
-.form-label{display:block;font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:7px;}
-.form-input{
-  width:100%;background:rgba(20,20,20,0.6);border:1px solid var(--border2);
-  border-radius:var(--r);padding:13px 15px;
-  color:var(--white);font-family:var(--body);font-size:.9rem;
-  outline:none;transition:border-color .2s,box-shadow .2s;
-}
-.form-input:focus{border-color:var(--gold-line);box-shadow:0 0 0 3px var(--gold-glow);}
-.form-input::placeholder{color:var(--muted2);}
-.form-input[type="date"]{color-scheme:dark;}
-.pass-wrap{position:relative;}
-.pass-wrap .form-input{padding-right:44px;}
-.pass-toggle{
-  position:absolute;right:13px;top:50%;transform:translateY(-50%);
-  background:none;border:none;cursor:pointer;padding:4px;
-  color:var(--muted);transition:color .2s;display:flex;align-items:center;
-}
-.pass-toggle:hover{color:var(--gold);}
-
-/* ── BUTTONS ── */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:14px 24px;border-radius:50px;font-weight:700;font-size:.85rem;
-  cursor:pointer;border:none;font-family:var(--heading);
-  letter-spacing:.07em;text-transform:uppercase;
-  width:100%;transition:all .2s;
-}
-.btn-gold{background:var(--gold);color:#000;box-shadow:0 0 28px rgba(201,168,76,0.2);}
-.btn-gold:hover{background:#d4b05a;transform:translateY(-1px);box-shadow:0 0 42px rgba(201,168,76,0.35);}
-.btn-gold:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-.btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border2);width:auto;padding:9px 18px;font-size:.78rem;}
-.btn-ghost:hover{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.04);}
-.btn-danger-outline{background:transparent;border:1px solid rgba(192,57,43,0.4);color:#e74c3c;width:auto;padding:9px 18px;font-size:.78rem;}
-.btn-danger-outline:hover{background:rgba(192,57,43,0.08);}
-
-/* ── ALERTS ── */
-.alert{padding:11px 15px;border-radius:var(--r);font-size:.84rem;margin-bottom:16px;display:none;align-items:flex-start;gap:9px;line-height:1.5;}
-.alert.show{display:flex;}
-.alert-error{background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);color:#e87070;}
-.alert-success{background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.2);color:#6fcf97;}
-.alert-icon{flex-shrink:0;margin-top:1px;}
-.forgot-link{display:block;text-align:right;font-size:.8rem;color:var(--muted);margin-top:-8px;margin-bottom:16px;transition:color .2s;}
-.forgot-link:hover{color:var(--gold);}
-
-/* ══════════════════════════════════════
-   DASHBOARD
-══════════════════════════════════════ */
-#view-dashboard{flex-direction:column;}
-
-/* ── MAIN ── */
-.dash-main{
-  margin-left:var(--sidebar);flex:1;padding:40px 36px;min-height:100vh;
-  transition:margin-left .3s cubic-bezier(.4,0,.2,1);
-}
-.welcome-row{margin-bottom:36px;}
-.welcome-row h1{font-family:var(--heading);font-size:1.8rem;font-weight:900;letter-spacing:-.02em;}
-.welcome-row h1 em{font-style:normal;color:var(--gold);}
-.welcome-row p{color:var(--muted);font-size:.9rem;margin-top:6px;}
-
-/* ── SECTION TITLE ── */
-.section-title{
-  font-family:var(--heading);font-size:.7rem;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:16px;
-  display:flex;align-items:center;gap:10px;
-}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
-
-/* ══════════════════════════════════════
-   APP CARDS — Glassmorphism
-══════════════════════════════════════ */
-.apps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:36px;}
-
-.app-card{
-  position:relative;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.10);
-  border-radius:20px;
-  overflow:hidden;
-  backdrop-filter:blur(20px) saturate(180%);
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
-  box-shadow:
-    0 4px 24px rgba(0,0,0,0.4),
-    0 1px 0 rgba(255,255,255,0.08) inset,
-    0 -1px 0 rgba(0,0,0,0.2) inset;
-  transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .3s;
-  cursor:pointer;
-}
-.app-card::after{
-  content:'';
-  position:absolute;inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 50%, rgba(201,168,76,0.03) 100%);
-  pointer-events:none;z-index:0;border-radius:inherit;
-}
-.app-card::before{
-  content:'';
-  position:absolute;inset:0;
-  background:radial-gradient(600px circle at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.09) 0%, transparent 60%);
-  opacity:0;transition:opacity .4s;
-  pointer-events:none;z-index:1;border-radius:inherit;
-}
-.app-card:hover{
-  transform:translateY(-5px);
-  border-color:rgba(255,255,255,0.18);
-  box-shadow:
-    0 24px 60px rgba(0,0,0,0.6),
-    0 1px 0 rgba(255,255,255,0.12) inset,
-    0 0 0 1px rgba(201,168,76,0.08);
-}
-.app-card:hover::before{opacity:1;}
-.app-card.active-card{
-  border-color:rgba(201,168,76,0.15);
-  box-shadow:
-    0 4px 24px rgba(0,0,0,0.4),
-    0 1px 0 rgba(255,255,255,0.08) inset,
-    0 0 20px rgba(201,168,76,0.04);
-}
-
-.app-card-top{
-  height:130px;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;z-index:2;
-}
-.app-card-top::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 120%,rgba(255,255,255,.04) 0%,transparent 65%);
-}
-.app-card-logo{width:72px;height:72px;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(255,255,255,0.1));}
-.app-card-logo-fallback{
-  width:72px;height:72px;border-radius:18px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--heading);font-size:1rem;font-weight:900;color:rgba(255,255,255,0.7);
-  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
-  position:relative;z-index:1;
-}
-.app-card-body{padding:16px 20px 18px;position:relative;z-index:2;}
-.app-card-name{font-family:var(--heading);font-weight:800;font-size:.92rem;margin-bottom:5px;letter-spacing:-.01em;color:#fff;}
-.app-card-desc{color:rgba(255,255,255,0.38);font-size:.76rem;line-height:1.65;}
-.app-card-foot{
-  padding:12px 20px;
-  border-top:1px solid rgba(255,255,255,0.07);
-  display:flex;align-items:center;justify-content:space-between;
-  position:relative;z-index:2;
-  background:rgba(0,0,0,0.1);
-}
-.app-badge{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:100px;}
-.app-badge.ok{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.1);}
-.app-badge.ok::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:#4ade80;margin-right:5px;box-shadow:0 0 6px #4ade80;vertical-align:middle;}
-.app-badge.no{background:rgba(255,255,255,.03);color:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.06);}
-.app-access-btn{
-  display:inline-flex;align-items:center;gap:5px;
-  font-family:var(--heading);font-size:.67rem;font-weight:700;letter-spacing:.07em;
-  text-transform:uppercase;color:rgba(255,255,255,0.7);
-  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
-  border-radius:50px;padding:5px 12px;transition:all .25s;
-}
-.app-access-btn:hover{background:rgba(255,255,255,.11);color:#fff;border-color:rgba(255,255,255,0.2);}
-.app-access-btn svg{width:10px;height:10px;}
-
-/* ── LICENÇA ROW ── */
-.licenca-row{
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(13,13,13,0.5);border:1px solid var(--border);border-radius:var(--r);
-  padding:16px 20px;margin-top:4px;
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-}
-.lic-label{font-size:.78rem;color:var(--muted);}
-.lic-value{font-size:.85rem;font-weight:600;color:var(--gold);}
-
-/* ── PROFILE SECTION ── */
-.profile-grid{display:grid;grid-template-columns:280px 1fr;gap:16px;}
-.card{
-  background:rgba(13,13,13,0.6);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:var(--r-lg);padding:24px;
-  backdrop-filter:blur(20px) saturate(160%);
-  -webkit-backdrop-filter:blur(20px) saturate(160%);
-  transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .3s;
-  position:relative;overflow:hidden;
-}
-.card::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 65%);
-  opacity:0;transition:opacity .4s;pointer-events:none;z-index:0;border-radius:inherit;
-}
-.card:hover{
-  transform:translateY(-4px);
-  border-color:rgba(201,168,76,0.2);
-  box-shadow:0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.06), 0 0 30px rgba(201,168,76,0.04);
-}
-.card:hover::before{opacity:1;}
-.card > *{position:relative;z-index:1;}
-.card-label{font-family:var(--heading);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
-.card-label::before{content:'';width:3px;height:12px;background:var(--gold);border-radius:2px;flex-shrink:0;}
-
-/* Profile avatar */
-.prof-av-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:22px;}
-.prof-av{
-  width:96px;height:96px;border-radius:50%;overflow:hidden;
-  background:linear-gradient(135deg,var(--gold),var(--gold-dim));
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--heading);font-weight:900;font-size:2rem;color:#000;
-  border:2px solid var(--gold-line);cursor:pointer;position:relative;
-  transition:box-shadow .25s;
-}
-.prof-av:hover{box-shadow:0 0 0 4px var(--gold-glow);}
-.prof-av img{width:100%;height:100%;object-fit:cover;}
-.prof-av-overlay{
-  position:absolute;inset:0;background:rgba(0,0,0,.6);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity .2s;border-radius:50%;
-}
-.prof-av:hover .prof-av-overlay{opacity:1;}
-.prof-av-overlay svg{width:20px;height:20px;}
-.prof-name{font-family:var(--heading);font-weight:800;font-size:1.05rem;text-align:center;}
-.prof-email{font-size:.78rem;color:var(--muted);text-align:center;margin-top:2px;}
-.prof-badge{
-  display:inline-flex;align-items:center;gap:6px;margin-top:4px;
-  background:rgba(201,168,76,.08);border:1px solid var(--gold-line);
-  color:var(--gold);font-size:.68rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  padding:3px 10px;border-radius:100px;
-}
-.prof-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 5px var(--gold);}
-
-.info-list{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
-.info-row{display:flex;flex-direction:column;gap:3px;}
-.info-label{font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;}
-.info-value{font-size:.88rem;}
-.btn-edit{
-  width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
-  background:rgba(20,20,20,0.5);border:1px solid var(--border2);border-radius:50px;
-  padding:10px;color:var(--white);font-family:var(--heading);font-size:.75rem;
-  font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all .2s;
-}
-.btn-edit:hover{border-color:var(--gold-line);color:var(--gold);}
-
-/* ── MODAL BASE ── */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;
-  display:none;align-items:center;justify-content:center;padding:24px;
-  backdrop-filter:blur(6px);
-}
-.modal-overlay.open{display:flex;}
-.modal{
-  background:rgba(13,13,13,0.85);border:1px solid var(--border2);border-radius:20px;
-  padding:32px;width:100%;max-width:460px;
-  backdrop-filter:blur(32px) saturate(180%);-webkit-backdrop-filter:blur(32px) saturate(180%);
-  animation:fadeUp .3s ease;max-height:90vh;overflow-y:auto;
-}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.modal-title{font-family:var(--heading);font-weight:800;font-size:1.1rem;}
-.modal-close{
-  background:var(--surface2);border:none;color:var(--muted);
-  width:30px;height:30px;border-radius:50%;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s;
-}
-.modal-close:hover{background:var(--surface3);color:var(--white);}
-.sec-divider{height:1px;background:var(--border);margin:22px 0;}
-.sec-label{font-family:var(--heading);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
-.modal-btns{display:flex;gap:10px;margin-top:6px;}
-.modal-btns .btn{width:auto;flex:1;}
-
-/* ── PHOTO MODAL ── */
-#modal-foto{z-index:600;}
-#modal-foto .modal{max-width:500px;text-align:center;}
-.foto-viewer{
-  width:200px;height:200px;border-radius:50%;overflow:hidden;
-  border:3px solid var(--gold-line);margin:0 auto 24px;
-  background:var(--surface2);display:flex;align-items:center;justify-content:center;
-}
-.foto-viewer img{width:100%;height:100%;object-fit:cover;}
-.foto-btns{display:flex;gap:10px;justify-content:center;}
-
-/* ── CROP MODAL ── */
-#modal-crop{z-index:700;}
-#modal-crop .modal{max-width:520px;}
-.crop-area{
-  width:100%;aspect-ratio:1;background:#111;border-radius:var(--r);overflow:hidden;
-  position:relative;cursor:grab;user-select:none;margin-bottom:16px;
-}
-.crop-area:active{cursor:grabbing;}
-#crop-canvas{width:100%;height:100%;display:block;}
-.crop-overlay{position:absolute;inset:0;pointer-events:none;}
-.zoom-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
-.zoom-wrap label{font-size:.78rem;color:var(--muted);flex-shrink:0;}
-input[type=range]{flex:1;-webkit-appearance:none;height:3px;background:var(--surface3);border-radius:2px;outline:none;cursor:pointer;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;}
-.crop-btns{display:flex;gap:10px;}
-.crop-btns .btn{flex:1;}
-
-/* ── TOAST ── */
-.toast{
-  position:fixed;bottom:24px;right:24px;z-index:9999;
-  background:rgba(13,13,13,0.9);border:1px solid var(--border2);border-radius:var(--r);
-  padding:13px 18px;font-size:.875rem;color:var(--white);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  box-shadow:0 8px 32px rgba(0,0,0,.5);
-  transform:translateY(20px);opacity:0;transition:all .3s ease;pointer-events:none;
-  display:flex;align-items:center;gap:10px;max-width:300px;
-}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast.success{border-color:rgba(39,174,96,.3);}
-.toast.error{border-color:rgba(192,57,43,.3);}
-
-/* ── MOBILE ── */
-@media(max-width:900px){
-  .dash-main{margin-left:0 !important;padding:80px 16px 32px;}
-  .apps-grid{grid-template-columns:1fr;}
-  .profile-grid{grid-template-columns:1fr;}
-}
-@media(min-width:901px) and (max-width:1100px){
-  .apps-grid{grid-template-columns:repeat(2,1fr);}
-}
-@media(max-width:480px){
-  .dash-main{padding:72px 12px 24px;}
-  .welcome-row h1{font-size:1.4rem;}
-  .profile-grid{grid-template-columns:1fr;}
-}
-
-/* ── NO ACCESS ── */
-.no-access{
-  background:rgba(13,13,13,0.5);border:1px dashed var(--border2);border-radius:var(--r-lg);
-  padding:36px 24px;text-align:center;
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-}
-.no-access p{color:var(--muted);margin-bottom:20px;line-height:1.7;}
-.no-access a{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--gold);color:#000;border-radius:50px;padding:12px 28px;
-  font-family:var(--heading);font-weight:700;font-size:.82rem;letter-spacing:.07em;
-  text-transform:uppercase;transition:all .2s;
-}
-.no-access a:hover{background:#d4b05a;transform:translateY(-1px);}
-
-/* ── VERIFY EMAIL ── */
-.verify-icon{
-  font-size:3rem;margin-bottom:16px;
-  animation:pulse 2s ease-in-out infinite;
-}
-@keyframes pulse{
-  0%,100%{transform:scale(1);}
-  50%{transform:scale(1.1);}
-}
-.verify-steps{
-  margin:20px 0 24px;
-  display:flex;flex-direction:column;gap:10px;
-}
-.verify-step{
-  display:flex;align-items:center;gap:12px;
-  background:rgba(255,255,255,0.03);border:1px solid var(--border);
-  border-radius:var(--r);padding:12px 14px;font-size:.83rem;color:rgba(255,255,255,0.6);
-}
-.verify-step-num{
-  width:22px;height:22px;border-radius:50%;
-  background:rgba(201,168,76,0.15);border:1px solid var(--gold-line);
-  color:var(--gold);font-family:var(--heading);font-size:.7rem;font-weight:800;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-</style>
-</head>
-<body>
-
-<!-- FUNDO -->
-<div id="bg-canvas" aria-hidden="true">
-  <div class="bg-orb bg-orb-1"></div>
-  <div class="bg-orb bg-orb-2"></div>
-  <div class="bg-orb bg-orb-3"></div>
-  <div class="bg-orb bg-orb-4"></div>
-</div>
-
-<div id="app-layer">
-
-<!-- LOADING -->
-<div id="loading-screen">
-  <div class="load-logo">ASSENT <em>AGÊNCIA</em></div>
-  <div class="spinner"></div>
-</div>
-
-<!-- ══════════════════════════════════════
-     AUTH VIEWS
-══════════════════════════════════════ -->
-
-<!-- LOGIN -->
-<div id="view-login" class="view">
-  <div class="auth-wrap">
-    <a href="https://assentagencia.com.br" class="auth-logo-link">ASSENT&nbsp;<em>AGÊNCIA</em></a>
-    <div class="auth-card">
-      <h2 class="auth-title">Bem-vindo de volta</h2>
-      <p class="auth-sub">Acesse sua área de membros</p>
-      <div id="login-alert" class="alert alert-error">
-        <span class="alert-icon">⚠</span><span></span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">E-mail</label>
-        <input type="email" id="login-email" class="form-input" placeholder="seu@email.com" autocomplete="email"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Senha</label>
-        <input type="password" id="login-password" class="form-input" placeholder="••••••••" autocomplete="current-password"/>
-      </div>
-      <a href="#" class="forgot-link" onclick="showView('forgot');return false">Esqueci minha senha</a>
-      <button class="btn btn-gold" id="btn-login" onclick="doLogin()">Entrar na minha conta</button>
-      <div class="auth-switch">Ainda não tem conta? <a href="#" onclick="showView('register');return false">Cadastre-se grátis</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- REGISTER -->
-<div id="view-register" class="view">
-  <div class="auth-wrap">
-    <a href="https://assentagencia.com.br" class="auth-logo-link">ASSENT&nbsp;<em>AGÊNCIA</em></a>
-    <div class="auth-card">
-      <h2 class="auth-title">Criar conta</h2>
-      <p class="auth-sub">Preencha os dados para se cadastrar</p>
-      <div id="register-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-      <div id="register-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Conta criada! Enviando e-mail de confirmação...</span></div>
-      <div class="form-group">
-        <label class="form-label">Nome completo *</label>
-        <input type="text" id="reg-nome" class="form-input" placeholder="Seu nome completo"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Data de nascimento *</label>
-        <input type="date" id="reg-nascimento" class="form-input"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">E-mail *</label>
-        <input type="email" id="reg-email" class="form-input" placeholder="seu@email.com"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Senha *</label>
-        <div class="pass-wrap">
-          <input type="password" id="reg-password" class="form-input" placeholder="Mínimo 6 caracteres"/>
-          <button type="button" class="pass-toggle" onclick="togglePass('reg-password',this)" tabindex="-1" aria-label="Mostrar senha">
-            <svg id="eye-reg-password" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Confirmar senha *</label>
-        <div class="pass-wrap">
-          <input type="password" id="reg-password2" class="form-input" placeholder="Repita a senha"/>
-          <button type="button" class="pass-toggle" onclick="togglePass('reg-password2',this)" tabindex="-1" aria-label="Mostrar senha">
-            <svg id="eye-reg-password2" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="form-group" style="margin-bottom:22px;">
-        <label class="form-label">Telefone *</label>
-        <input type="tel" id="reg-telefone" class="form-input" placeholder="(00) 00000-0000" maxlength="15" oninput="maskTel(this)"/>
-      </div>
-      <button class="btn btn-gold" id="btn-register" onclick="doRegister()">Criar minha conta</button>
-      <div class="auth-switch">Já tem conta? <a href="#" onclick="showView('login');return false">Entrar</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- FORGOT -->
-<div id="view-forgot" class="view">
-  <div class="auth-wrap">
-    <a href="https://assentagencia.com.br" class="auth-logo-link">ASSENT&nbsp;<em>AGÊNCIA</em></a>
-    <div class="auth-card">
-      <h2 class="auth-title">Recuperar senha</h2>
-      <p class="auth-sub">Enviaremos um link de redefinição para seu e-mail</p>
-      <div id="forgot-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-      <div id="forgot-success" class="alert alert-success" style="display:none;"><span class="alert-icon">✓</span><span>E-mail enviado! Verifique sua caixa de entrada.</span></div>
-      <div class="form-group" style="margin-bottom:22px;">
-        <label class="form-label">E-mail da conta</label>
-        <input type="email" id="forgot-email" class="form-input" placeholder="seu@email.com"/>
-      </div>
-      <button class="btn btn-gold" id="btn-forgot" onclick="doForgot()">Enviar e-mail de recuperação</button>
-      <div class="auth-switch"><a href="#" onclick="showView('login');return false">← Voltar para o login</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- VERIFICAR E-MAIL -->
-<div id="view-verify-email" class="view">
-  <div class="auth-wrap">
-    <a href="https://assentagencia.com.br" class="auth-logo-link">ASSENT&nbsp;<em>AGÊNCIA</em></a>
-    <div class="auth-card">
-      <div style="text-align:center;">
-        <div class="verify-icon">📬</div>
-        <h2 class="auth-title">Confirme seu e-mail</h2>
-        <p class="auth-sub" style="margin-bottom:0;">Enviamos um link para <strong id="verify-email-display" style="color:var(--white);"></strong></p>
-      </div>
-      <div class="verify-steps">
-        <div class="verify-step"><span class="verify-step-num">1</span>Abra sua caixa de entrada</div>
-        <div class="verify-step"><span class="verify-step-num">2</span>Clique no link "Confirmar e-mail"</div>
-        <div class="verify-step"><span class="verify-step-num">3</span>Volte aqui e faça login normalmente</div>
-      </div>
-      <div id="verify-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-      <div id="verify-success" class="alert alert-success"><span class="alert-icon">✓</span><span>E-mail reenviado! Verifique sua caixa de entrada.</span></div>
-      <p style="font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.6;">Caso seu e-mail não tenha chegado, clique em reenviar e confira sua <strong style="color:rgba(255,255,255,.45);">caixa de spam</strong>.</p>
-      <button class="btn btn-gold" id="btn-resend-verify" onclick="resendVerification()" style="margin-bottom:12px;">Reenviar e-mail de confirmação</button>
-      <div class="auth-switch">
-        <a href="#" onclick="showView('login');return false">← Voltar para o login</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     DASHBOARD
-══════════════════════════════════════ -->
-<div id="view-dashboard" class="view">
-  <main class="dash-main" id="assent-dash-main">
-
-    <!-- WELCOME -->
-    <div class="welcome-row">
-      <h1>Olá, <em id="welcome-name">Membro</em></h1>
-      <p>Bem-vindo à sua área de membros da ASSENT</p>
-    </div>
-
-    <!-- PROFILE -->
-    <div id="section-profile">
-      <div class="section-title">Minha Conta</div>
-      <div class="profile-grid">
-
-        <!-- Avatar card -->
-        <div class="card">
-          <div class="card-label">Perfil</div>
-          <div class="prof-av-wrap">
-            <div class="prof-av" id="prof-av-btn" onclick="handleAvatarClick()">
-              <span id="prof-av-initials">A</span>
-              <div class="prof-av-overlay">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              </div>
-            </div>
-            <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="onFileSelected(event)"/>
-            <div>
-              <div class="prof-name" id="prof-name">—</div>
-              <div class="prof-email" id="prof-email">—</div>
-              <div style="display:flex;justify-content:center;margin-top:6px;">
-                <span class="prof-badge">Membro Ativo</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="info-list">
-            <div class="info-row">
-              <span class="info-label">Data de Nascimento</span>
-              <span class="info-value" id="prof-nasc">—</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Membro desde</span>
-              <span class="info-value" id="prof-since">—</span>
-            </div>
-          </div>
-          <button class="btn-edit" onclick="openModal('modal-perfil')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
-            Editar perfil
-          </button>
-        </div>
-
-        <!-- Info card -->
-        <div class="card">
-          <div class="card-label">Licença &amp; Acesso</div>
-          <div id="licenca-container"><div style="color:var(--muted);font-size:.875rem;">Carregando...</div></div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- APPS -->
-    <div id="section-apps" style="margin-top:36px;">
-      <div class="section-title">Meus Aplicativos</div>
-      <div id="apps-container">
-        <div style="color:var(--muted);font-size:.875rem;padding:20px 0;">Carregando...</div>
-      </div>
-    </div>
-
-  </main>
-</div><!-- /view-dashboard -->
-
-</div><!-- /app-layer -->
-
-<!-- ══════════════════════════════════════
-     MODAIS
-══════════════════════════════════════ -->
-
-<!-- EDITAR PERFIL -->
-<div class="modal-overlay" id="modal-perfil">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 class="modal-title">Editar Perfil</h3>
-      <button class="modal-close" onclick="closeModal('modal-perfil')">✕</button>
-    </div>
-    <div id="modal-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-    <div id="modal-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Perfil atualizado!</span></div>
-    <p class="sec-label">Dados Pessoais</p>
-    <div class="form-group">
-      <label class="form-label">Nome completo *</label>
-      <input type="text" id="edit-nome" class="form-input" placeholder="Seu nome completo"/>
-    </div>
-    <div class="form-group" style="margin-bottom:20px;">
-      <label class="form-label">Data de nascimento *</label>
-      <input type="date" id="edit-nascimento" class="form-input"/>
-    </div>
-    <button class="btn btn-gold" id="btn-save-profile" onclick="saveProfile()">Salvar alterações</button>
-    <div class="sec-divider"></div>
-    <p class="sec-label">Alterar Senha</p>
-    <div id="senha-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-    <div id="senha-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Senha alterada!</span></div>
-    <div class="form-group">
-      <label class="form-label">Senha atual</label>
-      <input type="password" id="senha-atual" class="form-input" placeholder="Sua senha atual"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Nova senha</label>
-      <input type="password" id="senha-nova" class="form-input" placeholder="Mínimo 6 caracteres"/>
-    </div>
-    <div class="form-group" style="margin-bottom:20px;">
-      <label class="form-label">Confirmar nova senha</label>
-      <input type="password" id="senha-nova2" class="form-input" placeholder="Repita a nova senha"/>
-    </div>
-    <button class="btn btn-ghost" id="btn-change-password" onclick="changePassword()" style="width:100%;">Alterar senha</button>
-  </div>
-</div>
-
-<!-- FOTO -->
-<div class="modal-overlay" id="modal-foto">
-  <div class="modal" style="text-align:center;max-width:420px;">
-    <div class="modal-header">
-      <h3 class="modal-title">Foto de Perfil</h3>
-      <button class="modal-close" onclick="closeModal('modal-foto')">✕</button>
-    </div>
-    <div class="foto-viewer">
-      <img id="foto-viewer-img" src="" alt="Foto de perfil"/>
-    </div>
-    <div class="foto-btns">
-      <button class="btn btn-danger-outline" onclick="removerFoto()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-        Remover
-      </button>
-      <button class="btn btn-ghost" onclick="document.getElementById('avatar-input').click();closeModal('modal-foto')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Alterar foto
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- CROP -->
-<div class="modal-overlay" id="modal-crop">
-  <div class="modal" style="max-width:480px;">
-    <div class="modal-header">
-      <h3 class="modal-title">Enquadrar foto</h3>
-      <button class="modal-close" onclick="cancelCrop()">✕</button>
-    </div>
-    <div class="crop-area" id="crop-area">
-      <canvas id="crop-canvas"></canvas>
-      <svg class="crop-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <mask id="hole">
-            <rect width="100" height="100" fill="white"/>
-            <circle cx="50" cy="50" r="42" fill="black"/>
-          </mask>
-        </defs>
-        <rect width="100" height="100" fill="rgba(0,0,0,0.55)" mask="url(#hole)"/>
-        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(201,168,76,0.7)" stroke-width="0.5"/>
-      </svg>
-    </div>
-    <div class="zoom-wrap">
-      <label>Zoom</label>
-      <input type="range" id="zoom-slider" min="1" max="5" step="0.05" value="1" oninput="onZoomChange()"/>
-    </div>
-    <div class="crop-btns">
-      <button class="btn btn-ghost" onclick="cancelCrop()">Cancelar</button>
-      <button class="btn btn-gold" id="btn-crop-save" onclick="saveCrop()">Salvar foto</button>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <span id="toast-icon"></span>
-  <span id="toast-msg"></span>
-</div>
-
-<!-- ══════════════════════════════════════
-     SCRIPTS
-══════════════════════════════════════ -->
-<script type="module" src="/sidebar.js"></script>
-
-<script>
-/* ── CONFIGURAÇÃO DE VERIFICAÇÃO DE E-MAIL ── */
-const ACTION_CODE_SETTINGS = {
-  url: 'https://assentagencia.com.br/email-confirmado',
-  handleCodeInApp: false,
-};
-
-/* ── UTILS ── */
-function showView(name){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  const map={
-    login:'view-login',
-    register:'view-register',
-    forgot:'view-forgot',
-    'verify-email':'view-verify-email',
-    dashboard:'view-dashboard'
-  };
-  const el=document.getElementById(map[name]);
-  if(el)el.classList.add('active');
-
-  // ── Oculta sidebar e topbar mobile em views de autenticação ──
-  // Impede que dados de sessão anterior fiquem visíveis para outro usuário.
-  const authViews=['login','register','forgot','verify-email'];
-  const isAuth=authViews.includes(name);
-  const sidebarEl=document.getElementById('assent-sidebar');
-  const topbarEl=document.querySelector('.assent-mob-topbar');
-  const overlayEl=document.getElementById('assent-sb-overlay');
-  if(sidebarEl)  sidebarEl.style.visibility = isAuth ? 'hidden' : 'visible';
-  if(topbarEl)   topbarEl.style.display      = isAuth ? 'none'   : '';
-  if(overlayEl && isAuth) overlayEl.classList.remove('open');
-}
-function showAlert(id,msg){
-  const el=document.getElementById(id);if(!el)return;
-  el.querySelector('span:last-child').textContent=msg;el.classList.add('show');
-}
-function hideAlert(id){const el=document.getElementById(id);if(el)el.classList.remove('show');}
-function showToast(msg,type='success'){
-  const t=document.getElementById('toast');
-  t.className=`toast ${type}`;
-  document.getElementById('toast-icon').textContent=type==='success'?'✓':'⚠';
-  document.getElementById('toast-msg').textContent=msg;
-  t.classList.add('show');
-  clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),3500);
-}
-function setLoading(btnId,loading){
-  const btn=document.getElementById(btnId);if(!btn)return;
-  btn.disabled=loading;
-  if(loading)btn.dataset.orig=btn.textContent;
-  btn.textContent=loading?'Aguarde...':(btn.dataset.orig||btn.textContent);
-}
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeModal(o.id);}));
-
-function firebaseError(code){
-  const map={
-    'auth/invalid-email':'E-mail inválido.',
-    'auth/user-not-found':'Usuário não encontrado.',
-    'auth/wrong-password':'Senha incorreta.',
-    'auth/email-already-in-use':'Este e-mail já está em uso.',
-    'auth/weak-password':'A senha deve ter pelo menos 6 caracteres.',
-    'auth/too-many-requests':'Muitas tentativas. Aguarde e tente novamente.',
-    'auth/network-request-failed':'Erro de conexão.',
-    'auth/invalid-credential':'E-mail ou senha incorretos.',
-    'auth/requires-recent-login':'Por segurança, faça login novamente.',
-  };
-  return map[code]||'Ocorreu um erro. Tente novamente.';
+  --gold: #C9A84C;
+  --gold-dim: #a8883a;
+  --gold-line: rgba(201,168,76,0.3);
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.1);
+  --surface: #0d0d0d;
+  --surface2: #141414;
+  --surface3: #1c1c1c;
+  --muted: #666666;
+  --white: #FFFFFF;
+  --heading: 'Montserrat', sans-serif;
+  --body: 'DM Sans', sans-serif;
 }
 
 /* ── SIDEBAR ── */
-function initSidebar(){
-  if(typeof window.AssentSidebar==='undefined'){
-    setTimeout(initSidebar, 50);
-    return;
-  }
-  window.AssentSidebar.init({
-    activePage: 'apps',
-    navItems: [
-      { key:'apps',    label:'Meus Aplicativos', icon:'apps',    href:'' },
-      { key:'profile', label:'Minha Conta',       icon:'profile', href:'' },
-    ],
-    onLogout: () => doLogout(),
-    onUserClick: () => {
-      const el=document.getElementById('section-profile');
-      if(el){const top=el.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top,behavior:'smooth'});}
-    },
-    onNav: (key) => {
-      const map={apps:'section-apps',profile:'section-profile'};
-      const el=document.getElementById(map[key]);
-      if(el){const top=el.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top,behavior:'smooth'});}
-    },
-  });
+.assent-sidebar {
+  width: var(--sidebar);
+  flex-shrink: 0;
+  background: rgba(13,13,13,0.72);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  transition: width .3s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+.assent-sidebar.collapsed { width: var(--sidebar-collapsed); }
+
+/* Logo */
+.sb-logo {
+  padding: 20px 20px 16px;
+  font-family: var(--heading); font-weight: 900; font-size: 1rem; letter-spacing: .14em;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  white-space: nowrap; min-height: 64px; color: var(--white);
+}
+.sb-logo em { color: var(--gold); font-style: normal; }
+.sb-logo-text { transition: opacity .2s, width .2s; overflow: hidden; }
+.assent-sidebar.collapsed .sb-logo-text { opacity: 0; width: 0; }
+
+.sb-toggle {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  width: 28px; height: 28px; border-radius: 8px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all .2s;
+}
+.sb-toggle:hover { border-color: var(--gold-line); color: var(--gold); }
+.sb-toggle svg { transition: transform .3s; width: 14px; height: 14px; }
+.assent-sidebar.collapsed .sb-toggle svg { transform: rotate(180deg); }
+
+/* User strip */
+.sb-user {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; white-space: nowrap; overflow: hidden;
+}
+.sb-user:hover .sb-user-name { color: var(--gold); }
+.sb-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; overflow: hidden;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--heading); font-weight: 800; font-size: .85rem; color: #000;
+  border: 2px solid var(--gold-line); position: relative;
+}
+.sb-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.sb-user-info { transition: opacity .2s; overflow: hidden; }
+.assent-sidebar.collapsed .sb-user-info { opacity: 0; width: 0; }
+.sb-user-name { font-family: var(--heading); font-weight: 700; font-size: .85rem; transition: color .2s; line-height: 1.2; color: var(--white); }
+.sb-user-email { font-size: .72rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; }
+
+/* Nav */
+.sb-nav { flex: 1; padding: 12px 0; overflow-y: auto; overflow-x: hidden; }
+.sb-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 22px;
+  font-size: .82rem; font-weight: 500; color: var(--muted);
+  cursor: pointer; transition: all .2s; position: relative;
+  white-space: nowrap; overflow: hidden;
+}
+.sb-nav-item:hover { color: var(--white); background: rgba(255,255,255,.03); }
+.sb-nav-item.active { color: var(--gold); background: rgba(201,168,76,.06); }
+.sb-nav-item.active::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--gold); border-radius: 0 2px 2px 0;
+}
+.sb-nav-icon { width: 18px; height: 18px; flex-shrink: 0; }
+.sb-nav-label { transition: opacity .2s; }
+.assent-sidebar.collapsed .sb-nav-label { opacity: 0; }
+.assent-sidebar.collapsed .sb-nav-item { padding: 11px 0; justify-content: center; }
+.assent-sidebar.collapsed .sb-nav-item.active::before { display: none; }
+.assent-sidebar.collapsed .sb-nav-item.active { border-left: 3px solid var(--gold); }
+
+/* Tooltip collapsed */
+.assent-sidebar.collapsed .sb-nav-item { position: relative; }
+.assent-sidebar.collapsed .sb-nav-item:hover::after {
+  content: attr(data-label);
+  position: absolute; left: calc(var(--sidebar-collapsed) - 8px); top: 50%; transform: translateY(-50%);
+  background: var(--surface3); color: var(--white); font-size: .75rem; font-weight: 600;
+  padding: 5px 12px; border-radius: 8px; white-space: nowrap; z-index: 200;
+  border: 1px solid var(--border2); pointer-events: none;
 }
 
-/* ── AUTH EVENTS ── */
-window.addEventListener('assent:authchange',async(e)=>{
-  document.getElementById('loading-screen').classList.add('hide');
-  const user=e.detail.user;
-  if(window._registrando)return;
-  if(user){
-    // Bloqueia acesso se e-mail não confirmado
-    if(!user.emailVerified){
-      window._currentUser=user;
-      await window._signOut(window._auth);
-      return; // Não redireciona — usuário será levado à tela de verify após o cadastro
-    }
-    initSidebar();
-    await loadDashboard(user);
-    showView('dashboard');
-  } else {
-    showView('login');
-  }
-});
+/* Footer */
+.sb-footer { padding: 16px 12px; border-top: 1px solid var(--border); }
+.sb-btn-sair {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px; border-radius: 50px;
+  background: transparent; border: 1px solid var(--border2);
+  color: var(--muted); font-size: .78rem; font-weight: 600; font-family: var(--heading);
+  letter-spacing: .05em; text-transform: uppercase; cursor: pointer; transition: all .2s;
+  white-space: nowrap; overflow: hidden;
+}
+.sb-btn-sair:hover { border-color: rgba(192,57,43,.4); color: #e87070; }
+.assent-sidebar.collapsed .sb-btn-sair { padding: 10px 0; border-radius: 50%; }
+.sb-sair-label { transition: opacity .2s, max-width .2s; max-width: 120px; overflow: hidden; }
+.assent-sidebar.collapsed .sb-sair-label { opacity: 0; max-width: 0; }
 
-/* ── LOAD DASHBOARD ── */
-async function loadDashboard(user){
-  window._currentUser=user;
-  const [perfilSnap,licSnap,planoEssSnap,planoProfSnap]=await Promise.all([
-    window._getDoc(window._doc(window._db,'perfis',user.uid)),
-    window._getDoc(window._doc(window._db,'licencas',user.uid)),
-    window._getDoc(window._doc(window._db,'licencas',user.uid,'plano','essencial')),
-    window._getDoc(window._doc(window._db,'licencas',user.uid,'plano','profissional')),
-  ]);
-  const perfil=perfilSnap.exists()?perfilSnap.data():{};
-  const lic=licSnap.exists()?licSnap.data():{};
-  const planoEss=planoEssSnap.exists()?planoEssSnap.data():{};
-  const planoProf=planoProfSnap.exists()?planoProfSnap.data():{};
-  // Determina plano ativo pelos subdocs
-  const essAtivo=planoEss.ativo===true;
-  const profAtivo=planoProf.ativo===true;
-  lic._planoEssencial=planoEss;
-  lic._planoProfissional=planoProf;
-  lic._clienteAG=essAtivo||profAtivo;
-  if(profAtivo) lic.plano='profissional';
-  else if(essAtivo) lic.plano='essencial';
-  window._perfil=perfil;window._licenca=lic;
+/* ── MOBILE TOPBAR ── */
+.assent-mob-topbar {
+  display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(13,13,13,0.85); border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  height: 56px; align-items: center; justify-content: space-between; padding: 0 16px;
+}
+.mob-topbar-logo { font-family: var(--heading); font-weight: 900; font-size: .9rem; letter-spacing: .12em; color: var(--white); }
+.mob-topbar-logo em { color: var(--gold); font-style: normal; }
+.assent-hamburger { background: none; border: none; cursor: pointer; padding: 4px; display: flex; flex-direction: column; gap: 5px; }
+.assent-hamburger span { width: 22px; height: 2px; background: var(--white); border-radius: 2px; display: block; transition: all .3s; }
+.assent-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.assent-hamburger.open span:nth-child(2) { opacity: 0; }
+.assent-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  // Prioriza licencas, fallback para perfis (compatibilidade retroativa)
-  const nome=lic.name||perfil.nome||user.email.split('@')[0];
-  const dataNasc=lic.dataNascimento||perfil.dataNascimento||'';
-  const inits=nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+/* ── OVERLAY MOBILE ── */
+.assent-sb-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 99; }
+.assent-sb-overlay.open { display: block; }
 
-  // Foto
-  try{
-    const fotoSnap=await window._getDoc(window._doc(window._db,'users',user.uid,'foto','avatar'));
-    if(fotoSnap.exists()&&fotoSnap.data().base64){
-      window._fotoBase64=fotoSnap.data().base64;
-      setAvatarImg(fotoSnap.data().base64,inits);
-    } else {
-      window._fotoBase64=null;
-      setAvatarInitials(inits);
-    }
-  }catch(err){
-    window._fotoBase64=null;
-    setAvatarInitials(inits);
-  }
+@media (max-width: 900px) {
+  .assent-sidebar { transform: translateX(-100%); width: var(--sidebar) !important; }
+  .assent-sidebar.open { transform: translateX(0); }
+  .assent-mob-topbar { display: flex; }
+  .sb-toggle { display: none; }
+}
+`;
 
-  document.getElementById('welcome-name').textContent=nome.split(' ')[0];
-  document.getElementById('prof-name').textContent=nome||'—';
-  document.getElementById('prof-email').textContent=user.email;
-
-  if(window.AssentSidebar){
-    window.AssentSidebar.setUser({nome,email:user.email,fotoBase64:window._fotoBase64});
-  }
-
-  if(dataNasc){
-    const[y,m,d]=dataNasc.split('-');
-    document.getElementById('prof-nasc').textContent=`${d}/${m}/${y}`;
-  }
-  const since=user.metadata.creationTime
-    ?new Date(user.metadata.creationTime).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}):'—';
-  document.getElementById('prof-since').textContent=since;
-  document.getElementById('edit-nome').value=nome||'';
-  document.getElementById('edit-nascimento').value=dataNasc||'';
-
-  renderApps(lic);
-  renderLicenca(lic);
+function injectCSS() {
+  if (document.getElementById('assent-sidebar-css')) return;
+  const style = document.createElement('style');
+  style.id = 'assent-sidebar-css';
+  style.textContent = SIDEBAR_CSS;
+  document.head.appendChild(style);
 }
 
-function setAvatarImg(base64,inits){
-  const av=document.getElementById('prof-av-btn');
-  av.innerHTML=`<img src="${base64}" alt="foto"/><div class="prof-av-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
-  if(window.AssentSidebar)window.AssentSidebar.setUser({fotoBase64:base64});
-}
-function setAvatarInitials(inits){
-  const av=document.getElementById('prof-av-btn');
-  av.innerHTML=`<span id="prof-av-initials">${inits}</span><div class="prof-av-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
-}
+const ICONS = {
+  apps: `<svg class="sb-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="9" height="9" rx="1"/><rect x="13" y="3" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>`,
+  profile: `<svg class="sb-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
+  courses: `<svg class="sb-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+  logout: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
+  chevron: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`,
+};
 
-/* ── APPS ── */
-function renderApps(lic){
-  const container=document.getElementById('apps-container');
-  const apps=[
-    {key:'_clienteAG',  name:'ASSENT Gestão',  desc:'Gestão completa do seu negócio local em um só lugar.',   logo:'/public/logo_ag.png',     logoFb:'AG', link:'https://ag.assentagencia.com.br'},
-    {key:'clienteCurso',name:'ASSENT Cursos',   desc:'Acesso à plataforma de cursos e conteúdos exclusivos.', logo:'/public/logo_cursos.png', logoFb:'🎓', link:'/cursos'},
-  ];
-  const temAcesso=apps.some(a=>lic[a.key]===true);
-  if(!temAcesso){
-    container.innerHTML=`<div class="no-access"><p>Você ainda não tem acesso aos nossos aplicativos.<br/>Conheça o que temos para o seu negócio crescer.</p><a href="https://assentagencia.com.br/aplicativos" target="_blank">Conhecer aplicativos →</a></div>`;
-    return;
-  }
-  container.innerHTML=`<div class="apps-grid">${apps.map(a=>{
-    const ok=lic[a.key]===true;
-    const logoHtml=`<img class="app-card-logo" src="${a.logo}" alt="${a.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="app-card-logo-fallback" style="display:none;">${a.logoFb}</div>`;
-    const actionBtn=ok&&a.link
-      ?`<a href="${a.link}" class="app-access-btn">Acessar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>`
-      :``;
-    const cardTag = ok&&a.link ? `a href="${a.link}" target="_blank" rel="noopener noreferrer"` : `div`;
-    const cardClose = ok&&a.link ? `a` : `div`;
-    return `<${cardTag} class="app-card${ok?' active-card':''}">
-      <div class="app-card-top">${logoHtml}</div>
-      <div class="app-card-body">
-        <div class="app-card-name">${a.name}</div>
-        <div class="app-card-desc">${a.desc}</div>
-      </div>
-      <div class="app-card-foot">
-        <span class="app-badge ${ok?'ok':'no'}">${ok?'Ativo':'Sem acesso'}</span>
-        ${actionBtn}
-      </div>
-    </${cardClose}>`;
-  }).join('')}</div>`;
-}
+let _cfg = {};
+let _sidebarEl = null;
 
-function renderLicenca(lic){
-  const container=document.getElementById('licenca-container');
-  const plano=lic.plano||'trial';
+function buildSidebar(cfg) {
+  _cfg = cfg;
 
-  // Label e cor por plano
-  const planoLabel={ trial:'Trial', essencial:'Essencial', profissional:'Profissional' }[plano] || plano;
-  const planoColor={ trial:'var(--muted)', essencial:'var(--gold)', profissional:'var(--gold)' }[plano] || 'var(--muted)';
+  // Remove elementos de sidebar de uma sessão anterior antes de reconstruir.
+  // Sem isso, se um novo usuário logar após outro, a sidebar antiga permanece
+  // no DOM com os dados do usuário anterior.
+  document.getElementById('assent-sidebar')?.remove();
+  document.getElementById('assent-sb-overlay')?.remove();
+  document.querySelector('.assent-mob-topbar')?.remove();
 
-  // Validade
-  let validadeHtml='';
-  if(plano==='trial'&&lic.trialExpira){
-    const exp=lic.trialExpira.toDate ? lic.trialExpira.toDate() : new Date(lic.trialExpira);
-    const hoje=new Date();
-    const dias=Math.ceil((exp-hoje)/86400000);
-    const dataFmt=exp.toLocaleDateString('pt-BR');
-    if(dias>0){
-      validadeHtml=`<div class="licenca-row"><span class="lic-label">Trial expira em</span><span class="lic-value" style="color:${dias<=3?'#e87070':'var(--gold)'};">${dataFmt} (${dias} dia${dias!==1?'s':''})</span></div>`;
-    } else {
-      validadeHtml=`<div class="licenca-row"><span class="lic-label">Trial</span><span class="lic-value" style="color:#e87070;">Expirado</span></div>`;
-    }
-  } else if(plano!=='trial'){
-    // Para planos pagos, tenta ler dataVencimento do subdoc (disponível após ativação)
-    const expira=lic.expira||'—';
-    validadeHtml=`<div class="licenca-row"><span class="lic-label">Validade</span><span class="lic-value">${expira==='nunca'?'∞ Nunca expira':expira}</span></div>`;
-  }
+  // Overlay mobile
+  const overlay = document.createElement('div');
+  overlay.className = 'assent-sb-overlay';
+  overlay.id = 'assent-sb-overlay';
+  overlay.addEventListener('click', closeSidebar);
 
-  container.innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="licenca-row">
-        <span class="lic-label">Plano atual</span>
-        <span class="lic-value" style="color:${planoColor};">${planoLabel}</span>
-      </div>
-      ${validadeHtml}
-      ${lic.email?`<div class="licenca-row"><span class="lic-label">E-mail da licença</span><span class="lic-value" style="font-size:.8rem;color:var(--muted);">${lic.email}</span></div>`:''}
+  // Mobile topbar
+  const topbar = document.createElement('div');
+  topbar.className = 'assent-mob-topbar';
+  topbar.innerHTML = `
+    <span class="mob-topbar-logo">ASSENT&nbsp;<em>AGÊNCIA</em></span>
+    <button class="assent-hamburger" id="assent-ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>`;
+  topbar.querySelector('#assent-ham').addEventListener('click', toggleSidebar);
+
+  // Sidebar element
+  const sidebar = document.createElement('aside');
+  sidebar.className = 'assent-sidebar';
+  sidebar.id = 'assent-sidebar';
+
+  // Nav items HTML
+  const navItems = (cfg.navItems || []).map(item => {
+    const icon = ICONS[item.icon] || '';
+    return `<div class="sb-nav-item${item.key === cfg.activePage ? ' active' : ''}"
+      data-key="${item.key}"
+      data-label="${item.label}"
+      data-href="${item.href || ''}"
+      tabindex="0"
+      role="button"
+      aria-label="${item.label}">
+      ${icon}
+      <span class="sb-nav-label">${item.label}</span>
     </div>`;
+  }).join('');
+
+  sidebar.innerHTML = `
+    <div class="sb-logo">
+      <span class="sb-logo-text">ASSENT&nbsp;<em>AGÊNCIA</em></span>
+      <button class="sb-toggle" id="assent-sb-toggle" title="Recolher menu" aria-label="Recolher menu">
+        ${ICONS.chevron}
+      </button>
+    </div>
+    <div class="sb-user" id="assent-sb-user" role="button" tabindex="0">
+      <div class="sb-avatar" id="assent-sb-avatar">?</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name" id="assent-sb-name">Carregando...</div>
+        <div class="sb-user-email" id="assent-sb-email"></div>
+      </div>
+    </div>
+    <nav class="sb-nav" id="assent-sb-nav">
+      ${navItems}
+    </nav>
+    <div class="sb-footer">
+      <button class="sb-btn-sair" id="assent-sb-logout" aria-label="Sair da conta">
+        ${ICONS.logout}
+        <span class="sb-sair-label">Sair da conta</span>
+      </button>
+    </div>`;
+
+  // Events
+  sidebar.querySelector('#assent-sb-toggle').addEventListener('click', toggleCollapse);
+  sidebar.querySelector('#assent-sb-logout').addEventListener('click', () => cfg.onLogout?.());
+  sidebar.querySelector('#assent-sb-user').addEventListener('click', () => {
+    cfg.onUserClick?.();
+    closeSidebar();
+  });
+  sidebar.querySelectorAll('.sb-nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const key = item.dataset.key;
+      const href = item.dataset.href;
+      if (href) {
+        window.location.href = href;
+      } else {
+        setActive(key);
+        cfg.onNav?.(key);
+        closeSidebar();
+      }
+    });
+  });
+
+  _sidebarEl = sidebar;
+
+  // Restore collapsed state
+  if (localStorage.getItem('assent-sidebar-collapsed') === '1') {
+    sidebar.classList.add('collapsed');
+    _applyMainMargin(true);
+  }
+
+  // Inject into body (before first child)
+  document.body.prepend(overlay, topbar, sidebar);
+
+  // Adjust main content margin
+  _applyMainMargin(sidebar.classList.contains('collapsed'));
 }
 
-/* ── AVATAR ── */
-function handleAvatarClick(){
-  if(window._fotoBase64){
-    document.getElementById('foto-viewer-img').src=window._fotoBase64;
-    openModal('modal-foto');
-  } else {
-    document.getElementById('avatar-input').click();
+function _applyMainMargin(collapsed) {
+  const main = document.getElementById('assent-dash-main') || document.querySelector('.dash-main');
+  if (main) {
+    main.style.marginLeft = collapsed
+      ? 'var(--sidebar-collapsed)'
+      : 'var(--sidebar)';
   }
 }
-function onFileSelected(e){
-  const file=e.target.files[0];if(!file)return;
-  if(file.size>10*1024*1024){showToast('Imagem deve ter até 10MB.','error');return;}
-  const reader=new FileReader();
-  reader.onload=ev=>{ openCropModal(ev.target.result); };
-  reader.readAsDataURL(file);
-  e.target.value='';
+
+function toggleCollapse() {
+  const sidebar = document.getElementById('assent-sidebar');
+  if (!sidebar) return;
+  const isCollapsed = sidebar.classList.toggle('collapsed');
+  _applyMainMargin(isCollapsed);
+  localStorage.setItem('assent-sidebar-collapsed', isCollapsed ? '1' : '0');
 }
 
-/* ── CROP ── */
-let cropState={img:null,zoom:1,offsetX:0,offsetY:0,dragging:false,lastX:0,lastY:0};
-function openCropModal(src){
-  closeModal('modal-foto');openModal('modal-crop');
-  const img=new Image();
-  img.onload=()=>{
-    cropState={img,zoom:1,offsetX:0,offsetY:0,dragging:false,lastX:0,lastY:0};
-    document.getElementById('zoom-slider').value=1;
-    initCropCanvas();drawCrop();
-  };
-  img.src=src;
-}
-function initCropCanvas(){
-  const area=document.getElementById('crop-area');
-  const canvas=document.getElementById('crop-canvas');
-  const size=area.clientWidth;canvas.width=size;canvas.height=size;
-}
-function drawCrop(){
-  const canvas=document.getElementById('crop-canvas');
-  const ctx=canvas.getContext('2d');
-  const{img,zoom,offsetX,offsetY}=cropState;
-  const s=canvas.width;ctx.clearRect(0,0,s,s);
-  const scale=Math.max(s/img.width,s/img.height)*zoom;
-  const w=img.width*scale,h=img.height*scale;
-  const x=(s-w)/2+offsetX,y=(s-h)/2+offsetY;
-  ctx.drawImage(img,x,y,w,h);
-}
-function onZoomChange(){
-  cropState.zoom=parseFloat(document.getElementById('zoom-slider').value);drawCrop();
-}
-function cancelCrop(){closeModal('modal-crop');}
-const cropArea=document.getElementById('crop-area');
-cropArea.addEventListener('mousedown',e=>{cropState.dragging=true;cropState.lastX=e.clientX;cropState.lastY=e.clientY;});
-cropArea.addEventListener('touchstart',e=>{cropState.dragging=true;cropState.lastX=e.touches[0].clientX;cropState.lastY=e.touches[0].clientY;},{passive:true});
-window.addEventListener('mousemove',e=>{
-  if(!cropState.dragging)return;
-  cropState.offsetX+=e.clientX-cropState.lastX;cropState.offsetY+=e.clientY-cropState.lastY;
-  cropState.lastX=e.clientX;cropState.lastY=e.clientY;drawCrop();
-});
-window.addEventListener('touchmove',e=>{
-  if(!cropState.dragging)return;
-  cropState.offsetX+=e.touches[0].clientX-cropState.lastX;cropState.offsetY+=e.touches[0].clientY-cropState.lastY;
-  cropState.lastX=e.touches[0].clientX;cropState.lastY=e.touches[0].clientY;drawCrop();
-},{passive:true});
-window.addEventListener('mouseup',()=>{cropState.dragging=false;});
-window.addEventListener('touchend',()=>{cropState.dragging=false;});
-
-async function saveCrop(){
-  setLoading('btn-crop-save',true);
-  try{
-    const out=document.createElement('canvas');
-    out.width=400;out.height=400;
-    const ctx=out.getContext('2d');
-    const src=document.getElementById('crop-canvas');
-    const srcSize=src.width;
-    ctx.beginPath();ctx.arc(200,200,200,0,Math.PI*2);ctx.clip();
-    ctx.drawImage(src,0,0,srcSize,srcSize,0,0,400,400);
-    const base64=out.toDataURL('image/jpeg',0.85);
-    await salvarFotoFirestore(base64);
-    window._fotoBase64=base64;
-    const nome=window._licenca?.name||window._perfil?.nome||window._currentUser?.email?.split('@')[0]||'?';
-    const inits=nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    setAvatarImg(base64,inits);
-    if(window.AssentSidebar)window.AssentSidebar.setUser({nome,email:window._currentUser.email,fotoBase64:base64});
-    closeModal('modal-crop');showToast('Foto atualizada com sucesso!');
-  }catch(err){console.error(err);showToast('Erro ao salvar foto.','error');}
-  setLoading('btn-crop-save',false);
+function toggleSidebar() {
+  const sidebar = document.getElementById('assent-sidebar');
+  const ham = document.getElementById('assent-ham');
+  const overlay = document.getElementById('assent-sb-overlay');
+  sidebar?.classList.toggle('open');
+  ham?.classList.toggle('open');
+  overlay?.classList.toggle('open');
 }
 
-async function salvarFotoFirestore(base64){
-  const uid=window._currentUser.uid;
-  await window._setDoc(
-    window._doc(window._db,'users',uid,'foto','avatar'),
-    {base64,updatedAt:window._serverTimestamp()},
-    {merge:true}
-  );
+function closeSidebar() {
+  document.getElementById('assent-sidebar')?.classList.remove('open');
+  document.getElementById('assent-ham')?.classList.remove('open');
+  document.getElementById('assent-sb-overlay')?.classList.remove('open');
 }
 
-async function removerFoto(){
-  try{
-    const uid=window._currentUser.uid;
-    await window._setDoc(
-      window._doc(window._db,'users',uid,'foto','avatar'),
-      {base64:null,updatedAt:window._serverTimestamp()},
-      {merge:true}
-    );
-    window._fotoBase64=null;
-    const nome=window._licenca?.name||window._perfil?.nome||window._currentUser?.email?.split('@')[0]||'?';
-    const inits=nome.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    setAvatarInitials(inits);
-    if(window.AssentSidebar)window.AssentSidebar.setUser({nome,email:window._currentUser.email,fotoBase64:null});
-    closeModal('modal-foto');showToast('Foto removida.');
-  }catch(err){showToast('Erro ao remover foto.','error');}
-}
+function setUser({ nome, email, fotoBase64 }) {
+  const nameEl = document.getElementById('assent-sb-name');
+  const emailEl = document.getElementById('assent-sb-email');
+  const avatarEl = document.getElementById('assent-sb-avatar');
+  if (!nameEl) return;
 
-/* ── AUTH ── */
-async function doLogin(){
-  hideAlert('login-alert');
-  const email=document.getElementById('login-email').value.trim();
-  const pass=document.getElementById('login-password').value;
-  if(!email||!pass){showAlert('login-alert','Preencha e-mail e senha.');return;}
-  setLoading('btn-login',true);
-  try{
-    const cred=await window._signInWithEmailAndPassword(window._auth,email,pass);
-    if(!cred.user.emailVerified){
-      // Guarda referência para poder reenviar o e-mail se necessário
-      window._currentUser=cred.user;
-      await window._signOut(window._auth);
-      showAlert('login-alert','Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.');
-      // Mostra link para reenviar
-      document.getElementById('login-alert').querySelector('span:last-child').innerHTML =
-        'Confirme seu e-mail antes de entrar. <a href="#" onclick="goToVerifyFromLogin(\''+email+'\');return false" style="color:var(--gold);font-weight:700;">Reenviar e-mail</a>';
-      setLoading('btn-login',false);
-      return;
+  const firstName = nome?.split(' ')[0] || '—';
+  const inits = (nome || email || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+  nameEl.textContent = firstName;
+  if (emailEl) emailEl.textContent = email || '';
+  if (avatarEl) {
+    if (fotoBase64) {
+      avatarEl.innerHTML = `<img src="${fotoBase64}" alt="foto"/>`;
+    } else {
+      avatarEl.textContent = inits;
     }
   }
-  catch(e){showAlert('login-alert',firebaseError(e.code));}
-  setLoading('btn-login',false);
 }
 
-// Abre a tela de verificação a partir do login
-function goToVerifyFromLogin(email){
-  const el=document.getElementById('verify-email-display');
-  if(el)el.textContent=email;
-  showView('verify-email');
-}
-
-async function doRegister(){
-  hideAlert('register-alert');
-  const nome=document.getElementById('reg-nome').value.trim();
-  const nasc=document.getElementById('reg-nascimento').value;
-  const email=document.getElementById('reg-email').value.trim();
-  const pass=document.getElementById('reg-password').value;
-  const pass2=document.getElementById('reg-password2').value;
-  const telefone=document.getElementById('reg-telefone').value.trim();
-  if(!nome){showAlert('register-alert','Informe seu nome.');return;}
-  if(!nasc){showAlert('register-alert','Informe sua data de nascimento.');return;}
-  if(!email){showAlert('register-alert','Informe seu e-mail.');return;}
-  if(pass.length<6){showAlert('register-alert','A senha deve ter ao menos 6 caracteres.');return;}
-  if(pass!==pass2){showAlert('register-alert','As senhas não coincidem.');return;}
-  if(!telefone){showAlert('register-alert','Informe seu telefone.');return;}
-  window._registrando=true;setLoading('btn-register',true);
-
-  // ── 1. Criar conta — se falhar, mostra erro e para ────────────────────
-  let cred;
-  try{
-    cred=await window._createUserWithEmailAndPassword(window._auth,email,pass);
-  }catch(e){
-    window._registrando=false;
-    showAlert('register-alert',firebaseError(e.code));
-    setLoading('btn-register',false);
-    return;
-  }
-
-  // ── 2. Redireciona imediatamente (mantém _registrando=true para evitar signOut automático) ─
-  const uid=cred.user.uid;
-  window._currentUser=cred.user;
-  const emailDisplay=document.getElementById('verify-email-display');
-  if(emailDisplay)emailDisplay.textContent=email;
-  showView('verify-email');
-  setLoading('btn-register',false);
-
-  // ── 3. Firestore + e-mail de verificação — AINDA com user autenticado ─
-  // IMPORTANTE: _registrando permanece true até aqui terminar.
-  // O handler assent:authchange faz signOut quando emailVerified===false,
-  // mas respeita _registrando=true e pula. Sem isso as writes falham.
-  try{
-    const trialExpira=new Date(Date.now()+14*86_400_000);
-    await window._setDoc(window._doc(window._db,'licencas',uid),{
-      name:           nome,
-      email:          email,
-      dataNascimento: nasc,
-      telefone:       telefone,
-      ativo:          true,
-      plano:          'trial',
-      trialInicio:    window._serverTimestamp(),
-      trialExpira:    trialExpira,
-      criadoEm:       window._serverTimestamp(),
-    });
-    const now=new Date();
-    const baseSubdoc={
-      ativo:false,dataInicio:null,dataVencimento:null,
-      contagem:{vendasMes:0,resetAt:now},
-    };
-    await Promise.all([
-      window._setDoc(window._doc(window._db,'licencas',uid,'plano','essencial'),{
-        ...baseSubdoc,slug:'essencial',
-        limites:{loginsExtras:5,vendasMes:500},features:{instaInsights:false},
-      }),
-      window._setDoc(window._doc(window._db,'licencas',uid,'plano','profissional'),{
-        ...baseSubdoc,slug:'profissional',
-        limites:{loginsExtras:15,vendasMes:2500},features:{instaInsights:true},
-      }),
-    ]);
-    await window._setDoc(window._doc(window._db,'perfis',uid),{
-      nome:nome,dataNascimento:nasc,criadoEm:window._serverTimestamp(),
-    });
-    await window._sendEmailVerification(cred.user,ACTION_CODE_SETTINGS);
-  }catch(e){
-    console.warn('[doRegister] pós-criação:',e.code,e.message);
-  }finally{
-    // Só aqui o authchange pode agir normalmente
-    window._registrando=false;
-  }
-}
-
-async function doForgot(){
-  hideAlert('forgot-alert');
-  document.getElementById('forgot-success').style.display='none';
-  const email=document.getElementById('forgot-email').value.trim();
-  if(!email){showAlert('forgot-alert','Informe seu e-mail.');return;}
-  setLoading('btn-forgot',true);
-  try{await window._sendPasswordResetEmail(window._auth,email);document.getElementById('forgot-success').style.display='flex';}
-  catch(e){showAlert('forgot-alert',firebaseError(e.code));}
-  setLoading('btn-forgot',false);
-}
-
-async function doLogout(){
-  // Limpa dados do usuário anterior na sidebar ANTES do signOut
-  // Garante que nenhuma informação pessoal fique exposta entre sessões.
-  if(window.AssentSidebar){
-    window.AssentSidebar.setUser({nome:'—',email:'',fotoBase64:null});
-  }
-  await window._signOut(window._auth);
-  showView('login');
-}
-
-/* ── REENVIAR VERIFICAÇÃO ── */
-async function resendVerification(){
-  hideAlert('verify-alert');
-  document.getElementById('verify-success').classList.remove('show');
-  if(!window._currentUser){showView('login');return;}
-  setLoading('btn-resend-verify',true);
-  try{
-    await window._sendEmailVerification(window._currentUser, ACTION_CODE_SETTINGS);
-    document.getElementById('verify-success').classList.add('show');
-  }catch(e){
-    showAlert('verify-alert','Erro ao reenviar. Aguarde alguns minutos e tente novamente.');
-  }
-  setLoading('btn-resend-verify',false);
-}
-
-/* ── SAVE PROFILE ── */
-async function saveProfile(){
-  hideAlert('modal-alert');hideAlert('modal-success');
-  const nome=document.getElementById('edit-nome').value.trim();
-  const nasc=document.getElementById('edit-nascimento').value;
-  if(!nome){showAlert('modal-alert','Informe seu nome.');return;}
-  if(!nasc){showAlert('modal-alert','Informe sua data de nascimento.');return;}
-  setLoading('btn-save-profile',true);
-  try{
-    const uid=window._currentUser.uid;
-    // Se licencas/{uid} nao existe, cria com campos minimos obrigatorios
-    // Se ja existe, faz merge apenas dos campos de perfil
-    const licDocRef=window._doc(window._db,'licencas',uid);
-    const licExiste=window._licenca&&(window._licenca.ativo!==undefined||window._licenca.email);
-    const licPromise=licExiste
-      ?window._setDoc(licDocRef,{name:nome,dataNascimento:nasc},{merge:true})
-      :window._setDoc(licDocRef,{
-          name:nome,
-          email:window._currentUser.email,
-          dataNascimento:nasc,
-          ativo:true,
-          plano:'trial',
-          criadoEm:window._serverTimestamp(),
-        },{merge:true});
-    await Promise.all([
-      licPromise,
-      window._setDoc(window._doc(window._db,'perfis',uid),{nome,dataNascimento:nasc},{merge:true}),
-    ]);
-    window._perfil.nome=nome;window._perfil.dataNascimento=nasc;
-    if(window._licenca){window._licenca.name=nome;window._licenca.dataNascimento=nasc;}
-    else{window._licenca={name:nome,email:window._currentUser.email,dataNascimento:nasc,ativo:true,plano:'trial'};}
-    document.getElementById('welcome-name').textContent=nome.split(' ')[0];
-    document.getElementById('prof-name').textContent=nome;
-    if(window.AssentSidebar)window.AssentSidebar.setUser({nome,email:window._currentUser.email,fotoBase64:window._fotoBase64});
-    const[y,m,d]=nasc.split('-');
-    document.getElementById('prof-nasc').textContent=`${d}/${m}/${y}`;
-    document.getElementById('modal-success').classList.add('show');
-    showToast('Perfil atualizado!');
-  }catch(e){showAlert('modal-alert','Erro ao salvar. Tente novamente.');}
-  setLoading('btn-save-profile',false);
-}
-
-/* ── CHANGE PASSWORD ── */
-async function changePassword(){
-  hideAlert('senha-alert');hideAlert('senha-success');
-  const atual=document.getElementById('senha-atual').value;
-  const nova=document.getElementById('senha-nova').value;
-  const nova2=document.getElementById('senha-nova2').value;
-  if(!atual){showAlert('senha-alert','Informe sua senha atual.');return;}
-  if(nova.length<6){showAlert('senha-alert','A nova senha deve ter ao menos 6 caracteres.');return;}
-  if(nova!==nova2){showAlert('senha-alert','As senhas não coincidem.');return;}
-  setLoading('btn-change-password',true);
-  try{
-    const user=window._currentUser;
-    const cred=window._EmailAuthProvider.credential(user.email,atual);
-    await window._reauthenticateWithCredential(user,cred);
-    await window._updatePassword(user,nova);
-    document.getElementById('senha-success').classList.add('show');
-    document.getElementById('senha-atual').value='';
-    document.getElementById('senha-nova').value='';
-    document.getElementById('senha-nova2').value='';
-    showToast('Senha alterada!');
-  }catch(e){showAlert('senha-alert',firebaseError(e.code));}
-  setLoading('btn-change-password',false);
-}
-
-/* ── ENTER KEY ── */
-document.addEventListener('keydown',e=>{
-  if(e.key!=='Enter')return;
-  if(document.getElementById('view-login')?.classList.contains('active'))doLogin();
-  else if(document.getElementById('view-register')?.classList.contains('active'))doRegister();
-  else if(document.getElementById('view-forgot')?.classList.contains('active'))doForgot();
-});
-
-/* ── CARD MOUSE LIGHT ── */
-document.addEventListener('mousemove',e=>{
-  document.querySelectorAll('.app-card').forEach(card=>{
-    const rect=card.getBoundingClientRect();
-    const x=((e.clientX-rect.left)/rect.width*100).toFixed(1)+'%';
-    const y=((e.clientY-rect.top)/rect.height*100).toFixed(1)+'%';
-    card.style.setProperty('--mx',x);
-    card.style.setProperty('--my',y);
+function setActive(key) {
+  document.querySelectorAll('.sb-nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.key === key);
   });
-});
-
-window._loadDashboard=loadDashboard;
-
-/* ── TOGGLE SENHA ── */
-function togglePass(id,btn){
-  const inp=document.getElementById(id);
-  const show=inp.type==='password';
-  inp.type=show?'text':'password';
-  btn.querySelector('svg').innerHTML=show
-    ?'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
-    :'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
 }
 
-/* ── MÁSCARA TELEFONE ── */
-function maskTel(el){
-  let v=el.value.replace(/\D/g,'').slice(0,11);
-  if(v.length>10) v=v.replace(/^(\d{2})(\d{5})(\d{4}).*/,'($1) $2-$3');
-  else if(v.length>6) v=v.replace(/^(\d{2})(\d{4})(\d*)/,'($1) $2-$3');
-  else if(v.length>2) v=v.replace(/^(\d{2})(\d*)/,'($1) $2');
-  else if(v.length>0) v='('+v;
-  el.value=v;
+function init(cfg) {
+  injectCSS();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => buildSidebar(cfg));
+  } else {
+    buildSidebar(cfg);
+  }
 }
-</script>
-</body>
-</html>
+
+// Public API
+window.AssentSidebar = { init, setUser, setActive, toggleCollapse, closeSidebar };
+export { init, setUser, setActive, toggleCollapse, closeSidebar };

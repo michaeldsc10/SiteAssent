@@ -541,11 +541,6 @@ let _user = null, _licenca = {}, _authJaProcessado = false;
     if (window.AssentSidebar) {
       window.AssentSidebar.init({
         activePage: 'courses',
-        navItems: [
-          { key: 'apps',    label: 'Dashboard', icon: 'apps',    href: '/dashboard.html' },
-          { key: 'courses', label: 'Cursos',     icon: 'courses', href: '/cursos.html' },
-          { key: 'profile', label: 'Perfil',     icon: 'profile', href: '/perfil.html' },
-        ],
         onLogout: () => { if (window.firebase) firebase.auth().signOut(); }
       });
     }

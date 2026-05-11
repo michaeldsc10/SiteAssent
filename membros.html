@@ -901,18 +901,14 @@ function initSidebar(){
     return;
   }
   window.AssentSidebar.init({
-    activePage: 'apps',
-    navItems: [
-      { key:'apps',    label:'Meus Aplicativos', icon:'apps',    href:'' },
-      { key:'profile', label:'Minha Conta',       icon:'profile', href:'' },
-    ],
+    activePage: 'profile',
     onLogout: () => doLogout(),
     onUserClick: () => {
       const el=document.getElementById('section-profile');
       if(el){const top=el.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top,behavior:'smooth'});}
     },
     onNav: (key) => {
-      const map={apps:'section-apps',profile:'section-profile'};
+      const map={profile:'section-profile'};
       const el=document.getElementById(map[key]);
       if(el){const top=el.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top,behavior:'smooth'});}
     },

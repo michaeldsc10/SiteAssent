@@ -45,7 +45,6 @@ body{
   background:var(--bg); color:var(--white);
   font-family:var(--body); min-height:100vh;
   overflow-x:hidden; line-height:1.6;
-  padding-top: var(--nav-h);
 }
 ::-webkit-scrollbar{ width:4px; }
 ::-webkit-scrollbar-track{ background:transparent; }
@@ -104,7 +103,7 @@ a{ text-decoration:none; color:inherit; }
 #view-erro{
   display:none; align-items:center; justify-content:center;
   flex-direction:column; text-align:center; padding:60px 24px;
-  min-height:calc(100vh - var(--nav-h));
+  min-height:100vh;
   background:radial-gradient(ellipse at 50% 0%, rgba(201,168,76,.06) 0%, transparent 60%), var(--bg);
 }
 #view-erro.active{ display:flex; }
@@ -137,13 +136,13 @@ a{ text-decoration:none; color:inherit; }
 ══════════════════════════════════════ */
 #view-player{
   display:none; flex-direction:column;
-  min-height:calc(100vh - var(--nav-h));
+  min-height:100vh;
 }
 #view-player.active{ display:flex; }
 
 /* ── Header do player ── */
 .player-header{
-  position:sticky; top:var(--nav-h); z-index:100;
+  position:sticky; top:0; z-index:100;
   background:var(--surface); border-bottom:1px solid var(--border);
   padding:0 24px; height:var(--header-h);
   display:flex; align-items:center; gap:16px;
@@ -184,7 +183,7 @@ a{ text-decoration:none; color:inherit; }
 /* ── Layout principal ── */
 .player-layout{
   display:flex; flex:1;
-  height:calc(100vh - var(--nav-h) - var(--header-h));
+  height:calc(100vh - var(--header-h));
   overflow:hidden;
 }
 
@@ -326,7 +325,7 @@ a{ text-decoration:none; color:inherit; }
 
   .player-sidebar{
     position:fixed;
-    top:calc(var(--nav-h) + var(--header-h));
+    top:var(--header-h);
     left:0; right:0; bottom:0;
     width:100%; z-index:200;
     transform:translateX(-100%);
@@ -334,7 +333,7 @@ a{ text-decoration:none; color:inherit; }
   }
   .player-sidebar.open{ transform:translateX(0); }
 
-  .player-main{ min-height:calc(100vh - var(--nav-h) - var(--header-h)); }
+  .player-main{ min-height:calc(100vh - var(--header-h)); }
   .aula-info{ padding:20px 20px 36px; }
 }
 
@@ -344,7 +343,6 @@ a{ text-decoration:none; color:inherit; }
 </style>
 </head>
 <body>
-<assent-navbar></assent-navbar>
 
 <!-- Loading -->
 <div id="loading-screen">

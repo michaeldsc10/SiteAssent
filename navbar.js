@@ -378,10 +378,10 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
       mobSair.classList.add('show');
       mobEntrar.classList.add('hide');
 
-      // Busca foto do Firestore (mesmo caminho da sidebar)
+      // Busca foto do Firestore — users/{uid}/foto/avatar → campo base64
       try {
-        const snap = await getDoc(doc(_db, 'usuarios', user.uid));
-        const foto = snap.exists() ? snap.data()?.fotoBase64 : null;
+        const snap = await getDoc(doc(_db, 'users', user.uid, 'foto', 'avatar'));
+        const foto = snap.exists() ? snap.data()?.base64 : null;
         if (foto) {
           avatar.innerHTML   = `<img src="${foto}" alt="foto"/>`;
           mobAvatar.innerHTML = `<img src="${foto}" alt="foto"/>`;

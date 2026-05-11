@@ -1068,10 +1068,22 @@ function renderLicenca(lic){
     } else {
       validadeHtml=`<div class="licenca-row"><span class="lic-label">Trial</span><span class="lic-value" style="color:#e87070;">Expirado</span></div>`;
     }
-  } else if(plano!=='trial'){
-    // Para planos pagos, tenta ler dataVencimento do subdoc (disponível após ativação)
-    const expira=lic.expira||'—';
-    validadeHtml=`<div class="licenca-row"><span class="lic-label">Validade</span><span class="lic-value">${expira==='nunca'?'∞ Nunca expira':expira}</span></div>`;
+  } else if(plano==='profissional'||plano==='essencial'){
+    const subdoc=plano==='profissional'?lic._planoProfissional:lic._planoEssencial;
+    const raw=subdoc&&subdoc.dataVencimento;
+    if(raw){
+      const exp=raw.toDate?raw.toDate():new Date(raw);
+      const hoje=new Date();
+      const dias=Math.ceil((exp-hoje)/86400000);
+      const dataFmt=exp.toLocaleDateString('pt-BR');
+      if(dias>0){
+        validadeHtml=`<div class="licenca-row"><span class="lic-label">Validade</span><span class="lic-value" style="color:${dias<=7?'#e87070':'var(--gold)'};">${dataFmt} (${dias} dia${dias!==1?'s':''})</span></div>`;
+      } else {
+        validadeHtml=`<div class="licenca-row"><span class="lic-label">Validade</span><span class="lic-value" style="color:#e87070;">Expirado</span></div>`;
+      }
+    } else {
+      validadeHtml=`<div class="licenca-row"><span class="lic-label">Validade</span><span class="lic-value">∞ Nunca expira</span></div>`;
+    }
   }
 
   container.innerHTML=`

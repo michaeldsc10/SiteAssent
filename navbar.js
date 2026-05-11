@@ -174,8 +174,9 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 0 14px rgba(212,175,55,.3);cursor:default;
   opacity:0;pointer-events:none;transform:scale(.8);
-  transition:opacity .3s,transform .3s;
+  transition:opacity .3s,transform .3s;overflow:hidden;
 }
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 
 /* Botão sair — invisível E não clicável quando deslogado */
 .btn-sair{
@@ -246,7 +247,8 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
 .mob a:hover{color:#F5A623;}
 .mob-user{display:none;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05);}
 .mob-user.show{display:flex;}
-.mob-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#D4AF37,#B8860B);color:#111;font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mob-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#D4AF37,#B8860B);color:#111;font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
+.mob-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .mob-email{font-size:.75rem;color:rgba(255,255,255,.45);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
 .mob-cta{margin-top:18px;text-align:center;background:#F5A623 !important;color:#111 !important;border-radius:50px;font-family:'Montserrat',sans-serif !important;font-weight:700 !important;border-bottom:none !important;padding:14px 0 !important;}
 .mob-entrar{text-align:center;color:rgba(255,255,255,.5) !important;font-size:.82rem !important;border-bottom:none !important;padding:10px 0 !important;text-transform:none !important;letter-spacing:.02em !important;margin-top:6px;}
@@ -356,7 +358,7 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
     sr.getElementById('avatar').style.cursor = 'pointer';
   }
 
-  _onAuth(user) {
+  async _onAuth(user) {
     const sr = this.shadowRoot;
     const right      = sr.getElementById('rightSide');
     const avatar     = sr.getElementById('avatar');
@@ -369,16 +371,28 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
 
     if (user) {
       const ini = this._initial(user);
-      // Desktop: modo logado (esconde Entrar, mostra avatar+sair)
       right.classList.add('logado');
-      avatar.textContent   = ini;
-      avatar.title         = user.email || '';
-      // Mobile: mostra info + sair, esconde entrar
+      avatar.title = user.email || '';
       mobUser.classList.add('show');
-      mobAvatar.textContent = ini;
       mobEmail.textContent  = user.email || '';
       mobSair.classList.add('show');
       mobEntrar.classList.add('hide');
+
+      // Busca foto do Firestore (mesmo caminho da sidebar)
+      try {
+        const snap = await getDoc(doc(_db, 'usuarios', user.uid));
+        const foto = snap.exists() ? snap.data()?.fotoBase64 : null;
+        if (foto) {
+          avatar.innerHTML   = `<img src="${foto}" alt="foto"/>`;
+          mobAvatar.innerHTML = `<img src="${foto}" alt="foto"/>`;
+        } else {
+          avatar.textContent   = ini;
+          mobAvatar.textContent = ini;
+        }
+      } catch {
+        avatar.textContent   = ini;
+        mobAvatar.textContent = ini;
+      }
     } else {
       // Desktop: modo deslogado
       right.classList.remove('logado');

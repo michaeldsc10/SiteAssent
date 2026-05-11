@@ -6,7 +6,7 @@
 <title>Cursos — ASSENT AGÊNCIA</title>
 <script type="module" src="/navbar.js"></script>
 <script type="module" src="/sidebar.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Inter:wght@300;400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 
 <style>
 /* ════════════════════════════════════════
@@ -30,6 +30,7 @@
   --border2:     rgba(255,255,255,0.10);
   --heading:     'Montserrat', sans-serif;
   --body:        'Inter', sans-serif;
+  --btn:         'DM Sans', sans-serif;
   --sidebar:     240px;
   --sidebar-col: 64px;
   --radius:      10px;
@@ -150,7 +151,7 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 .hero-btn {
   display: inline-flex; align-items: center; gap: 9px;
   padding: 12px 26px; border-radius: 50px;
-  font-family: var(--body); font-size: .78rem; font-weight: 600;
+  font-family: var(--btn); font-size: .78rem; font-weight: 600;
   letter-spacing: .06em; text-transform: uppercase;
   cursor: pointer; transition: all .2s; border: none; text-decoration: none;
 }
@@ -211,7 +212,7 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
   font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
   padding: 3px 9px; border-radius: 4px;
   background: linear-gradient(90deg, var(--gold-dim), var(--gold));
-  color: #000; font-family: var(--body);
+  color: #000; font-family: var(--btn);
 }
 
 /* Carrossel */
@@ -359,7 +360,7 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 .card-btn {
   display: flex; align-items: center; justify-content: center; gap: 5px;
   border: none; cursor: pointer; border-radius: 50px;
-  font-family: var(--body); font-size: .62rem; font-weight: 700;
+  font-family: var(--btn); font-size: .62rem; font-weight: 700;
   letter-spacing: .07em; text-transform: uppercase;
   transition: all .15s; text-decoration: none;
 }
@@ -381,7 +382,7 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 /* Badges */
 .card-badges { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
 .card-badge {
-  font-family: var(--body); font-size: .57rem; font-weight: 600;
+  font-family: var(--btn); font-size: .57rem; font-weight: 600;
   letter-spacing: .08em; text-transform: uppercase;
   padding: 2px 7px; border-radius: 3px;
 }

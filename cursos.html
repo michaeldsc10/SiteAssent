@@ -6,17 +6,17 @@
 <title>Cursos — ASSENT AGÊNCIA</title>
 <script type="module" src="/navbar.js"></script>
 <script type="module" src="/sidebar.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
 <style>
 /* ════════════════════════════════════════
    TOKENS
 ════════════════════════════════════════ */
 :root {
-  --bg:          #0a0a0a;
-  --surface:     #141414;
-  --surface2:    #1c1c1c;
-  --surface3:    #242424;
+  --bg:          #000000;
+  --surface:     #0d0d0d;
+  --surface2:    #141414;
+  --surface3:    #1c1c1c;
   --gold:        #C9A84C;
   --gold-dim:    #a8883a;
   --gold-bright: #e4c068;
@@ -27,9 +27,9 @@
   --muted:       #888888;
   --muted2:      #555555;
   --border:      rgba(255,255,255,0.06);
-  --border2:     rgba(255,255,255,0.1);
+  --border2:     rgba(255,255,255,0.10);
   --heading:     'Montserrat', sans-serif;
-  --body:        'DM Sans', sans-serif;
+  --body:        'Inter', sans-serif;
   --sidebar:     240px;
   --sidebar-col: 64px;
   --radius:      10px;
@@ -88,13 +88,13 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 }
 .hero-bg {
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, #0c0c0a 0%, #121108 40%, #181508 70%, #0e0d07 100%);
+  background: linear-gradient(135deg, #080600 0%, #0e0b04 40%, #141008 70%, #09080400 100%);
 }
 .hero-bg::before {
   content: '';
   position: absolute; inset: 0;
   background-image:
-    radial-gradient(ellipse 80% 60% at 72% 38%, rgba(201,168,76,0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 72% 38%, rgba(201,168,76,0.16) 0%, transparent 60%),
     radial-gradient(ellipse 35% 35% at 82% 18%, rgba(201,168,76,0.08) 0%, transparent 50%);
 }
 .hero-bg::after {
@@ -105,7 +105,7 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 }
 .hero-logo-stamp {
   position: absolute; top: 40px; right: 48px;
-  opacity: 0.1; width: 130px; pointer-events: none;
+  opacity: 0.07; width: 130px; pointer-events: none;
 }
 .hero-logo-stamp img { width: 100%; }
 .hero-gradient {
@@ -114,7 +114,7 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 }
 .hero-gradient-side {
   position: absolute; top: 0; bottom: 0; left: 0; width: 55%;
-  background: linear-gradient(to right, rgba(10,10,8,0.55) 0%, transparent 100%);
+  background: linear-gradient(to right, rgba(0,0,0,0.55) 0%, transparent 100%);
 }
 
 .hero-content {
@@ -124,7 +124,7 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 }
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--heading); font-size: .62rem; font-weight: 700;
+  font-family: var(--body); font-size: .62rem; font-weight: 600;
   letter-spacing: .2em; text-transform: uppercase; color: var(--gold);
   margin-bottom: 16px;
 }
@@ -142,32 +142,34 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 }
 .hero-title em { color: var(--gold); font-style: italic; }
 .hero-desc {
-  font-size: .88rem; color: rgba(255,255,255,0.6);
+  font-size: .88rem; color: rgba(255,255,255,0.55);
   line-height: 1.72; max-width: 460px; margin-bottom: 28px;
+  font-family: var(--body);
 }
 .hero-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
 .hero-btn {
   display: inline-flex; align-items: center; gap: 9px;
-  padding: 12px 26px; border-radius: 6px;
-  font-family: var(--heading); font-size: .76rem; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase;
+  padding: 12px 26px; border-radius: 50px;
+  font-family: var(--body); font-size: .78rem; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
   cursor: pointer; transition: all .2s; border: none; text-decoration: none;
 }
 .hero-btn-primary {
-  background: var(--gold); color: #0a0a0a;
+  background: var(--gold); color: #000;
   box-shadow: 0 0 40px var(--gold-glow);
 }
 .hero-btn-primary:hover { background: var(--gold-bright); transform: translateY(-1px); box-shadow: 0 0 60px var(--gold-glow); }
 .hero-btn-secondary {
-  background: rgba(255,255,255,0.1); color: var(--white);
-  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.08); color: var(--white);
+  border: 1px solid rgba(255,255,255,0.12);
   backdrop-filter: blur(10px);
 }
-.hero-btn-secondary:hover { background: rgba(255,255,255,0.18); }
+.hero-btn-secondary:hover { background: rgba(255,255,255,0.14); }
 .hero-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 .hero-meta {
   display: flex; align-items: center; gap: 16px;
   font-size: .73rem; color: var(--muted);
+  font-family: var(--body);
 }
 .hero-meta-dot { width: 3px; height: 3px; background: var(--muted2); border-radius: 50%; }
 
@@ -190,15 +192,15 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 
 .row-header {
   display: flex; align-items: center; gap: 14px;
-  padding: 0 48px; margin-bottom: 12px;
+  padding: 0 48px; margin-bottom: 14px;
   cursor: default; user-select: none;
 }
 .row-title {
-  font-family: var(--heading); font-size: .88rem; font-weight: 700;
-  letter-spacing: .01em; color: var(--white);
+  font-family: var(--body); font-size: .82rem; font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--white);
 }
 .row-see-all {
-  font-size: .73rem; color: var(--gold); font-weight: 600;
+  font-size: .72rem; color: var(--gold); font-weight: 600;
   letter-spacing: .05em; opacity: 0;
   transform: translateX(-8px);
   transition: all .22s;
@@ -206,17 +208,17 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 }
 .row-header:hover .row-see-all { opacity: 1; transform: translateX(0); }
 .row-badge {
-  font-size: .58rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-  padding: 3px 8px; border-radius: 4px;
+  font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 4px;
   background: linear-gradient(90deg, var(--gold-dim), var(--gold));
-  color: #0a0a0a;
+  color: #000; font-family: var(--body);
 }
 
 /* Carrossel */
 .carousel-wrapper { position: relative; }
 .carousel {
-  display: flex; gap: 5px;
-  padding: 10px 48px 24px;
+  display: flex; gap: 6px;
+  padding: 12px 48px 28px;
   overflow-x: auto; overflow-y: visible;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -226,146 +228,182 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 
 .carousel-btn {
   position: absolute; top: 50%; transform: translateY(-50%);
-  width: 38px; height: 84px; z-index: 10;
-  background: rgba(8,8,8,0.75);
+  width: 40px; height: 90px; z-index: 10;
+  background: rgba(0,0,0,0.8);
   border: none; cursor: pointer; color: var(--white);
   display: flex; align-items: center; justify-content: center;
   opacity: 0; transition: opacity .2s, background .2s;
   backdrop-filter: blur(4px);
 }
-.carousel-btn:hover { background: rgba(8,8,8,0.97); }
+.carousel-btn:hover { background: rgba(0,0,0,0.97); }
 .carousel-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 .carousel-btn-left  { left: 0; border-radius: 0 6px 6px 0; }
 .carousel-btn-right { right: 0; border-radius: 6px 0 0 6px; }
 .carousel-wrapper:hover .carousel-btn { opacity: 1; }
 
 /* ════════════════════════════════════════
-   CARD DE CURSO
+   CARD DE CURSO — ESTILO NETFLIX PREMIUM
 ════════════════════════════════════════ */
 .curso-card {
   flex-shrink: 0;
-  width: 218px;
+  width: 220px;
   border-radius: var(--radius);
   overflow: visible;
   cursor: pointer;
   scroll-snap-align: start;
-  transition: transform .3s cubic-bezier(.4,0,.2,1), z-index 0s .3s;
+  transition: transform .32s cubic-bezier(.4,0,.2,1), z-index 0s .32s;
   position: relative; z-index: 1;
   text-decoration: none; color: inherit;
   outline: none;
 }
-.curso-card:hover, .curso-card:focus-visible {
-  transform: scale(1.16) translateY(-10px);
+.curso-card:hover,
+.curso-card:focus-visible {
+  transform: scale(1.18) translateY(-12px);
   z-index: 50;
-  transition: transform .3s cubic-bezier(.4,0,.2,1), z-index 0s 0s;
+  transition: transform .32s cubic-bezier(.4,0,.2,1), z-index 0s 0s;
 }
 
-/* Thumb */
+/* Thumb — proporção 16/9 Netflix */
 .card-thumb {
   width: 100%; aspect-ratio: 16/9;
   border-radius: var(--radius);
   overflow: hidden; position: relative;
   background: var(--surface2);
-  box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
   transition: border-radius .3s, box-shadow .3s;
 }
 .curso-card:hover .card-thumb {
   border-radius: var(--radius) var(--radius) 0 0;
-  box-shadow: 0 18px 56px rgba(0,0,0,0.85), 0 0 0 1px var(--gold-line);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 0 1px var(--gold-line);
 }
 .card-thumb img {
   width: 100%; height: 100%; object-fit: cover; display: block;
   transition: transform .4s ease;
 }
-.curso-card:hover .card-thumb img { transform: scale(1.06); }
+.curso-card:hover .card-thumb img { transform: scale(1.07); }
+
+/* Placeholder sem emoji — SVG puro */
 .card-thumb-placeholder {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #141414, #1d1d1d);
-  font-size: 2rem;
+  background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+  position: relative;
+  overflow: hidden;
+}
+.card-thumb-placeholder::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201,168,76,0.07) 0%, transparent 70%);
+}
+.card-thumb-placeholder svg {
+  width: 36px; height: 36px; color: var(--muted2); position: relative; z-index: 1;
 }
 
-/* Overlay thumb */
+/* Shimmer de carregamento */
+.card-thumb-placeholder.loading {
+  background: linear-gradient(90deg, #111 0%, #1d1d1d 50%, #111 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite linear;
+}
+
+/* Overlay hover — gradiente Netflix bottom-up */
 .card-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.15) 55%, transparent 100%);
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.95) 0%,
+    rgba(0,0,0,0.5)  35%,
+    rgba(0,0,0,0.1)  65%,
+    transparent      100%
+  );
   opacity: 0; transition: opacity .28s;
   display: flex; align-items: center; justify-content: center;
 }
 .curso-card:hover .card-overlay { opacity: 1; }
-.play-circle {
-  width: 42px; height: 42px; border-radius: 50%;
-  background: var(--gold); border: 2px solid var(--gold-bright);
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 28px var(--gold-glow);
-  transform: scale(.8); transition: transform .22s .05s;
-}
-.curso-card:hover .play-circle { transform: scale(1); }
-.play-circle svg { width: 15px; height: 15px; fill: #0a0a0a; margin-left: 2px; }
 
-/* Info expandida */
+/* Botão de play central — círculo dourado */
+.play-circle {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 32px var(--gold-glow), 0 0 80px rgba(201,168,76,0.15);
+  transform: scale(.75); transition: transform .24s .04s, box-shadow .24s;
+}
+.curso-card:hover .play-circle {
+  transform: scale(1);
+  box-shadow: 0 0 48px var(--gold-glow), 0 0 100px rgba(201,168,76,0.2);
+}
+.play-circle svg { width: 16px; height: 16px; fill: #000; margin-left: 2px; }
+
+/* Info expandida — painel que aparece abaixo do thumb no hover */
 .card-info {
   background: var(--surface2);
   border: 1px solid var(--gold-line);
   border-top: none;
   border-radius: 0 0 var(--radius) var(--radius);
-  padding: 13px 13px 15px;
+  padding: 14px 14px 16px;
   transform: scaleY(0); transform-origin: top;
   opacity: 0; pointer-events: none;
-  transition: transform .28s cubic-bezier(.4,0,.2,1), opacity .2s;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+  transition: transform .3s cubic-bezier(.4,0,.2,1), opacity .22s;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.95);
 }
 .curso-card:hover .card-info {
   transform: scaleY(1); opacity: 1; pointer-events: auto;
 }
 
+/* Ações rápidas */
 .card-actions {
-  display: flex; align-items: center; gap: 7px; margin-bottom: 11px;
+  display: flex; align-items: center; gap: 7px; margin-bottom: 12px;
 }
 .card-btn {
   display: flex; align-items: center; justify-content: center; gap: 5px;
-  border: none; cursor: pointer; border-radius: 4px;
-  font-family: var(--heading); font-size: .62rem; font-weight: 700;
+  border: none; cursor: pointer; border-radius: 50px;
+  font-family: var(--body); font-size: .62rem; font-weight: 700;
   letter-spacing: .07em; text-transform: uppercase;
   transition: all .15s; text-decoration: none;
 }
 .card-btn-play {
-  padding: 7px 14px; flex: 1;
-  background: var(--gold); color: #0a0a0a;
+  padding: 8px 16px; flex: 1;
+  background: var(--gold); color: #000;
+  box-shadow: 0 0 16px rgba(201,168,76,0.25);
 }
-.card-btn-play:hover { background: var(--gold-bright); }
-.card-btn-play svg { width: 11px; height: 11px; fill: #0a0a0a; }
+.card-btn-play:hover { background: var(--gold-bright); box-shadow: 0 0 24px rgba(201,168,76,0.4); }
+.card-btn-play svg { width: 11px; height: 11px; fill: #000; }
 .card-btn-icon {
-  width: 30px; height: 30px;
-  background: var(--surface3); color: var(--white);
+  width: 30px; height: 30px; border-radius: 50%;
+  background: transparent; color: var(--white);
   border: 1px solid var(--border2);
 }
-.card-btn-icon:hover { border-color: var(--white); }
-.card-btn-icon svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.card-btn-icon:hover { border-color: var(--white); background: rgba(255,255,255,0.06); }
+.card-btn-icon svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
 
-.card-badges { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 7px; }
+/* Badges */
+.card-badges { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
 .card-badge {
-  font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  font-family: var(--body); font-size: .57rem; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
   padding: 2px 7px; border-radius: 3px;
 }
 .card-badge-cat { background: var(--gold-fill); color: var(--gold); border: 1px solid var(--gold-line); }
-.card-badge-lvl { background: rgba(255,255,255,.05); color: var(--muted); border: 1px solid var(--border2); }
+.card-badge-lvl { background: rgba(255,255,255,.04); color: var(--muted); border: 1px solid var(--border); }
 
+/* Título e desc */
 .card-title {
   font-family: var(--heading); font-size: .8rem; font-weight: 700;
   letter-spacing: -.01em; line-height: 1.3; margin-bottom: 5px;
 }
 .card-desc {
-  font-size: .71rem; color: var(--muted); line-height: 1.55;
+  font-family: var(--body); font-size: .7rem; color: var(--muted); line-height: 1.55;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   margin-bottom: 9px;
 }
 .card-meta {
   display: flex; gap: 10px;
-  font-size: .66rem; color: var(--muted);
+  font-family: var(--body); font-size: .65rem; color: var(--muted);
 }
-.card-meta span { display: flex; align-items: center; gap: 3px; }
-.card-meta svg { width: 10px; height: 10px; opacity: .6; stroke: currentColor; fill: none; stroke-width: 2; }
+.card-meta span { display: flex; align-items: center; gap: 4px; }
+.card-meta svg { width: 10px; height: 10px; opacity: .55; stroke: currentColor; fill: none; stroke-width: 2; }
 
 /* Barra de progresso */
 .progress-bar {
@@ -375,10 +413,11 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 .progress-fill {
   height: 100%; border-radius: 2px;
   background: linear-gradient(90deg, var(--gold-dim), var(--gold-bright));
+  transition: width .4s ease;
 }
 
 /* ════════════════════════════════════════
-   EMPTY / ACESSO NEGADO
+   ACESSO NEGADO
 ════════════════════════════════════════ */
 .view { display: none; }
 .view.active { display: block; }
@@ -396,41 +435,49 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
   width: 68px; height: 68px; border-radius: 50%;
   background: var(--gold-fill); border: 1px solid var(--gold-line);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.7rem; margin-bottom: 22px;
+  margin-bottom: 22px;
 }
+.negado-icon svg { width: 28px; height: 28px; color: var(--gold); }
 .negado-title {
   font-family: var(--heading); font-size: 1.4rem; font-weight: 800;
   letter-spacing: -.03em; margin-bottom: 12px;
 }
 .negado-sub {
-  color: var(--muted); font-size: .9rem; max-width: 380px;
-  line-height: 1.7; margin-bottom: 30px;
+  font-family: var(--body); color: var(--muted); font-size: .9rem;
+  max-width: 380px; line-height: 1.7; margin-bottom: 30px;
 }
 .btn-negado {
   display: inline-flex; align-items: center; gap: 10px;
-  padding: 12px 28px; border-radius: 6px;
-  background: var(--gold); color: #0a0a0a;
-  font-family: var(--heading); font-size: .76rem; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase;
+  padding: 13px 28px; border-radius: 50px;
+  background: var(--gold); color: #000;
+  font-family: var(--body); font-size: .78rem; font-weight: 700;
+  letter-spacing: .07em; text-transform: uppercase;
   text-decoration: none; transition: all .2s;
   box-shadow: 0 0 40px var(--gold-glow);
 }
-.btn-negado:hover { background: var(--gold-bright); transform: translateY(-2px); }
+.btn-negado:hover { background: var(--gold-bright); transform: translateY(-2px); box-shadow: 0 0 60px var(--gold-glow); }
 
 /* ── TOAST ── */
 .toast {
   position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 8px; padding: 14px 20px;
-  font-size: .875rem; color: var(--white);
+  background: rgba(13,13,13,.92); border: 1px solid var(--border2);
+  border-radius: 12px; padding: 14px 20px;
+  font-family: var(--body); font-size: .875rem; color: var(--white);
   box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  backdrop-filter: blur(16px);
   transform: translateY(20px); opacity: 0;
   transition: all .3s ease; pointer-events: none;
   display: flex; align-items: center; gap: 10px;
+  max-width: 320px;
 }
 .toast.show { transform: translateY(0); opacity: 1; }
-.toast.ok  { border-color: var(--gold-line); }
-.toast.err { border-color: rgba(224,85,85,.3); }
+.toast-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.toast.ok  { border-color: rgba(39,174,96,.2); }
+.toast.ok  .toast-dot { background: #27ae60; box-shadow: 0 0 6px rgba(39,174,96,.5); }
+.toast.err { border-color: rgba(192,57,43,.2); }
+.toast.err .toast-dot { background: #e87070; box-shadow: 0 0 6px rgba(192,57,43,.5); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
@@ -462,13 +509,18 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 <!-- VIEW: NEGADO -->
 <div id="view-negado" class="view">
   <img src="/public/logo_cursos.png" class="negado-logo" alt="ASSENT">
-  <div class="negado-icon">🔒</div>
+  <div class="negado-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+  </div>
   <div class="negado-title">Acesso Restrito</div>
   <div class="negado-sub">
     Esta área é exclusiva para clientes ASSENT com acesso ao módulo de cursos.
     Entre em contato conosco para saber mais.
   </div>
-  <a href="https://wa.me/5500000000000" class="btn-negado" target="_blank" rel="noopener">
+  <a href="https://wa.me/5500000000000" class="btn-negado" target="_blank" rel="noopener noreferrer">
     <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.134.558 4.133 1.535 5.867L0 24l6.295-1.508A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818c-1.943 0-3.77-.525-5.338-1.44l-.382-.227-3.96.949.993-3.854-.249-.395A9.785 9.785 0 012.182 12C2.182 6.59 6.59 2.182 12 2.182c5.41 0 9.818 4.408 9.818 9.818S17.41 21.818 12 21.818z"/></svg>
     Falar com a ASSENT
   </a>
@@ -512,7 +564,7 @@ body.sb-collapsed { margin-left: var(--sidebar-col); }
 
 <!-- TOAST -->
 <div class="toast" id="toast">
-  <span id="toast-icon">✓</span>
+  <div class="toast-dot"></div>
   <span id="toast-msg"></span>
 </div>
 
@@ -552,15 +604,39 @@ let _user = null, _licenca = {}, _authJaProcessado = false;
 ════════════════════════════════════════ */
 function extrairYouTubeId(url) {
   if (!url) return null;
-  const pats = [/youtu\.be\/([a-zA-Z0-9_-]{11})/, /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/, /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/];
+  const pats = [
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/
+  ];
   for (const re of pats) { const m = url.match(re); if (m) return m[1]; }
   return null;
 }
+
 function getThumb(c) {
   if (c.thumbnail) return c.thumbnail;
   const ytId = extrairYouTubeId(c.videoUrl || c.primeiraAulaUrl || '');
   return ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : null;
 }
+
+function sanitizeUrl(url) {
+  try {
+    const u = new URL(url);
+    if (u.protocol === 'http:' || u.protocol === 'https:') return url;
+  } catch (_) {}
+  return '';
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
 function showView(name) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   const el = document.getElementById('view-' + name);
@@ -580,13 +656,21 @@ window.addEventListener('assent:authchange', async (e) => {
   _user = user;
 
   if (window.AssentSidebar) {
-    window.AssentSidebar.setUser({ nome: user.displayName || user.email, email: user.email, fotoBase64: user.photoURL || null });
+    window.AssentSidebar.setUser({
+      nome: user.displayName || user.email,
+      email: user.email,
+      fotoBase64: user.photoURL || null
+    });
   }
 
   try {
     const licSnap = await window._getDoc(window._doc(window._db, 'licencas', user.uid));
     _licenca = licSnap.exists() ? licSnap.data() : {};
-  } catch (err) { console.error('[Cursos] licença:', err); showView('negado'); return; }
+  } catch (err) {
+    console.error('[Cursos] licença:', err);
+    showView('negado');
+    return;
+  }
 
   if (!_licenca.clienteCurso) { showView('negado'); return; }
 
@@ -610,9 +694,11 @@ async function carregarCursos() {
   } catch (err) {
     console.error('[Cursos]', err);
     document.getElementById('main-content').innerHTML = `
-      <div style="padding:64px 48px;text-align:center;color:var(--muted)">
-        <div style="font-size:2.5rem;margin-bottom:16px">⚠️</div>
-        <p style="font-family:var(--heading);font-weight:700;margin-bottom:8px">Erro ao carregar cursos</p>
+      <div style="padding:80px 48px;text-align:center;color:var(--muted)">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#e87070" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <p style="font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:8px">Erro ao carregar cursos</p>
         <p style="font-size:.85rem">Verifique sua conexão e recarregue a página.</p>
       </div>`;
   }
@@ -629,8 +715,10 @@ function renderNetflix(cursos) {
   if (cursos.length === 0) {
     content.innerHTML = `
       <div style="padding:80px 48px;text-align:center">
-        <div style="font-size:3rem;margin-bottom:18px">📚</div>
-        <p style="font-family:var(--heading);font-size:1.1rem;font-weight:700;margin-bottom:8px">Em breve</p>
+        <div style="width:64px;height:64px;border-radius:50%;background:var(--gold-fill);border:1px solid var(--gold-line);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <p style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:8px">Em breve</p>
         <p style="color:var(--muted);font-size:.88rem">Os cursos serão disponibilizados em breve.</p>
       </div>`;
     return;
@@ -638,17 +726,13 @@ function renderNetflix(cursos) {
 
   const rows = [];
 
-  /* ── Continuar assistindo ──
-     Filtra cursos com progresso real (campo `progresso`, 0–100).
-     Quando integrar o Firestore de progresso, basta popular esse campo no objeto do curso.
-     Ex: buscar de userProgress/{uid}/cursos/{cursoId} e merge no array antes de chamar renderNetflix().
-  ── */
+  /* Continuar assistindo */
   const emAndamento = cursos.filter(c => (c.progresso || 0) > 0);
   if (emAndamento.length > 0) {
     rows.push({ title: 'Continuar Assistindo', badge: null, list: emAndamento, showProg: true });
   }
 
-  /* ── Por categoria ── */
+  /* Por categoria */
   const catMap = {};
   cursos.forEach(c => {
     const cat = c.categoria || 'Outros';
@@ -658,31 +742,33 @@ function renderNetflix(cursos) {
     rows.push({ title: cat, badge: null, list, showProg: false });
   });
 
-  /* fallback sem categoria */
   if (Object.keys(catMap).length === 0) {
     rows.push({ title: 'Todos os Cursos', badge: null, list: cursos, showProg: false });
   }
 
   content.innerHTML = rows.map(r => buildRow(r)).join('');
 
-  /* setas */
+  /* Setas de carrossel */
   content.querySelectorAll('.carousel-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const c = btn.closest('.carousel-wrapper').querySelector('.carousel');
-      c.scrollBy({ left: (btn.dataset.dir === 'right' ? 1 : -1) * 660, behavior: 'smooth' });
+      c.scrollBy({ left: (btn.dataset.dir === 'right' ? 1 : -1) * 680, behavior: 'smooth' });
     });
   });
 
-  /* clique nos cards */
+  /* Clique nos cards */
   content.querySelectorAll('.curso-card').forEach(card => {
     card.addEventListener('click', (e) => {
       if (e.target.closest('.card-btn-icon')) return;
       const id = card.dataset.id;
-      /* ── PRONTO PARA QUANDO CURSOS FOREM ADICIONADOS ──
-         Apenas descomente (ou mantenha assim — já funciona):
-         window.location.href = `/curso.html?id=${id}`;
-      ── */
       if (id) window.location.href = `/curso.html?id=${id}`;
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const id = card.dataset.id;
+        if (id) window.location.href = `/curso.html?id=${id}`;
+      }
     });
     const playBtn = card.querySelector('.card-btn-play');
     if (playBtn) playBtn.addEventListener('click', (e) => {
@@ -697,8 +783,8 @@ function buildRow({ title, badge, list, showProg }) {
   return `
   <div class="row">
     <div class="row-header">
-      <span class="row-title">${title}</span>
-      ${badge ? `<span class="row-badge">${badge}</span>` : ''}
+      <span class="row-title">${escapeHtml(title)}</span>
+      ${badge ? `<span class="row-badge">${escapeHtml(badge)}</span>` : ''}
       <span class="row-see-all">Ver tudo &rsaquo;</span>
     </div>
     <div class="carousel-wrapper">
@@ -713,18 +799,30 @@ function buildRow({ title, badge, list, showProg }) {
   </div>`;
 }
 
+/* SVG placeholder inline — sem emoji */
+const THUMB_PLACEHOLDER_SVG = `
+<div class="card-thumb-placeholder">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="23 7 16 12 23 17 23 7"/>
+    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+  </svg>
+</div>`;
+
 function buildCard(c, showProg) {
   const thumb = getThumb(c);
+  const safeThumb = thumb ? sanitizeUrl(thumb) : '';
   const prog  = c.progresso || 0;
   const total = c.totalAulas || 0;
 
+  const thumbHtml = safeThumb
+    ? `<img src="${safeThumb}" alt="${escapeHtml(c.titulo)}" loading="lazy"
+           onerror="this.parentElement.innerHTML=\`${THUMB_PLACEHOLDER_SVG.replace(/`/g,'\\`')}\`">`
+    : THUMB_PLACEHOLDER_SVG;
+
   return `
-  <div class="curso-card" data-id="${c.id}" role="button" tabindex="0" aria-label="${c.titulo}">
+  <div class="curso-card" data-id="${escapeHtml(c.id)}" role="button" tabindex="0" aria-label="${escapeHtml(c.titulo)}">
     <div class="card-thumb">
-      ${thumb
-        ? `<img src="${thumb}" alt="${c.titulo}" loading="lazy"
-               onerror="this.parentElement.innerHTML='<div class=\\"card-thumb-placeholder\\">🎬</div>'">`
-        : `<div class="card-thumb-placeholder">🎬</div>`}
+      ${thumbHtml}
       <div class="card-overlay">
         <div class="play-circle">
           <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
@@ -737,24 +835,32 @@ function buildCard(c, showProg) {
           <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
           Assistir
         </button>
-        <button class="card-btn card-btn-icon" title="Mais informações">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+        <button class="card-btn card-btn-icon" title="Mais informações" aria-label="Mais informações">
+          <svg viewBox="0 0 24 24" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
         </button>
       </div>
       <div class="card-badges">
-        ${c.categoria ? `<span class="card-badge card-badge-cat">${c.categoria}</span>` : ''}
-        ${c.nivel     ? `<span class="card-badge card-badge-lvl">${c.nivel}</span>`     : ''}
+        ${c.categoria ? `<span class="card-badge card-badge-cat">${escapeHtml(c.categoria)}</span>` : ''}
+        ${c.nivel     ? `<span class="card-badge card-badge-lvl">${escapeHtml(c.nivel)}</span>`     : ''}
       </div>
-      <div class="card-title">${c.titulo}</div>
-      ${c.descricao ? `<div class="card-desc">${c.descricao}</div>` : ''}
+      <div class="card-title">${escapeHtml(c.titulo)}</div>
+      ${c.descricao ? `<div class="card-desc">${escapeHtml(c.descricao)}</div>` : ''}
       ${(total > 0 || c.duracao) ? `
       <div class="card-meta">
-        ${total > 0 ? `<span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>${total} aula${total!==1?'s':''}</span>` : ''}
-        ${c.duracao  ? `<span><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>${c.duracao}</span>` : ''}
+        ${total > 0 ? `
+        <span>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+          ${total} aula${total !== 1 ? 's' : ''}
+        </span>` : ''}
+        ${c.duracao ? `
+        <span>
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          ${escapeHtml(c.duracao)}
+        </span>` : ''}
       </div>` : ''}
       ${showProg && prog > 0 ? `
       <div class="progress-bar">
-        <div class="progress-fill" style="width:${prog}%"></div>
+        <div class="progress-fill" style="width:${Math.min(100, Math.max(0, prog))}%"></div>
       </div>` : ''}
     </div>
   </div>`;
@@ -764,10 +870,10 @@ function buildCard(c, showProg) {
    TOAST
 ════════════════════════════════════════ */
 function showToast(msg, type = '') {
-  const t = document.getElementById('toast');
+  const t   = document.getElementById('toast');
+  const txt = document.getElementById('toast-msg');
   t.className = 'toast' + (type ? ' ' + type : '');
-  document.getElementById('toast-icon').textContent = type === 'err' ? '⚠' : '✓';
-  document.getElementById('toast-msg').textContent  = msg;
+  txt.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3200);
 }

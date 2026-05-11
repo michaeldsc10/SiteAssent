@@ -347,7 +347,7 @@ function closeSidebar() {
   document.getElementById('assent-sb-overlay')?.classList.remove('open');
 }
 
-function setUser({ nome, email, fotoBase64 }) {
+async function setUser({ nome, email, fotoBase64 }) {
   const nameEl = document.getElementById('assent-sb-name');
   const emailEl = document.getElementById('assent-sb-email');
   const avatarEl = document.getElementById('assent-sb-avatar');
@@ -358,7 +358,17 @@ function setUser({ nome, email, fotoBase64 }) {
 
   nameEl.textContent = firstName;
   if (emailEl) emailEl.textContent = email || '';
+
   if (avatarEl) {
+    if (!fotoBase64) {
+      try {
+        const user = window._auth?.currentUser;
+        if (user) {
+          const snap = await window._getDoc(window._doc(window._db, 'users', user.uid, 'foto', 'avatar'));
+          if (snap.exists() && snap.data()?.base64) fotoBase64 = snap.data().base64;
+        }
+      } catch { /* fallback iniciais */ }
+    }
     if (fotoBase64) {
       avatarEl.innerHTML = `<img src="${fotoBase64}" alt="foto"/>`;
     } else {

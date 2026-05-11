@@ -227,7 +227,7 @@ a{text-decoration:none;color:inherit;}
     0 1px 0 rgba(255,255,255,0.08) inset,
     0 -1px 0 rgba(0,0,0,0.2) inset;
   transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .3s;
-  cursor:default;
+  cursor:pointer;
 }
 .app-card::after{
   content:'';
@@ -318,7 +318,21 @@ a{text-decoration:none;color:inherit;}
   border-radius:var(--r-lg);padding:24px;
   backdrop-filter:blur(20px) saturate(160%);
   -webkit-backdrop-filter:blur(20px) saturate(160%);
+  transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .3s;
+  position:relative;overflow:hidden;
 }
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 65%);
+  opacity:0;transition:opacity .4s;pointer-events:none;z-index:0;border-radius:inherit;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(201,168,76,0.2);
+  box-shadow:0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.06), 0 0 30px rgba(201,168,76,0.04);
+}
+.card:hover::before{opacity:1;}
+.card > *{position:relative;z-index:1;}
 .card-label{font-family:var(--heading);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
 .card-label::before{content:'';width:3px;height:12px;background:var(--gold);border-radius:2px;flex-shrink:0;}
 
@@ -1018,7 +1032,9 @@ function renderApps(lic){
     const actionBtn=ok&&a.link
       ?`<a href="${a.link}" class="app-access-btn">Acessar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>`
       :``;
-    return `<div class="app-card${ok?' active-card':''}">
+    const cardTag = ok&&a.link ? `a href="${a.link}" target="_blank" rel="noopener noreferrer"` : `div`;
+    const cardClose = ok&&a.link ? `a` : `div`;
+    return `<${cardTag} class="app-card${ok?' active-card':''}">
       <div class="app-card-top">${logoHtml}</div>
       <div class="app-card-body">
         <div class="app-card-name">${a.name}</div>
@@ -1028,7 +1044,7 @@ function renderApps(lic){
         <span class="app-badge ${ok?'ok':'no'}">${ok?'Ativo':'Sem acesso'}</span>
         ${actionBtn}
       </div>
-    </div>`;
+    </${cardClose}>`;
   }).join('')}</div>`;
 }
 

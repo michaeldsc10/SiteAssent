@@ -1030,11 +1030,11 @@ function renderApps(lic){
     const ok=lic[a.key]===true;
     const logoHtml=`<img class="app-card-logo" src="${a.logo}" alt="${a.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="app-card-logo-fallback" style="display:none;">${a.logoFb}</div>`;
     const actionBtn=ok&&a.link
-      ?`<a href="${a.link}" class="app-access-btn">Acessar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>`
+      ?`<span class="app-access-btn">Acessar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>`
       :``;
-    const cardTag = ok&&a.link ? `a href="${a.link}" target="_blank" rel="noopener noreferrer"` : `div`;
-    const cardClose = ok&&a.link ? `a` : `div`;
-    return `<${cardTag} class="app-card${ok?' active-card':''}">
+    const wrapOpen=ok&&a.link?`<a href="${a.link}" target="_blank" rel="noopener noreferrer" class="app-card${ok?' active-card':''}">`:`<div class="app-card${ok?' active-card':''}">`;
+    const wrapClose=ok&&a.link?`</a>`:`</div>`;
+    return `${wrapOpen}
       <div class="app-card-top">${logoHtml}</div>
       <div class="app-card-body">
         <div class="app-card-name">${a.name}</div>
@@ -1044,7 +1044,7 @@ function renderApps(lic){
         <span class="app-badge ${ok?'ok':'no'}">${ok?'Ativo':'Sem acesso'}</span>
         ${actionBtn}
       </div>
-    </${cardClose}>`;
+    ${wrapClose}`;
   }).join('')}</div>`;
 }
 

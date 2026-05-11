@@ -5,40 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Curso — ASSENT AGÊNCIA</title>
 <script type="module" src="/navbar.js"></script>
-<!--
-  curso.html — ASSENT Agência
-  ───────────────────────────
-  Página de player de curso. Lê parâmetro ?id= da URL.
-  Estrutura Firestore: cursos/{id}/aulas (subcoleção, ordenada por `ordem`)
-  Requer: navbar.js (auth + Firebase helpers)
--->
-<script type="module" src="/navbar.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script type="module" src="/sidebar.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
 <style>
 /* ════════════════════════════════════════
-   TOKENS DE DESIGN
+   TOKENS DE DESIGN — alinhados com membros
 ════════════════════════════════════════ */
 :root {
-  --bg:        #111111;
-  --surface:   #1a1a1a;
-  --surface2:  #222222;
-  --surface3:  #2a2a2a;
-  --gold:      #F5A623;
-  --gold-dark: #E09820;
-  --gold-glow: rgba(245,166,35,0.18);
-  --white:     #FFFFFF;
-  --muted:     #777777;
-  --muted2:    #555555;
-  --border:    rgba(255,255,255,0.07);
-  --border2:   rgba(255,255,255,0.12);
-  --success:   #4CAF50;
-  --danger:    #e05555;
-  --heading:   'Montserrat', sans-serif;
-  --body:      'Inter', sans-serif;
-  --nav-h:     68px;
-  --sidebar-w: 320px;
-  --header-h:  56px;
+  --bg:          #000000;
+  --surface:     #0d0d0d;
+  --surface2:    #141414;
+  --surface3:    #1c1c1c;
+  --gold:        #C9A84C;
+  --gold-dim:    #a8883a;
+  --gold-glow:   rgba(201,168,76,0.15);
+  --gold-line:   rgba(201,168,76,0.3);
+  --white:       #FFFFFF;
+  --muted:       #666666;
+  --muted2:      #444444;
+  --border:      rgba(255,255,255,0.06);
+  --border2:     rgba(255,255,255,0.1);
+  --success:     #27ae60;
+  --danger:      #c0392b;
+  --heading:     'Montserrat', sans-serif;
+  --body:        'Inter', sans-serif;
+  --nav-h:       68px;
+  --sidebar:     240px;
+  --sidebar-collapsed: 64px;
+  --sidebar-w:   320px;
+  --header-h:    56px;
+  --r:           10px;
+  --r-lg:        16px;
 }
 
 *{ margin:0; padding:0; box-sizing:border-box; }
@@ -49,9 +47,17 @@ body{
   overflow-x:hidden; line-height:1.6;
   padding-top: var(--nav-h);
 }
-::-webkit-scrollbar{ width:5px; }
-::-webkit-scrollbar-track{ background:var(--bg); }
-::-webkit-scrollbar-thumb{ background:var(--surface3); border-radius:3px; }
+::-webkit-scrollbar{ width:4px; }
+::-webkit-scrollbar-track{ background:transparent; }
+::-webkit-scrollbar-thumb{ background:var(--surface3); border-radius:2px; }
+img{ display:block; }
+a{ text-decoration:none; color:inherit; }
+
+/* ── WRAPPER — recua do assent-sidebar ── */
+.content-wrap{
+  margin-left: var(--sidebar);
+  transition: margin-left .3s cubic-bezier(.4,0,.2,1);
+}
 
 /* ── LOADING ── */
 #loading-screen{
@@ -61,58 +67,70 @@ body{
   transition:opacity .4s ease;
 }
 #loading-screen.hide{ opacity:0; pointer-events:none; }
-.loading-logo{ font-family:var(--heading); font-weight:800; font-size:1.4rem; letter-spacing:.06em; }
+.loading-logo{
+  font-family:var(--heading); font-weight:800;
+  font-size:1.4rem; letter-spacing:.08em;
+}
 .loading-logo span{ color:var(--gold); }
 .spinner{
-  width:36px; height:36px;
-  border:3px solid var(--surface3); border-top-color:var(--gold);
-  border-radius:50%; animation:spin .8s linear infinite;
+  width:32px; height:32px;
+  border:2px solid var(--surface3); border-top-color:var(--gold);
+  border-radius:50%; animation:spin .7s linear infinite;
 }
 @keyframes spin{ to{ transform:rotate(360deg); } }
 
 /* ── TOAST ── */
 .toast{
   position:fixed; bottom:24px; right:24px; z-index:9999;
-  background:var(--surface); border:1px solid var(--border2);
-  border-radius:10px; padding:14px 20px;
+  background:rgba(13,13,13,0.9); border:1px solid var(--border2);
+  border-radius:var(--r); padding:13px 18px;
   font-size:.875rem; color:var(--white);
-  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
   transform:translateY(20px); opacity:0;
   transition:all .3s ease; pointer-events:none;
-  display:flex; align-items:center; gap:10px;
+  display:flex; align-items:center; gap:10px; max-width:300px;
 }
 .toast.show{ transform:translateY(0); opacity:1; }
-.toast.ok{ border-color:rgba(76,175,80,.3); }
-.toast.err{ border-color:rgba(224,85,85,.3); }
+.toast.ok{ border-color:rgba(39,174,96,.3); }
+.toast.err{ border-color:rgba(192,57,43,.3); }
+.toast-icon-wrap{ display:flex; align-items:center; flex-shrink:0; }
+.toast.ok  .toast-icon-wrap{ color:#6fcf97; }
+.toast.err .toast-icon-wrap{ color:#e87070; }
 
 /* ══════════════════════════════════════
-   VIEW: ERRO / ACESSO NEGADO / NOT FOUND
+   VIEW: ERRO
 ══════════════════════════════════════ */
 #view-erro{
   display:none; align-items:center; justify-content:center;
   flex-direction:column; text-align:center; padding:60px 24px;
   min-height:calc(100vh - var(--nav-h));
-  background:radial-gradient(ellipse at 50% 0%, rgba(245,166,35,.06) 0%, transparent 60%), var(--bg);
+  background:radial-gradient(ellipse at 50% 0%, rgba(201,168,76,.06) 0%, transparent 60%), var(--bg);
 }
 #view-erro.active{ display:flex; }
 .erro-icon{
   width:80px; height:80px; border-radius:50%;
-  background:rgba(245,166,35,.08); border:1px solid rgba(245,166,35,.2);
+  background:rgba(201,168,76,.08); border:1px solid rgba(201,168,76,.2);
   display:flex; align-items:center; justify-content:center;
-  font-size:2rem; margin-bottom:24px;
+  color:var(--gold); margin-bottom:24px;
 }
-.erro-title{ font-family:var(--heading); font-size:1.5rem; font-weight:800; letter-spacing:-.02em; margin-bottom:10px; }
-.erro-sub{ color:var(--muted); font-size:.9rem; max-width:400px; margin-bottom:32px; line-height:1.7; }
+.erro-title{
+  font-family:var(--heading); font-size:1.5rem; font-weight:800;
+  letter-spacing:-.02em; margin-bottom:10px;
+}
+.erro-sub{
+  color:var(--muted); font-size:.9rem; max-width:400px;
+  margin-bottom:32px; line-height:1.7;
+}
 .btn-voltar-lista{
   display:inline-flex; align-items:center; gap:8px;
   padding:12px 28px; border-radius:50px;
-  background:var(--gold); color:#111;
+  background:var(--gold); color:#000;
   font-family:var(--heading); font-size:.8rem; font-weight:700;
   letter-spacing:.07em; text-transform:uppercase;
-  text-decoration:none; transition:all .2s;
-  box-shadow:0 0 24px var(--gold-glow);
+  transition:all .2s; box-shadow:0 0 24px var(--gold-glow);
 }
-.btn-voltar-lista:hover{ background:var(--gold-dark); transform:translateY(-2px); }
+.btn-voltar-lista:hover{ background:var(--gold-dim); transform:translateY(-2px); }
 
 /* ══════════════════════════════════════
    VIEW: PLAYER
@@ -155,12 +173,13 @@ body{
 /* Botão toggle sidebar mobile */
 .btn-toggle-sidebar{
   display:none; background:none; border:1px solid var(--border2);
-  border-radius:8px; padding:7px 12px; color:var(--muted);
+  border-radius:var(--r); padding:7px 12px; color:var(--muted);
   font-size:.78rem; font-weight:600; cursor:pointer;
   align-items:center; gap:6px; letter-spacing:.04em;
   flex-shrink:0; font-family:var(--body); transition:all .2s;
 }
-.btn-toggle-sidebar:hover{ border-color:var(--gold); color:var(--gold); }
+.btn-toggle-sidebar:hover{ border-color:var(--gold-line); color:var(--gold); }
+.btn-toggle-sidebar svg{ width:14px; height:14px; }
 
 /* ── Layout principal ── */
 .player-layout{
@@ -183,9 +202,9 @@ body{
 .sidebar-header{
   padding:16px 20px;
   border-bottom:1px solid var(--border);
-  font-size:.75rem; font-weight:700; letter-spacing:.06em;
+  font-size:.72rem; font-weight:700; letter-spacing:.08em;
   text-transform:uppercase; color:var(--muted);
-  flex-shrink:0;
+  flex-shrink:0; font-family:var(--heading);
 }
 
 /* Item de aula na sidebar */
@@ -198,7 +217,7 @@ body{
 }
 .aula-sidebar-item:hover{ background:var(--surface2); }
 .aula-sidebar-item.ativa{
-  background:rgba(245,166,35,.06);
+  background:rgba(201,168,76,.06);
   border-left-color:var(--gold);
 }
 .aula-sidebar-item.completa .aula-sidebar-titulo{ color:var(--muted); }
@@ -212,10 +231,10 @@ body{
   transition:background .2s, color .2s;
 }
 .aula-sidebar-item.ativa .aula-sidebar-num{
-  background:var(--gold); color:#111;
+  background:var(--gold); color:#000;
 }
 .aula-sidebar-item.completa .aula-sidebar-num{
-  background:rgba(76,175,80,.15); color:#81c784;
+  background:rgba(39,174,96,.15); color:#6fcf97;
 }
 
 .aula-sidebar-info{ flex:1; min-width:0; }
@@ -230,8 +249,8 @@ body{
 .player-main{
   flex:1; overflow-y:auto; display:flex; flex-direction:column;
 }
-.player-main::-webkit-scrollbar{ width:5px; }
-.player-main::-webkit-scrollbar-thumb{ background:var(--surface3); border-radius:3px; }
+.player-main::-webkit-scrollbar{ width:4px; }
+.player-main::-webkit-scrollbar-thumb{ background:var(--surface3); border-radius:2px; }
 
 /* Vídeo */
 .video-container{ width:100%; background:#000; }
@@ -243,9 +262,9 @@ body{
   position:absolute; inset:0;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:14px; color:var(--muted);
-  background:linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+  background:linear-gradient(135deg, #000 0%, var(--surface) 100%);
 }
-.video-placeholder svg{ width:48px; height:48px; opacity:.25; }
+.video-placeholder svg{ width:48px; height:48px; opacity:.2; }
 .video-placeholder p{ font-size:.875rem; }
 
 /* Info da aula */
@@ -284,21 +303,22 @@ body{
   border:1px solid var(--border2) !important;
 }
 .btn-prev:hover:not(:disabled),.btn-next:hover:not(:disabled){
-  border-color:rgba(255,255,255,.3) !important;
+  border-color:rgba(255,255,255,.22) !important;
 }
 .btn-complete{
-  background:var(--gold); color:#111;
+  background:var(--gold); color:#000;
   box-shadow:0 0 24px var(--gold-glow);
 }
-.btn-complete:hover:not(:disabled){ background:var(--gold-dark); transform:translateY(-1px); }
+.btn-complete:hover:not(:disabled){ background:var(--gold-dim); transform:translateY(-1px); }
 .btn-complete.done{
-  background:rgba(76,175,80,.15); color:#81c784;
-  border:1px solid rgba(76,175,80,.3) !important; box-shadow:none;
+  background:rgba(39,174,96,.1); color:#6fcf97;
+  border:1px solid rgba(39,174,96,.25) !important; box-shadow:none;
 }
-.btn-complete.done:hover:not(:disabled){ background:rgba(76,175,80,.2); }
+.btn-complete.done:hover:not(:disabled){ background:rgba(39,174,96,.15); }
 
 /* ── RESPONSIVE ── */
 @media (max-width:900px) {
+  .content-wrap{ margin-left:0; }
   .player-header{ padding:0 16px; gap:12px; }
   .player-progress-wrap{ display:none; }
   .btn-toggle-sidebar{ display:inline-flex; }
@@ -325,20 +345,29 @@ body{
 </head>
 <body>
 <assent-navbar></assent-navbar>
+
 <!-- Loading -->
 <div id="loading-screen">
   <div class="loading-logo">ASSENT <span>CURSOS</span></div>
   <div class="spinner"></div>
 </div>
 
+<div class="content-wrap">
+
 <!-- ══════════════════════════════════════
      VIEW: ERRO
 ══════════════════════════════════════ -->
 <div id="view-erro">
-  <div class="erro-icon" id="erro-icon">⚠️</div>
+  <div class="erro-icon" id="erro-icon">
+    <!-- substituído via JS -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  </div>
   <div class="erro-title" id="erro-title">Curso não encontrado</div>
   <div class="erro-sub" id="erro-sub">O curso que você tentou acessar não existe ou foi removido.</div>
-  <a href="/cursos" class="btn-voltar-lista">← Voltar aos cursos</a>
+  <a href="/cursos" class="btn-voltar-lista">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Voltar aos cursos
+  </a>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -365,7 +394,8 @@ body{
 
     <!-- Toggle sidebar mobile -->
     <button class="btn-toggle-sidebar" id="btn-toggle-sidebar">
-      ☰ Aulas
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      Aulas
     </button>
   </div>
 
@@ -434,24 +464,52 @@ body{
   </div><!-- /player-layout -->
 </div><!-- /view-player -->
 
+</div><!-- /content-wrap -->
+
 <!-- ── TOAST ── -->
 <div class="toast" id="toast">
-  <span id="toast-icon">✓</span>
+  <span class="toast-icon-wrap" id="toast-icon"></span>
   <span id="toast-msg"></span>
 </div>
 
 <script>
 /* ════════════════════════════════════════
+   ÍCONES SVG
+════════════════════════════════════════ */
+const ICONS = {
+  warn:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+  lock:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+  search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+  inbox:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>`,
+  tool:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+  check:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>`,
+};
+
+/* ════════════════════════════════════════
    ESTADO
 ════════════════════════════════════════ */
-let _user         = null;
-let _licenca      = {};
-let _curso        = null;   // Dados do curso atual
-let _aulas        = [];     // Array de aulas carregadas
-let _aulaAtiva    = null;   // Aula sendo exibida
-let _progresso    = { aulasCompletas: [], aulaAtual: null };
+let _user           = null;
+let _licenca        = {};
+let _curso          = null;
+let _aulas          = [];
+let _aulaAtiva      = null;
+let _progresso      = { aulasCompletas: [], aulaAtual: null };
 let _authProcessado = false;
-let _sidebarOpen  = false;
+let _sidebarOpen    = false;
+
+/* ════════════════════════════════════════
+   SIDEBAR — AssentSidebar
+════════════════════════════════════════ */
+function initSidebar() {
+  if (typeof window.AssentSidebar === 'undefined') {
+    setTimeout(initSidebar, 50);
+    return;
+  }
+  window.AssentSidebar.init({
+    activePage: 'cursos',
+    onLogout: () => { window.location.href = '/membros'; },
+  });
+}
 
 /* ════════════════════════════════════════
    HELPER: Extrai YouTube ID
@@ -475,21 +533,19 @@ function extrairYouTubeId(url) {
    VIEWS
 ════════════════════════════════════════ */
 function showView(name) {
-  ['view-erro','view-player'].forEach(id => {
+  ['view-erro', 'view-player'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-    if (el) el.classList.remove('active');
+    if (el) { el.style.display = 'none'; el.classList.remove('active'); }
   });
   const el = document.getElementById('view-' + name);
-  if (el) { el.style.display = name === 'player' ? 'flex' : 'flex'; el.classList.add('active'); }
+  if (el) { el.style.display = 'flex'; el.classList.add('active'); }
 }
 
-function mostrarErro(icon, titulo, sub) {
-  document.getElementById('erro-icon').textContent = icon;
+function mostrarErro(iconKey, titulo, sub) {
+  document.getElementById('erro-icon').innerHTML = ICONS[iconKey] || ICONS.warn;
   document.getElementById('erro-title').textContent = titulo;
   document.getElementById('erro-sub').textContent   = sub;
-  document.getElementById('view-erro').style.display = 'flex';
-  document.getElementById('view-erro').classList.add('active');
+  showView('erro');
 }
 
 /* ════════════════════════════════════════
@@ -505,17 +561,19 @@ window.addEventListener('assent:authchange', async (e) => {
   if (!user) { window.location.href = '/membros'; return; }
   _user = user;
 
+  initSidebar();
+
   // Verifica licença
   try {
     const licSnap = await window._getDoc(window._doc(window._db, 'licencas', user.uid));
     _licenca = licSnap.exists() ? licSnap.data() : {};
   } catch (err) {
-    mostrarErro('⚠️', 'Erro de verificação', 'Não foi possível verificar seu acesso. Tente novamente.');
+    mostrarErro('warn', 'Erro de verificação', 'Não foi possível verificar seu acesso. Tente novamente.');
     return;
   }
 
   if (!_licenca.clienteCurso) {
-    mostrarErro('🔒', 'Acesso Restrito', 'Você não tem acesso a este conteúdo. Entre em contato com a ASSENT.');
+    mostrarErro('lock', 'Acesso Restrito', 'Você não tem acesso a este conteúdo. Entre em contato com a ASSENT.');
     return;
   }
 
@@ -524,7 +582,7 @@ window.addEventListener('assent:authchange', async (e) => {
   const cursoId = params.get('id');
 
   if (!cursoId) {
-    mostrarErro('🔍', 'Curso não especificado', 'Nenhum ID de curso foi informado na URL.');
+    mostrarErro('search', 'Curso não especificado', 'Nenhum ID de curso foi informado na URL.');
     return;
   }
 
@@ -532,30 +590,26 @@ window.addEventListener('assent:authchange', async (e) => {
 });
 
 /* ════════════════════════════════════════
-   INICIAR CURSO — carrega dados e aulas
+   INICIAR CURSO
 ════════════════════════════════════════ */
 async function iniciarCurso(cursoId) {
   try {
-    // Busca dados do curso
     const cursoSnap = await window._getDoc(window._doc(window._db, 'cursos', cursoId));
     if (!cursoSnap.exists()) {
-      mostrarErro('📭', 'Curso não encontrado', 'O curso que você tentou acessar não existe ou foi removido.');
+      mostrarErro('inbox', 'Curso não encontrado', 'O curso que você tentou acessar não existe ou foi removido.');
       return;
     }
 
     _curso = { id: cursoId, ...cursoSnap.data() };
 
-    // Verifica se curso está ativo
     if (_curso.ativo === false) {
-      mostrarErro('🚧', 'Curso indisponível', 'Este curso está temporariamente fora do ar. Volte em breve.');
+      mostrarErro('tool', 'Curso indisponível', 'Este curso está temporariamente fora do ar. Volte em breve.');
       return;
     }
 
-    // Atualiza título na página e no header
     document.title = `${_curso.titulo} — ASSENT AGÊNCIA`;
     document.getElementById('player-curso-titulo').textContent = _curso.titulo;
 
-    // Busca aulas da subcoleção (ordenadas por `ordem`)
     const aulasSnap = await window._getDocs(
       window._query(
         window._collection(window._db, 'cursos', cursoId, 'aulas'),
@@ -565,7 +619,6 @@ async function iniciarCurso(cursoId) {
     _aulas = aulasSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
     if (_aulas.length === 0) {
-      // Curso sem aulas — mostra player vazio com aviso
       document.getElementById('sidebar-header').textContent = '0 aulas';
       document.getElementById('aulas-sidebar-list').innerHTML =
         `<div style="padding:30px 20px;text-align:center;color:var(--muted);font-size:.82rem;line-height:1.6;">
@@ -576,7 +629,7 @@ async function iniciarCurso(cursoId) {
       return;
     }
 
-    // Carrega progresso do usuário
+    // Carrega progresso
     try {
       const progSnap = await window._getDoc(
         window._doc(window._db, 'progresso', `${_user.uid}_${cursoId}`)
@@ -586,19 +639,15 @@ async function iniciarCurso(cursoId) {
       }
     } catch (_) { /* progresso é opcional */ }
 
-    // Renderiza sidebar
     renderSidebar();
-
-    // Mostra o player
     showView('player');
 
-    // Abre a última aula acessada ou a primeira
     const aulaInicial = _aulas.find(a => a.id === _progresso.aulaAtual) || _aulas[0];
     selecionarAula(aulaInicial);
 
   } catch (err) {
-    console.error('[Curso] Erro ao iniciar curso:', err);
-    mostrarErro('⚠️', 'Erro ao carregar', 'Ocorreu um erro ao carregar o curso. Tente recarregar a página.');
+    console.error('[Curso] Erro ao iniciar:', err);
+    mostrarErro('warn', 'Erro ao carregar', 'Ocorreu um erro ao carregar o curso. Tente recarregar a página.');
   }
 }
 
@@ -606,9 +655,9 @@ async function iniciarCurso(cursoId) {
    RENDER SIDEBAR
 ════════════════════════════════════════ */
 function renderSidebar() {
-  const listEl = document.getElementById('aulas-sidebar-list');
+  const listEl   = document.getElementById('aulas-sidebar-list');
   const headerEl = document.getElementById('sidebar-header');
-  const total    = _aulas.length;
+  const total      = _aulas.length;
   const concluidas = (_progresso.aulasCompletas || []).length;
 
   headerEl.textContent = `${total} aula${total !== 1 ? 's' : ''} · ${concluidas} concluída${concluidas !== 1 ? 's' : ''}`;
@@ -632,7 +681,6 @@ function renderSidebar() {
     </div>`;
   }).join('');
 
-  // Atualiza barra de progresso no header
   atualizarBarra();
 }
 
@@ -643,7 +691,6 @@ function selecionarAula(aulaOrStr) {
   const aula = typeof aulaOrStr === 'string' ? JSON.parse(aulaOrStr) : aulaOrStr;
   _aulaAtiva = aula;
 
-  // Player de vídeo
   const iframe      = document.getElementById('youtube-player');
   const placeholder = document.getElementById('video-placeholder');
   const ytId        = extrairYouTubeId(aula.videoUrl);
@@ -659,13 +706,11 @@ function selecionarAula(aulaOrStr) {
     document.getElementById('placeholder-msg').textContent = 'Vídeo não disponível.';
   }
 
-  // Info da aula
   const concluida = (_progresso.aulasCompletas || []).includes(aula.id);
   document.getElementById('aula-info-breadcrumb').textContent = _curso?.titulo || '';
   document.getElementById('aula-info-titulo').textContent     = aula.titulo || '';
   document.getElementById('aula-info-desc').textContent       = aula.descricao || '';
 
-  // Botão concluída
   const btn = document.getElementById('btn-complete');
   btn.disabled = false;
   if (concluida) {
@@ -680,12 +725,10 @@ function selecionarAula(aulaOrStr) {
     btn.classList.remove('done');
   }
 
-  // Botões prev/next
   const idx = _aulas.findIndex(a => a.id === aula.id);
   document.getElementById('btn-prev').disabled = idx <= 0;
   document.getElementById('btn-next').disabled = idx >= _aulas.length - 1;
 
-  // Destaca item ativo na sidebar e rola até ele
   document.querySelectorAll('.aula-sidebar-item').forEach(el => el.classList.remove('ativa'));
   const itemEl = document.getElementById('aula-sidebar-' + aula.id);
   if (itemEl) {
@@ -693,10 +736,7 @@ function selecionarAula(aulaOrStr) {
     itemEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
-  // Fecha sidebar mobile
   if (window.innerWidth <= 900) fecharSidebarMobile();
-
-  // Salva progresso (aula atual)
   salvarProgresso();
 }
 
@@ -728,7 +768,7 @@ async function marcarConcluida() {
     );
     renderSidebar();
     selecionarAula(_aulaAtiva);
-    showToast(concluida ? 'Aula desmarcada.' : '✓ Aula concluída!', concluida ? '' : 'ok');
+    showToast(concluida ? 'Aula desmarcada.' : 'Aula concluída!', concluida ? '' : 'ok');
   } catch (err) {
     console.error('[Curso] Erro ao salvar progresso:', err);
     showToast('Erro ao salvar progresso.', 'err');
@@ -736,7 +776,7 @@ async function marcarConcluida() {
 }
 
 /* ════════════════════════════════════════
-   SALVAR PROGRESSO (aula atual)
+   SALVAR PROGRESSO
 ════════════════════════════════════════ */
 async function salvarProgresso() {
   if (!_user || !_curso || !_aulaAtiva) return;
@@ -755,12 +795,12 @@ async function salvarProgresso() {
 }
 
 /* ════════════════════════════════════════
-   ATUALIZAR BARRA DE PROGRESSO
+   BARRA DE PROGRESSO
 ════════════════════════════════════════ */
 function atualizarBarra() {
-  const total    = _aulas.length;
-  const done     = (_progresso.aulasCompletas || []).length;
-  const pct      = total > 0 ? Math.round((done / total) * 100) : 0;
+  const total = _aulas.length;
+  const done  = (_progresso.aulasCompletas || []).length;
+  const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
   document.getElementById('player-progress-fill').style.width = pct + '%';
   document.getElementById('player-progress-pct').textContent  = pct + '%';
 }
@@ -793,10 +833,14 @@ function fecharSidebarMobile() {
 function showToast(msg, type = '') {
   const t = document.getElementById('toast');
   t.className = 'toast' + (type ? ' ' + type : '');
-  document.getElementById('toast-icon').textContent = type === 'err' ? '⚠' : '✓';
-  document.getElementById('toast-msg').textContent  = msg;
+  document.getElementById('toast-icon').innerHTML =
+    type === 'err'
+      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>`
+      : ICONS.check;
+  document.getElementById('toast-msg').textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3200);
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
 }
 </script>
 </body>

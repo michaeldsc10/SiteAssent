@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Termos de Serviço — Orbita | Assent Agência Digital</title>
+  <meta name="description" content="Termos de Serviço do aplicativo Orbita, desenvolvido pela Assent Agência Digital." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --border: rgba(255,255,255,0.07);
+      --accent: #c8f060;
+      --accent-dim: rgba(200,240,96,0.12);
+      --text: #e8e8ee;
+      --muted: #7a7a8c;
+      --heading: #f4f4fa;
+      --radius: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(200,240,96,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 90% 80%, rgba(100,120,200,0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 64px 24px 120px;
+    }
+
+    /* Header */
+    header {
+      margin-bottom: 72px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(200,240,96,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo svg { width: 22px; height: 22px; }
+
+    .brand-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--heading);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-name span {
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.85rem;
+      display: block;
+      margin-top: -2px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      border: 1px solid rgba(200,240,96,0.2);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.1;
+      color: var(--heading);
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 48px 0;
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 48px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    section:nth-child(1)  { animation-delay: 0.05s; }
+    section:nth-child(2)  { animation-delay: 0.10s; }
+    section:nth-child(3)  { animation-delay: 0.15s; }
+    section:nth-child(4)  { animation-delay: 0.20s; }
+    section:nth-child(5)  { animation-delay: 0.25s; }
+    section:nth-child(6)  { animation-delay: 0.30s; }
+    section:nth-child(7)  { animation-delay: 0.35s; }
+    section:nth-child(8)  { animation-delay: 0.40s; }
+    section:nth-child(9)  { animation-delay: 0.45s; }
+    section:nth-child(10) { animation-delay: 0.50s; }
+
+    .section-number {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--heading);
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 14px;
+      font-weight: 300;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    ul {
+      list-style: none;
+      margin: 16px 0;
+    }
+
+    ul li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 10px;
+      color: var(--text);
+      font-weight: 300;
+    }
+
+    ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 400;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin: 20px 0;
+    }
+
+    .card.accent-card {
+      border-color: rgba(200,240,96,0.2);
+      background: var(--accent-dim);
+    }
+
+    .card p { margin-bottom: 0; }
+
+    .contact-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .contact-block p { margin-bottom: 6px; }
+
+    .contact-block a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 400;
+      transition: opacity 0.2s;
+    }
+
+    .contact-block a:hover { opacity: 0.75; }
+
+    /* Doc link */
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 400;
+      border: 1px solid rgba(200,240,96,0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      transition: background 0.2s, opacity 0.2s;
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    .doc-link:hover {
+      background: var(--accent-dim);
+    }
+
+    footer {
+      margin-top: 80px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .update-badge {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px 14px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .wrapper { padding: 40px 20px 80px; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <header>
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="3" fill="#c8f060"/>
+            <ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="#c8f060" stroke-width="1.4" fill="none"/>
+            <ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="#c8f060" stroke-width="1.4" fill="none" transform="rotate(60 12 12)" opacity="0.5"/>
+            <ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="#c8f060" stroke-width="1.4" fill="none" transform="rotate(120 12 12)" opacity="0.3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">
+            Orbita
+            <span>por Assent Agência Digital</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tag">Documento legal</div>
+      <h1>Termos de<br/><em>Serviço</em></h1>
+      <p class="subtitle">Última atualização: <strong style="color:var(--text)">15 de maio de 2025</strong></p>
+    </header>
+
+    <div class="divider"></div>
+
+    <!-- Intro -->
+    <section>
+      <div class="section-number">Introdução</div>
+      <h2>Aceitação dos termos</h2>
+      <p>
+        Ao acessar ou utilizar o <strong>Orbita</strong>, plataforma de gestão e monitoramento de redes sociais desenvolvida pela <strong>Assent Agência Digital</strong>, você declara ter lido, compreendido e concordado com os presentes Termos de Serviço.
+      </p>
+      <p>
+        Caso não concorde com qualquer parte destes termos, não utilize o aplicativo. O uso continuado após alterações nos termos implica aceitação das modificações.
+      </p>
+    </section>
+
+    <!-- Definições -->
+    <section>
+      <div class="section-number">01</div>
+      <h2>Definições</h2>
+      <ul>
+        <li><strong>Orbita</strong> — plataforma de gestão de redes sociais de propriedade da Assent Agência Digital;</li>
+        <li><strong>Assent / Nós</strong> — Assent Agência Digital, pessoa jurídica responsável pelo desenvolvimento e operação do Orbita;</li>
+        <li><strong>Usuário / Você</strong> — pessoa física ou jurídica que acessa o Orbita mediante autorização;</li>
+        <li><strong>Conteúdo</strong> — dados, métricas, publicações e demais informações acessadas por meio do aplicativo;</li>
+        <li><strong>Plataformas de Terceiros</strong> — Instagram, Facebook e demais serviços da Meta integrados ao Orbita.</li>
+      </ul>
+    </section>
+
+    <!-- Elegibilidade -->
+    <section>
+      <div class="section-number">02</div>
+      <h2>Elegibilidade e acesso</h2>
+      <p>
+        O Orbita é uma ferramenta de uso restrito, destinada a clientes e colaboradores da Assent Agência Digital. O acesso é concedido individualmente mediante autorização expressa.
+      </p>
+      <ul>
+        <li>Você deve ter ao menos 18 anos para utilizar o serviço;</li>
+        <li>É responsável por manter a confidencialidade das suas credenciais de acesso;</li>
+        <li>Não é permitido compartilhar acessos ou credenciais com terceiros não autorizados;</li>
+        <li>A Assent reserva-se o direito de revogar acessos a qualquer momento, com ou sem aviso prévio, em caso de uso indevido.</li>
+      </ul>
+    </section>
+
+    <!-- Uso do serviço -->
+    <section>
+      <div class="section-number">03</div>
+      <h2>Uso permitido do serviço</h2>
+      <p>O Orbita deve ser utilizado exclusivamente para fins legítimos de gestão e monitoramento de redes sociais. É expressamente proibido:</p>
+      <ul>
+        <li>Utilizar o aplicativo para violar leis brasileiras ou políticas das Plataformas de Terceiros;</li>
+        <li>Automatizar ações não autorizadas nas plataformas conectadas;</li>
+        <li>Acessar dados de contas para as quais você não possui autorização;</li>
+        <li>Tentar contornar, hackear ou interferir na segurança do sistema;</li>
+        <li>Reproduzir, copiar, distribuir ou comercializar o Orbita sem autorização prévia e por escrito da Assent;</li>
+        <li>Realizar engenharia reversa, descompilar ou extrair o código-fonte da plataforma.</li>
+      </ul>
+    </section>
+
+    <!-- Integração com Meta -->
+    <section>
+      <div class="section-number">04</div>
+      <h2>Integração com plataformas Meta</h2>
+      <p>
+        O Orbita utiliza as APIs oficiais do Instagram e do Facebook para acessar dados das contas conectadas. Ao integrar sua conta, você:
+      </p>
+      <ul>
+        <li>Autoriza o Orbita a acessar os dados e métricas das suas contas nas Plataformas de Terceiros;</li>
+        <li>Declara ter o direito e as permissões necessárias para conceder esse acesso;</li>
+        <li>Reconhece que o uso das APIs está sujeito aos <a href="https://developers.facebook.com/terms/" target="_blank" rel="noopener" style="color:var(--accent)">Termos da Plataforma Meta</a>.</li>
+      </ul>
+      <div class="card">
+        <p>
+          A Assent não é afiliada, patrocinada ou endossada pela Meta Platforms, Inc. O Orbita é uma ferramenta independente que utiliza APIs públicas disponibilizadas pela Meta.
+        </p>
+      </div>
+    </section>
+
+    <!-- Propriedade intelectual -->
+    <section>
+      <div class="section-number">05</div>
+      <h2>Propriedade intelectual</h2>
+      <p>
+        Todo o conteúdo, código, design, marca e demais elementos do Orbita são de propriedade exclusiva da <strong>Assent Agência Digital</strong>, protegidos pelas leis de propriedade intelectual aplicáveis.
+      </p>
+      <p>
+        Os dados e o conteúdo das contas conectadas pertencem ao respectivo titular da conta. A Assent não reivindica propriedade sobre os dados do usuário acessados via API.
+      </p>
+    </section>
+
+    <!-- Limitação de responsabilidade -->
+    <section>
+      <div class="section-number">06</div>
+      <h2>Limitação de responsabilidade</h2>
+      <p>Na máxima extensão permitida pela legislação vigente, a Assent Agência Digital não será responsável por:</p>
+      <ul>
+        <li>Interrupções, falhas ou indisponibilidade do serviço decorrentes de manutenção, força maior ou fatores fora do nosso controle;</li>
+        <li>Alterações nas APIs ou políticas das Plataformas de Terceiros que afetem o funcionamento do Orbita;</li>
+        <li>Uso indevido da plataforma por parte do usuário;</li>
+        <li>Perda de dados decorrente de falha técnica inesperada, desde que tenham sido adotadas as medidas de segurança razoáveis.</li>
+      </ul>
+      <div class="card accent-card">
+        <p>
+          <strong>O Orbita é fornecido "como está", sem garantias expressas ou implícitas de disponibilidade ininterrupta ou adequação a finalidades específicas.</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- Privacidade -->
+    <section>
+      <div class="section-number">07</div>
+      <h2>Privacidade e proteção de dados</h2>
+      <p>
+        O tratamento de dados pessoais realizado pelo Orbita é regido pela nossa Política de Privacidade, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).
+      </p>
+      <p>Recomendamos a leitura integral do documento:</p>
+      <a class="doc-link" href="/privacidade.html">→ Política de Privacidade do Orbita</a>
+    </section>
+
+    <!-- Rescisão -->
+    <section>
+      <div class="section-number">08</div>
+      <h2>Rescisão e suspensão de acesso</h2>
+      <p>
+        A Assent poderá suspender ou encerrar o acesso do usuário ao Orbita, a qualquer momento e sem aviso prévio, nos seguintes casos:
+      </p>
+      <ul>
+        <li>Violação destes Termos de Serviço ou da Política de Privacidade;</li>
+        <li>Uso fraudulento, abusivo ou contrário à lei;</li>
+        <li>Encerramento do contrato de prestação de serviços com a Assent;</li>
+        <li>Solicitação expressa do próprio usuário.</li>
+      </ul>
+      <p>
+        Após a rescisão, os dados associados à conta serão tratados conforme descrito na Política de Privacidade.
+      </p>
+    </section>
+
+    <!-- Lei aplicável -->
+    <section>
+      <div class="section-number">09</div>
+      <h2>Lei aplicável e foro</h2>
+      <p>
+        Estes Termos de Serviço são regidos pelas leis da República Federativa do Brasil. Quaisquer disputas ou controvérsias decorrentes do uso do Orbita serão submetidas ao foro da comarca competente, com renúncia a qualquer outro, por mais privilegiado que seja.
+      </p>
+    </section>
+
+    <!-- Contato -->
+    <section>
+      <div class="section-number">10</div>
+      <h2>Contato</h2>
+      <div class="contact-block">
+        <p><strong>Assent Agência Digital</strong></p>
+        <p>Responsável pelo aplicativo Orbita</p>
+        <p style="margin-top:16px;">Dúvidas sobre estes termos ou sobre o uso do aplicativo:</p>
+        <p style="margin-top:12px;">
+          📧 <a href="mailto:assent_ofc@gmail.com">assent_ofc@gmail.com</a>
+        </p>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:16px;">
+          Respondemos todas as solicitações em até 15 dias úteis.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <footer>
+      <p>© 2025 Assent Agência Digital · Todos os direitos reservados</p>
+      <span class="update-badge">Versão 1.0 — Mai/2025</span>
+    </footer>
+
+  </div>
+</body>
+</html>

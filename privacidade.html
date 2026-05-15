@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidade — Orbita | Assent Agência Digital</title>
+  <meta name="description" content="Política de Privacidade do aplicativo Orbita, desenvolvido pela Assent Agência Digital." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --border: rgba(255,255,255,0.07);
+      --accent: #c8f060;
+      --accent-dim: rgba(200,240,96,0.12);
+      --text: #e8e8ee;
+      --muted: #7a7a8c;
+      --heading: #f4f4fa;
+      --radius: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(200,240,96,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 90% 80%, rgba(100,120,200,0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 64px 24px 120px;
+    }
+
+    /* Header */
+    header {
+      margin-bottom: 72px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(200,240,96,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo svg { width: 22px; height: 22px; }
+
+    .brand-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--heading);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-name span {
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.85rem;
+      display: block;
+      margin-top: -2px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      border: 1px solid rgba(200,240,96,0.2);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.1;
+      color: var(--heading);
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 48px 0;
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 48px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    section:nth-child(1) { animation-delay: 0.05s; }
+    section:nth-child(2) { animation-delay: 0.10s; }
+    section:nth-child(3) { animation-delay: 0.15s; }
+    section:nth-child(4) { animation-delay: 0.20s; }
+    section:nth-child(5) { animation-delay: 0.25s; }
+    section:nth-child(6) { animation-delay: 0.30s; }
+    section:nth-child(7) { animation-delay: 0.35s; }
+
+    .section-number {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      color: var(--heading);
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 14px;
+      font-weight: 300;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    ul {
+      list-style: none;
+      margin: 16px 0;
+    }
+
+    ul li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 10px;
+      color: var(--text);
+      font-weight: 300;
+    }
+
+    ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 400;
+    }
+
+    /* Highlight card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin: 20px 0;
+    }
+
+    .card.accent-card {
+      border-color: rgba(200,240,96,0.2);
+      background: var(--accent-dim);
+    }
+
+    .card p { margin-bottom: 0; }
+
+    /* Contact */
+    .contact-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .contact-block p { margin-bottom: 6px; }
+
+    .contact-block a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 400;
+      transition: opacity 0.2s;
+    }
+
+    .contact-block a:hover { opacity: 0.75; }
+
+    /* Footer */
+    footer {
+      margin-top: 80px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .update-badge {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px 14px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .wrapper { padding: 40px 20px 80px; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <header>
+      <div class="brand">
+        <div class="brand-logo">
+          <!-- Orbita icon: simple orbit rings -->
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="3" fill="#c8f060"/>
+            <ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="#c8f060" stroke-width="1.4" fill="none"/>
+            <ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="#c8f060" stroke-width="1.4" fill="none" transform="rotate(60 12 12)" opacity="0.5"/>
+            <ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="#c8f060" stroke-width="1.4" fill="none" transform="rotate(120 12 12)" opacity="0.3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">
+            Orbita
+            <span>por Assent Agência Digital</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tag">Documento legal</div>
+      <h1>Política de<br/><em>Privacidade</em></h1>
+      <p class="subtitle">Última atualização: <strong style="color:var(--text)">15 de maio de 2025</strong></p>
+    </header>
+
+    <div class="divider"></div>
+
+    <!-- Intro -->
+    <section>
+      <div class="section-number">Introdução</div>
+      <h2>Quem somos</h2>
+      <p>
+        O <strong>Orbita</strong> é uma ferramenta de gestão e monitoramento de redes sociais desenvolvida pela <strong>Assent Agência Digital</strong> para uso interno e de clientes sob contrato.
+      </p>
+      <p>
+        Esta Política de Privacidade descreve como coletamos, usamos e protegemos os dados acessados por meio do aplicativo, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018) e com as políticas da plataforma Meta.
+      </p>
+    </section>
+
+    <!-- Dados coletados -->
+    <section>
+      <div class="section-number">01</div>
+      <h2>Dados que coletamos</h2>
+      <p>Para funcionar, o Orbita pode coletar e acessar as seguintes informações:</p>
+      <ul>
+        <li><strong>Tokens de acesso do Instagram e Facebook</strong> — necessários para autenticar e conectar contas autorizadas pelo usuário.</li>
+        <li><strong>Métricas de desempenho</strong> — dados de alcance, impressões, engajamento, seguidores e publicações das páginas e perfis conectados.</li>
+        <li><strong>Informações básicas da conta</strong> — nome de usuário, ID da conta e foto de perfil públicos.</li>
+        <li><strong>Dados de uso do aplicativo</strong> — logs de acesso e interações para fins de suporte técnico e melhoria do serviço.</li>
+      </ul>
+    </section>
+
+    <!-- Uso dos dados -->
+    <section>
+      <div class="section-number">02</div>
+      <h2>Como usamos os dados</h2>
+      <p>As informações coletadas são utilizadas exclusivamente para:</p>
+      <ul>
+        <li>Exibir relatórios e dashboards de desempenho das contas conectadas;</li>
+        <li>Permitir o gerenciamento e o monitoramento das redes sociais dentro da plataforma;</li>
+        <li>Gerar análises e insights para apoio à tomada de decisão;</li>
+        <li>Manutenção técnica, correção de erros e melhoria contínua do aplicativo.</li>
+      </ul>
+      <div class="card accent-card">
+        <p>
+          <strong>Nenhum dado coletado é utilizado para fins publicitários, treinamento de modelos de inteligência artificial ou qualquer finalidade não descrita nesta política.</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- Compartilhamento -->
+    <section>
+      <div class="section-number">03</div>
+      <h2>Compartilhamento de dados</h2>
+      <p>
+        A Assent Agência Digital <strong>não vende, aluga, cede ou compartilha</strong> quaisquer dados coletados pelo Orbita com terceiros, exceto nas seguintes situações:
+      </p>
+      <ul>
+        <li><strong>Obrigação legal</strong> — quando exigido por lei, ordem judicial ou autoridade competente;</li>
+        <li><strong>Prestadores de serviço essenciais</strong> — infraestrutura de hospedagem e servidores, exclusivamente para operação do aplicativo, sob acordos de confidencialidade.</li>
+      </ul>
+      <div class="card">
+        <p>
+          Os dados nunca são comercializados nem transferidos a parceiros, anunciantes ou plataformas de terceiros para qualquer finalidade.
+        </p>
+      </div>
+    </section>
+
+    <!-- Retenção -->
+    <section>
+      <div class="section-number">04</div>
+      <h2>Retenção e exclusão de dados</h2>
+      <p>
+        Os dados são mantidos apenas pelo tempo necessário para a prestação do serviço. Ao encerrar o uso do aplicativo ou revogar as permissões concedidas via Meta, os tokens de acesso são invalidados e os dados associados são removidos dos nossos sistemas em até <strong>30 dias</strong>.
+      </p>
+      <p>
+        Você pode, a qualquer momento, revogar o acesso do Orbita às suas contas diretamente nas configurações de privacidade do Instagram ou Facebook.
+      </p>
+    </section>
+
+    <!-- Segurança -->
+    <section>
+      <div class="section-number">05</div>
+      <h2>Segurança das informações</h2>
+      <p>
+        Adotamos medidas técnicas e organizacionais adequadas para proteger os dados contra acesso não autorizado, perda, alteração ou divulgação indevida, incluindo:
+      </p>
+      <ul>
+        <li>Comunicação criptografada via HTTPS/TLS;</li>
+        <li>Controle de acesso baseado em perfis e autenticação segura;</li>
+        <li>Armazenamento de tokens com criptografia em repouso;</li>
+        <li>Revisões periódicas de segurança da aplicação.</li>
+      </ul>
+    </section>
+
+    <!-- Direitos do usuário -->
+    <section>
+      <div class="section-number">06</div>
+      <h2>Seus direitos (LGPD)</h2>
+      <p>Em conformidade com a LGPD, você tem direito a:</p>
+      <ul>
+        <li>Confirmar a existência de tratamento dos seus dados;</li>
+        <li>Acessar os dados que mantemos sobre você;</li>
+        <li>Solicitar a correção de dados incompletos ou desatualizados;</li>
+        <li>Solicitar a exclusão dos seus dados pessoais;</li>
+        <li>Revogar o consentimento a qualquer momento;</li>
+        <li>Obter informações sobre o compartilhamento dos seus dados.</li>
+      </ul>
+      <p>Para exercer qualquer um desses direitos, entre em contato conosco pelo canal abaixo.</p>
+    </section>
+
+    <!-- Contato -->
+    <section>
+      <div class="section-number">07</div>
+      <h2>Contato e solicitações</h2>
+      <div class="contact-block">
+        <p><strong>Assent Agência Digital</strong></p>
+        <p>Responsável pelo aplicativo Orbita</p>
+        <p style="margin-top:16px;">Para dúvidas, solicitações de exclusão de dados ou exercício dos seus direitos:</p>
+        <p style="margin-top:12px;">
+          📧 <a href="mailto:privacidade@assent.com.br">privacidade@assent.com.br</a>
+        </p>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:16px;">
+          Respondemos todas as solicitações em até 15 dias úteis.
+        </p>
+      </div>
+    </section>
+
+    <!-- Alterações -->
+    <section>
+      <div class="section-number">08</div>
+      <h2>Alterações nesta política</h2>
+      <p>
+        Podemos atualizar esta política periodicamente. Qualquer alteração relevante será comunicada por e-mail ou por aviso no próprio aplicativo. O uso continuado do Orbita após a notificação implica aceite das alterações.
+      </p>
+      <p>
+        A data da última revisão está sempre indicada no topo deste documento.
+      </p>
+    </section>
+
+    <div class="divider"></div>
+
+    <footer>
+      <p>© 2025 Assent Agência Digital · Todos os direitos reservados</p>
+      <span class="update-badge">Versão 1.0 — Mai/2025</span>
+    </footer>
+
+  </div>
+</body>
+</html>

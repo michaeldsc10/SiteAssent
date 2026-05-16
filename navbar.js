@@ -106,10 +106,7 @@ class AssentNavbar extends HTMLElement {
 .logo{
   font-family:'Montserrat',sans-serif;font-size:1.35rem;font-weight:800;
   letter-spacing:-.01em;text-decoration:none;
-  background:linear-gradient(90deg,#D4AF37 0%,#EAEAEA 25%,#D4AF37 50%,#EAEAEA 75%,#B8860B 100%);
-  background-size:250% auto;
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  animation:shimmer 4s ease-in-out infinite;
+  color:#D4AF37;
 }
 @keyframes shimmer{0%{background-position:0% center}50%{background-position:100% center}100%{background-position:0% center}}
 

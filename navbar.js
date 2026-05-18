@@ -258,13 +258,13 @@ nav.scrolled{background:rgba(20,18,12,.98);backdrop-filter:blur(20px);box-shadow
 }
 
 /* Lista de itens */
-.d-list{padding:0 10px 14px;display:flex;flex-direction:column;gap:6px;}
+.d-list{padding:0 10px 18px;display:flex;flex-direction:column;gap:4px;}
 
 .ditem{
-  display:flex;align-items:center;gap:14px;padding:16px 12px;
+  display:flex;align-items:center;gap:14px;padding:18px 14px;
   border-radius:12px;text-decoration:none;
   transition:background .22s ease;
-  position:relative;
+  position:relative;text-transform:none;letter-spacing:normal;
 }
 .ditem:hover{background:rgba(212,175,55,.06);}
 .ditem:hover .dicon{
@@ -290,12 +290,12 @@ nav.scrolled{background:rgba(20,18,12,.98);backdrop-filter:blur(20px);box-shadow
 .d-text{flex:1;min-width:0;}
 .dtitle{
   display:block;font-family:'Inter',sans-serif;font-size:.875rem;font-weight:600;
-  color:rgba(255,255,255,.85);margin-bottom:3px;letter-spacing:.01em;
-  transition:color .22s;
+  color:rgba(255,255,255,.85);margin-bottom:4px;letter-spacing:.01em;
+  transition:color .22s;text-transform:none;
 }
 .ddesc{
   display:block;font-size:.75rem;color:rgba(255,255,255,.35);
-  line-height:1.55;font-weight:400;
+  line-height:1.55;font-weight:400;text-transform:none;letter-spacing:.01em;
 }
 
 /* Seta lateral */

@@ -258,10 +258,10 @@ nav.scrolled{background:rgba(20,18,12,.98);backdrop-filter:blur(20px);box-shadow
 }
 
 /* Lista de itens */
-.d-list{padding:0 10px 10px;}
+.d-list{padding:0 10px 14px;display:flex;flex-direction:column;gap:6px;}
 
 .ditem{
-  display:flex;align-items:center;gap:14px;padding:14px 12px;
+  display:flex;align-items:center;gap:14px;padding:16px 12px;
   border-radius:12px;text-decoration:none;
   transition:background .22s ease;
   position:relative;
@@ -305,20 +305,7 @@ nav.scrolled{background:rgba(20,18,12,.98);backdrop-filter:blur(20px);box-shadow
 }
 .darrow svg{width:14px;height:14px;display:block;}
 
-/* Rodapé */
-.d-footer{
-  padding:10px 20px 14px;
-  border-top:1px solid rgba(255,255,255,.05);
-  display:flex;align-items:center;justify-content:center;
-}
-.d-footer a{
-  font-family:'Inter',sans-serif;font-size:.72rem;font-weight:500;
-  color:rgba(212,175,55,.45);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;
-  display:flex;align-items:center;gap:6px;
-  transition:color .2s;
-}
-.d-footer a:hover{color:#D4AF37;}
-.d-footer a svg{width:12px;height:12px;}
+
 
 /* ══════════════════════════════════════
    HAMBURGER + MOBILE
@@ -434,15 +421,7 @@ nav.scrolled{background:rgba(20,18,12,.98);backdrop-filter:blur(20px);box-shadow
               </a>
             </div>
 
-            <!-- Footer -->
-            <div class="d-footer">
-              <a href="/aplicativos">
-                Ver todos os serviços
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              </a>
-            </div>
+
           </div>
         </li>
         <li><a href="/#provas">Resultados</a></li>

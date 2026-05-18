@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Relatório de Campanha — Base Burger × Assent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:        oklch(0.13 0.008 60);
+    --bg-2:      oklch(0.16 0.008 60);
+    --surface:   oklch(0.19 0.008 60);
+    --surface-2: oklch(0.22 0.008 60);
+    --line:      oklch(0.32 0.008 60 / 0.35);
+    --line-soft: oklch(0.32 0.008 60 / 0.18);
+    --text:      oklch(0.97 0.005 80);
+    --text-2:    oklch(0.78 0.008 70);
+    --text-3:    oklch(0.58 0.008 70);
+    --gold:      #c9a35a;
+    --gold-soft: oklch(0.74 0.10 85 / 0.12);
+    --gold-line: oklch(0.74 0.10 85 / 0.35);
+    --orange:    #ea5828;
+    --orange-soft: oklch(0.65 0.18 40 / 0.14);
+    --green:     #6cc28a;
+    --red:       #e57373;
+    --blue:      #6aa6e0;
+    --pink:      #d97a9b;
+
+    --maxw: 1240px;
+    --pad: clamp(20px, 4vw, 56px);
+    --radius: 18px;
+    --radius-sm: 12px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Montserrat',system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:'ss01','cv11'}
+  body{
+    background:
+      radial-gradient(1200px 800px at 85% -10%, oklch(0.74 0.10 85 / 0.06), transparent 60%),
+      radial-gradient(900px 600px at -10% 30%, oklch(0.65 0.18 40 / 0.05), transparent 60%),
+      var(--bg);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  ::selection{background:var(--gold);color:#1a1a1a}
+
+  h1,h2,h3,h4{font-family:'Sora',sans-serif;font-weight:600;letter-spacing:-0.02em;margin:0}
+  p{margin:0;line-height:1.65;color:var(--text-2)}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+
+  /* ───── Navbar ───── */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:saturate(140%) blur(14px);
+    -webkit-backdrop-filter:saturate(140%) blur(14px);
+    background:oklch(0.13 0.008 60 / 0.7);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-row{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .nav-left{display:flex;align-items:center;gap:14px}
+  .nav-logo{width:30px;height:30px;object-fit:contain;filter:drop-shadow(0 2px 12px rgba(201,163,90,.4))}
+  .nav-brand{font-family:'Sora',sans-serif;font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+  .nav-brand span{color:var(--gold)}
+  .nav-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);letter-spacing:.08em;text-transform:uppercase}
+
+  /* ───── Hero ───── */
+  .hero{padding:clamp(60px,8vw,120px) 0 clamp(40px,5vw,80px)}
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--gold);text-transform:uppercase;letter-spacing:.2em;
+    padding:8px 14px;border:1px solid var(--gold-line);border-radius:999px;
+    background:var(--gold-soft);
+  }
+  .hero-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+  .hero h1{
+    font-size:clamp(44px, 7.5vw, 96px);
+    line-height:1.02;font-weight:700;letter-spacing:-0.035em;
+    margin-top:28px;
+  }
+  .hero h1 .gold{color:var(--gold);font-weight:300;font-style:italic;font-family:'Sora',serif}
+  .hero-sub{
+    max-width:640px;margin-top:24px;
+    font-size:clamp(15px,1.4vw,17px);color:var(--text-2);line-height:1.6;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.4fr 1fr;gap:60px;align-items:end;
+    margin-top:clamp(40px,6vw,80px);
+  }
+  @media (max-width:880px){.hero-grid{grid-template-columns:1fr;gap:32px}}
+
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .hero-stat{
+    border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;background:linear-gradient(180deg, var(--surface), var(--bg-2));
+  }
+  .hero-stat .k{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;color:var(--text-3);text-transform:uppercase}
+  .hero-stat .v{font-family:'Sora',sans-serif;font-weight:600;font-size:clamp(26px,3.2vw,36px);margin-top:8px;letter-spacing:-0.02em}
+  .hero-stat .v small{color:var(--gold);font-weight:400;font-size:.55em;margin-left:4px;letter-spacing:0}
+
+  /* Client card */
+  .client-card{
+    border:1px solid var(--line);border-radius:var(--radius);
+    background:linear-gradient(180deg, var(--surface-2), var(--surface));
+    padding:32px;
+    display:flex;flex-direction:column;align-items:flex-start;gap:18px;
+    position:relative;overflow:hidden;
+  }
+  .client-card::before{
+    content:"";position:absolute;inset:-1px;
+    background:radial-gradient(400px 200px at 50% -10%, var(--orange-soft), transparent 60%);
+    pointer-events:none;
+  }
+  .client-card img{width:88px;height:88px;object-fit:contain;position:relative;z-index:1}
+  .client-card .label{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;color:var(--text-3);text-transform:uppercase;position:relative;z-index:1}
+  .client-card .name{font-family:'Sora',sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.02em;position:relative;z-index:1}
+  .client-card .tag{font-size:12.5px;color:var(--text-2);position:relative;z-index:1}
+
+  /* ───── Section anchor scroll ───── */
+  section{scroll-margin-top:80px}
+
+  .section-head{
+    display:flex;align-items:baseline;gap:24px;
+    padding:0 0 28px;margin-top:clamp(60px,7vw,110px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .section-num{
+    font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);
+    letter-spacing:.1em;
+  }
+  .section-title{font-size:clamp(28px,3.4vw,42px);font-weight:600;letter-spacing:-0.025em}
+  .section-kicker{
+    margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--text-3);letter-spacing:.18em;text-transform:uppercase;
+  }
+  @media (max-width:640px){
+    .section-head{flex-wrap:wrap;gap:8px 16px}
+    .section-kicker{margin-left:0;width:100%;order:-1}
+  }
+
+  .section-body{padding:40px 0 0}
+
+  /* ───── Overview ───── */
+  .overview-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:48px}
+  @media (max-width:880px){.overview-grid{grid-template-columns:1fr;gap:32px}}
+
+  .lead{font-size:clamp(18px,1.7vw,22px);color:var(--text);line-height:1.55;font-weight:400;letter-spacing:-0.005em}
+  .lead .accent{color:var(--gold)}
+
+  .goals{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+  .goal{
+    display:flex;align-items:flex-start;gap:16px;
+    padding:18px 20px;border:1px solid var(--line-soft);border-radius:var(--radius-sm);
+    background:var(--surface);transition:transform .25s ease, border-color .25s ease, background .25s ease;
+  }
+  .goal:hover{transform:translateX(4px);border-color:var(--gold-line);background:var(--surface-2)}
+  .goal .idx{
+    flex:none;width:28px;height:28px;border-radius:50%;
+    border:1px solid var(--gold-line);color:var(--gold);
+    display:grid;place-items:center;
+    font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;
+  }
+  .goal .txt{font-size:15px;color:var(--text);line-height:1.5}
+
+  /* ───── Metric cards ───── */
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:8px}
+  @media (max-width:980px){.metrics{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:480px){.metrics{grid-template-columns:1fr}}
+
+  .metric{
+    position:relative;border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px 24px 26px;background:var(--surface);overflow:hidden;
+    transition:transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s ease;
+  }
+  .metric:hover{transform:translateY(-3px);border-color:var(--gold-line)}
+  .metric::after{
+    content:"";position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity:.4;
+  }
+  .metric .ico{
+    width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+    background:var(--gold-soft);color:var(--gold);
+    margin-bottom:18px;
+  }
+  .metric .ico svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .metric .label{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;color:var(--text-3);text-transform:uppercase}
+  .metric .value{
+    font-family:'Sora',sans-serif;font-weight:600;
+    font-size:clamp(36px,4.5vw,52px);letter-spacing:-0.03em;
+    margin-top:6px;line-height:1;
+  }
+  .metric .unit{font-size:13px;color:var(--text-3);margin-top:6px;font-family:'Montserrat',sans-serif}
+  .metric .blurb{font-size:13px;color:var(--text-2);margin-top:14px;line-height:1.55}
+  .metric.hl .value{color:var(--gold)}
+  .metric.hl::after{opacity:1;height:2px}
+
+  /* ───── CPM callout ───── */
+  .callout{
+    margin-top:28px;
+    border:1px solid var(--gold-line);border-radius:var(--radius);
+    background:linear-gradient(135deg, var(--gold-soft), transparent 60%), var(--surface);
+    padding:32px;
+  }
+  .callout-head{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+  .callout-head .badge{
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);
+    letter-spacing:.16em;text-transform:uppercase;
+    padding:6px 10px;border:1px solid var(--gold-line);border-radius:6px;background:var(--gold-soft);
+  }
+  .callout-head h3{font-size:clamp(20px,2vw,24px);font-weight:500}
+  .callout-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  @media (max-width:880px){.callout-grid{grid-template-columns:repeat(2,1fr)}}
+  .cpm-pt{
+    display:flex;flex-direction:column;gap:10px;
+    padding:18px;border:1px solid var(--line-soft);border-radius:var(--radius-sm);
+    background:oklch(0.13 0.008 60 / 0.4);
+  }
+  .cpm-pt .ico{width:32px;height:32px;border-radius:8px;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center}
+  .cpm-pt .ico svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .cpm-pt .t{font-size:13.5px;color:var(--text);font-weight:500;line-height:1.4}
+
+  /* ───── Audience ───── */
+  .audience{display:grid;grid-template-columns:1fr 1.3fr;gap:32px}
+  @media (max-width:980px){.audience{grid-template-columns:1fr}}
+
+  .card{
+    border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);padding:32px;
+  }
+  .card-title{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--text-3);text-transform:uppercase;margin-bottom:24px}
+
+  .donut-wrap{display:flex;flex-direction:column;align-items:center;gap:28px}
+  .donut{width:240px;height:240px;position:relative}
+  .donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .donut-center{
+    position:absolute;inset:0;display:grid;place-items:center;text-align:center;
+  }
+  .donut-center .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--text-3);text-transform:uppercase}
+  .donut-center .v{font-family:'Sora',sans-serif;font-size:26px;font-weight:600;margin-top:4px;letter-spacing:-0.02em}
+
+  .donut-legend{display:flex;gap:32px;flex-wrap:wrap;justify-content:center}
+  .legend-item{display:flex;align-items:center;gap:12px}
+  .legend-dot{width:12px;height:12px;border-radius:3px}
+  .legend-txt{display:flex;flex-direction:column}
+  .legend-pct{font-family:'Sora',sans-serif;font-size:24px;font-weight:600;letter-spacing:-0.02em;line-height:1}
+  .legend-lbl{font-size:12px;color:var(--text-3);margin-top:4px;letter-spacing:.04em}
+
+  /* Age chart */
+  .age-hl{display:flex;align-items:baseline;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+  .age-hl .big{font-family:'Sora',sans-serif;font-size:42px;font-weight:600;color:var(--gold);letter-spacing:-0.03em;line-height:1}
+  .age-hl .desc{color:var(--text-2);font-size:14px;flex:1;min-width:200px}
+
+  .bars{display:flex;align-items:flex-end;gap:18px;height:200px;padding-top:20px;border-bottom:1px solid var(--line-soft)}
+  @media (max-width:480px){.bars{gap:10px}}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+  .bar-val{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--text-2);transition:color .3s}
+  .bar{
+    width:100%;background:linear-gradient(180deg, oklch(0.5 0.08 240), oklch(0.4 0.06 240));
+    border-radius:6px 6px 0 0;
+    height:0%;transition:height 1.2s cubic-bezier(.2,.7,.2,1);
+    position:relative;
+  }
+  .bar-col.hl .bar{background:linear-gradient(180deg, var(--gold), oklch(0.55 0.10 70))}
+  .bar-col.hl .bar-val{color:var(--gold)}
+  .bar-lbl{font-size:11px;color:var(--text-3);margin-top:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+
+  /* ───── Cards lists ───── */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media (max-width:880px){.two-col{grid-template-columns:1fr}}
+
+  .ptcard{
+    border:1px solid var(--line-soft);border-radius:var(--radius-sm);
+    background:var(--surface);padding:24px 26px;
+    display:flex;align-items:flex-start;gap:18px;
+    transition:transform .25s ease, border-color .25s ease;
+  }
+  .ptcard:hover{transform:translateX(4px);border-color:var(--gold-line)}
+  .ptcard .ico{flex:none;width:42px;height:42px;border-radius:11px;display:grid;place-items:center}
+  .ptcard.pos .ico{background:oklch(0.6 0.10 150 / 0.18);color:var(--green)}
+  .ptcard.warn .ico{background:oklch(0.6 0.14 30 / 0.18);color:var(--red)}
+  .ptcard .ico svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .ptcard .t{font-family:'Sora',sans-serif;font-size:16px;font-weight:600;letter-spacing:-0.01em;margin-bottom:6px}
+  .ptcard .d{font-size:14px;color:var(--text-2);line-height:1.55}
+
+  /* ───── Attention ───── */
+  .att-wrap{
+    border:1px solid oklch(0.6 0.14 30 / 0.4);border-radius:var(--radius);
+    background:linear-gradient(135deg, oklch(0.6 0.14 30 / 0.06), transparent 70%), var(--surface);
+    padding:36px;
+  }
+  .att-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .att-head .pill{
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);
+    letter-spacing:.16em;text-transform:uppercase;
+    padding:6px 10px;border:1px solid oklch(0.6 0.14 30 / 0.4);border-radius:6px;
+    background:oklch(0.6 0.14 30 / 0.1);
+  }
+  .att-head h3{font-size:clamp(20px,2vw,26px);font-weight:600}
+  .att-sub{color:var(--text-2);margin-bottom:28px}
+
+  .att-tools{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
+  @media (max-width:640px){.att-tools{grid-template-columns:1fr}}
+  .tool{
+    display:flex;align-items:center;gap:14px;padding:16px 18px;
+    border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--bg-2);
+  }
+  .tool .mark{
+    width:34px;height:34px;border-radius:8px;display:grid;place-items:center;
+    background:oklch(0.13 0.008 60);border:1px solid var(--line);
+    font-family:'Sora',sans-serif;font-size:14px;font-weight:600;
+  }
+  .tool .nm{font-family:'Sora',sans-serif;font-size:14px;font-weight:500}
+  .tool .sub{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:.08em}
+
+  .att-split{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media (max-width:880px){.att-split{grid-template-columns:1fr}}
+  .att-col h4{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+  .att-col.able h4{color:var(--green)}
+  .att-col.unable h4{color:var(--red)}
+  .att-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .att-col li{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-2)}
+  .att-col li .m{width:18px;height:18px;flex:none;display:grid;place-items:center;border-radius:4px}
+  .att-col.able li .m{background:oklch(0.6 0.10 150 / 0.18);color:var(--green)}
+  .att-col.unable li .m{background:oklch(0.6 0.14 30 / 0.18);color:var(--red)}
+  .att-col li .m svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.4}
+
+  /* ───── Recommendations ───── */
+  .recs{display:grid;grid-template-columns:1fr;gap:16px}
+  .rec{
+    display:grid;grid-template-columns:60px 1fr auto;gap:24px;align-items:center;
+    padding:28px;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);transition:transform .3s ease, border-color .3s ease, background .3s ease;
+    cursor:pointer;
+  }
+  .rec:hover{transform:translateX(6px);border-color:var(--gold-line);background:var(--surface-2)}
+  .rec .num{
+    font-family:'Sora',sans-serif;font-size:48px;font-weight:300;color:var(--gold);
+    letter-spacing:-0.04em;line-height:1;font-style:italic;
+  }
+  .rec .body{}
+  .rec .body h4{font-family:'Sora',sans-serif;font-size:18px;font-weight:600;margin-bottom:8px;letter-spacing:-0.01em}
+  .rec .body p{font-size:14px;line-height:1.6}
+  .rec .arrow{
+    width:42px;height:42px;border-radius:50%;border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--text-2);
+    transition:all .3s ease;
+  }
+  .rec:hover .arrow{background:var(--gold);color:#1a1a1a;border-color:var(--gold);transform:rotate(-45deg)}
+  .rec .arrow svg{width:16px;height:16px}
+  .rec-detail{
+    display:none;grid-column:1/-1;
+    padding-top:20px;margin-top:8px;border-top:1px solid var(--line-soft);
+  }
+  .rec.open .rec-detail{display:block}
+  .rec.open .arrow{background:var(--gold);color:#1a1a1a;border-color:var(--gold);transform:rotate(90deg)}
+  .rec-detail ul{margin:8px 0 0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+  .rec-detail li{
+    padding:12px 14px;background:var(--bg-2);border-radius:8px;font-size:13px;color:var(--text);
+    border-left:2px solid var(--gold);
+  }
+  @media (max-width:640px){
+    .rec{grid-template-columns:auto 1fr;gap:18px;padding:22px}
+    .rec .arrow{grid-column:2;justify-self:end;margin-top:8px}
+    .rec .num{font-size:36px}
+  }
+
+  /* ───── Conclusion ───── */
+  .concl{
+    display:grid;grid-template-columns:1fr;gap:32px;
+    border:1px solid var(--gold-line);border-radius:var(--radius);
+    background:linear-gradient(160deg, var(--gold-soft) 0%, transparent 50%), var(--surface);
+    padding:48px;
+  }
+  .concl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  @media (max-width:880px){.concl-grid{grid-template-columns:repeat(2,1fr)}}
+  .concl-pt{
+    padding:20px;border:1px solid var(--line-soft);border-radius:var(--radius-sm);
+    background:oklch(0.13 0.008 60 / 0.4);
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .concl-pt .ico{width:36px;height:36px;border-radius:9px;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center}
+  .concl-pt .ico svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .concl-pt .t{font-family:'Sora',sans-serif;font-size:14px;font-weight:500;line-height:1.4}
+
+  .concl-final{
+    padding:28px;border-radius:var(--radius-sm);
+    background:linear-gradient(135deg, oklch(0.74 0.10 85 / 0.18), transparent 60%);
+    border-left:3px solid var(--gold);
+  }
+  .concl-final p{color:var(--text);font-size:clamp(15px,1.4vw,17px);line-height:1.6}
+  .concl-final p strong{color:var(--gold);font-weight:600}
+
+  /* ───── Footer ───── */
+  footer{
+    margin-top:clamp(80px,10vw,140px);
+    border-top:1px solid var(--line-soft);
+    padding:48px 0;
+  }
+  .foot-row{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+  .foot-side{display:flex;align-items:center;gap:16px}
+  .foot-side img{width:44px;height:44px;object-fit:contain}
+  .foot-side .nm{font-family:'Sora',sans-serif;font-size:14px;font-weight:600;letter-spacing:.02em}
+  .foot-side .sub{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+  .foot-sep{width:1px;height:40px;background:var(--line-soft)}
+  @media (max-width:640px){.foot-sep{display:none}}
+
+  /* ───── Reveal animation ───── */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal-stagger > *{opacity:0;transform:translateY(20px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal-stagger.in > *{opacity:1;transform:none}
+  .reveal-stagger.in > *:nth-child(1){transition-delay:.05s}
+  .reveal-stagger.in > *:nth-child(2){transition-delay:.12s}
+  .reveal-stagger.in > *:nth-child(3){transition-delay:.19s}
+  .reveal-stagger.in > *:nth-child(4){transition-delay:.26s}
+  .reveal-stagger.in > *:nth-child(5){transition-delay:.33s}
+  .reveal-stagger.in > *:nth-child(6){transition-delay:.40s}
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal,.reveal-stagger > *{opacity:1;transform:none;transition:none}
+    .bar{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ───── Nav ───── -->
+<nav class="nav">
+  <div class="wrap nav-row">
+    <div class="nav-left">
+      <img src="assets/assent-logo.png" alt="Assent" class="nav-logo">
+      <div>
+        <div class="nav-brand">Assent <span>·</span> Agência Digital</div>
+      </div>
+    </div>
+    <div class="nav-meta">Relatório · 05 / 2026</div>
+  </div>
+</nav>
+
+<!-- ───── Hero ───── -->
+<header class="hero" data-screen-label="01 Hero">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="hero-eyebrow">Relatório de Desempenho</span>
+    </div>
+    <h1 class="reveal">
+      Campanha de tráfego<br>
+      <span class="gold">Base Burger</span>
+    </h1>
+    <p class="hero-sub reveal">
+      Análise consolidada da campanha de tráfego para o cardápio online da Base Burger,
+      conduzida pela Assent Agência Digital — entrega, alcance, perfil de público e
+      recomendações estratégicas para o próximo ciclo.
+    </p>
+
+    <div class="hero-grid">
+      <div class="hero-stats reveal-stagger">
+        <div class="hero-stat">
+          <div class="k">Período da campanha</div>
+          <div class="v">4 <small>dias</small></div>
+        </div>
+        <div class="hero-stat">
+          <div class="k">Investimento total</div>
+          <div class="v">R$ 150<small>,00</small></div>
+        </div>
+        <div class="hero-stat">
+          <div class="k">Plataforma</div>
+          <div class="v">Meta <small>Ads</small></div>
+        </div>
+        <div class="hero-stat">
+          <div class="k">Objetivo</div>
+          <div class="v">Tráfego</div>
+        </div>
+      </div>
+
+      <div class="client-card reveal">
+        <span class="label">Cliente</span>
+        <img src="assets/base-burger-logo.png" alt="Base Burger">
+        <div>
+          <div class="name">Base Burger</div>
+          <div class="tag">Hambúrguer artesanal · experiência premium</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ───── 01 Visão Geral ───── -->
+<section id="visao" data-screen-label="02 Visão Geral">
+  <div class="section-head reveal">
+    <span class="section-num">01 /</span>
+    <h2 class="section-title">Visão Geral</h2>
+    <span class="section-kicker">Contexto · Objetivos</span>
+  </div>
+  <div class="section-body overview-grid">
+    <div class="reveal">
+      <p class="lead">
+        A campanha foi executada durante <span class="accent">4 dias</span>
+        com investimento total de <span class="accent">R$ 150,00</span>,
+        com foco em ampliar a visibilidade da marca e direcionar o público
+        para o cardápio online da hamburgueria.
+      </p>
+    </div>
+    <div class="reveal-stagger">
+      <div class="goal">
+        <div class="idx">01</div>
+        <div class="txt">Aumentar a visibilidade da marca</div>
+      </div>
+      <div class="goal">
+        <div class="idx">02</div>
+        <div class="txt">Gerar acesso ao cardápio online</div>
+      </div>
+      <div class="goal">
+        <div class="idx">03</div>
+        <div class="txt">Atrair novos clientes da região</div>
+      </div>
+      <div class="goal">
+        <div class="idx">04</div>
+        <div class="txt">Fortalecer reconhecimento local da hamburgueria</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 02 Resultados ───── -->
+<section id="resultados" data-screen-label="03 Resultados">
+  <div class="section-head reveal">
+    <span class="section-num">02 /</span>
+    <h2 class="section-title">Principais Resultados</h2>
+    <span class="section-kicker">Entrega · 4 dias</span>
+  </div>
+
+  <div class="section-body">
+    <div class="metrics reveal-stagger">
+      <div class="metric">
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M2 20c.7-3.2 3.6-5 7-5s6.3 1.8 7 5"/><circle cx="17" cy="7" r="2.4"/><path d="M14.5 13c2.6 0 5 1.4 5.5 4"/></svg></div>
+        <div class="label">Alcance</div>
+        <div class="value" data-count="11156" data-format="int">0</div>
+        <div class="unit">pessoas únicas alcançadas</div>
+        <p class="blurb">Público expressivo para um negócio local em apenas quatro dias de veiculação.</p>
+      </div>
+
+      <div class="metric">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="label">Impressões</div>
+        <div class="value" data-count="23549" data-format="int">0</div>
+        <div class="unit">exibições totais dos anúncios</div>
+        <p class="blurb">Os anúncios apareceram mais de 23 mil vezes durante o período da campanha.</p>
+      </div>
+
+      <div class="metric">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 7-9"/><path d="M14 7h5v5"/></svg></div>
+        <div class="label">Frequência</div>
+        <div class="value" data-count="2.11" data-format="dec2">0</div>
+        <div class="unit">média de exibições por pessoa</div>
+        <p class="blurb">Equilibrada para campanhas locais de curto prazo — boa exposição sem saturação.</p>
+      </div>
+
+      <div class="metric hl">
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2c-.4-.8-1.4-1.5-2.7-1.5-1.7 0-3 1-3 2.3s1.3 1.9 3 2.4c1.7.5 3 1 3 2.4s-1.3 2.3-3 2.3c-1.4 0-2.4-.7-2.8-1.6"/><path d="M12 6v2"/><path d="M12 16v2"/></svg></div>
+        <div class="label">CPM</div>
+        <div class="value">R$ <span data-count="5.51" data-format="dec2">0</span></div>
+        <div class="unit">custo por 1.000 impressões</div>
+        <p class="blurb"><strong style="color:var(--gold)">Abaixo da média</strong> de mercado para o segmento alimentício.</p>
+      </div>
+    </div>
+
+    <div class="callout reveal">
+      <div class="callout-head">
+        <span class="badge">Por que esse CPM é excelente</span>
+        <h3>Quatro sinais convergentes de eficiência</h3>
+      </div>
+      <div class="callout-grid">
+        <div class="cpm-pt">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12l4-4 4 4 4-6 4 6 2-2"/><path d="M3 18h18"/></svg></div>
+          <div class="t">Boa aceitação dos anúncios</div>
+        </div>
+        <div class="cpm-pt">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 2v3"/><path d="M12 19v3"/><path d="M2 12h3"/><path d="M19 12h3"/><circle cx="12" cy="12" r="5"/></svg></div>
+          <div class="t">Criativos eficientes</div>
+        </div>
+        <div class="cpm-pt">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M5 12l5-9 4 8h5l-9 12 1-9z"/></svg></div>
+          <div class="t">Entrega otimizada pela plataforma</div>
+        </div>
+        <div class="cpm-pt">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h10"/><path d="M4 17h16"/></svg></div>
+          <div class="t">Conteúdo relevante para o público</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 03 Análise estratégica ───── -->
+<section id="analise" data-screen-label="04 Análise">
+  <div class="section-head reveal">
+    <span class="section-num">03 /</span>
+    <h2 class="section-title">Análise Estratégica</h2>
+    <span class="section-kicker">Performance · Distribuição</span>
+  </div>
+
+  <div class="section-body">
+    <div class="reveal" style="margin-bottom:32px">
+      <p class="lead">
+        A campanha apresentou <span class="accent">excelente capacidade de entrega</span> —
+        grande volume de pessoas alcançadas, baixo custo por impressão e frequência equilibrada
+        demonstram que o algoritmo da Meta respondeu positivamente aos criativos utilizados.
+      </p>
+    </div>
+
+    <div class="audience">
+      <!-- Donut: Gênero -->
+      <div class="card reveal">
+        <div class="card-title">Perfil por gênero</div>
+        <div class="donut-wrap">
+          <div class="donut">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="46" fill="none" stroke="oklch(0.22 0.008 60)" stroke-width="14"/>
+              <circle id="seg-m" cx="60" cy="60" r="46" fill="none" stroke="var(--blue)" stroke-width="14"
+                stroke-dasharray="0 1000" stroke-linecap="butt"/>
+              <circle id="seg-f" cx="60" cy="60" r="46" fill="none" stroke="var(--pink)" stroke-width="14"
+                stroke-dasharray="0 1000" stroke-dashoffset="0"/>
+            </svg>
+            <div class="donut-center">
+              <div>
+                <div class="lbl">Distribuição</div>
+                <div class="v">Equilibrada</div>
+              </div>
+            </div>
+          </div>
+          <div class="donut-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--blue)"></div>
+              <div class="legend-txt">
+                <div class="legend-pct">53<span style="color:var(--text-3);font-size:.6em">%</span></div>
+                <div class="legend-lbl">Homens</div>
+              </div>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--pink)"></div>
+              <div class="legend-txt">
+                <div class="legend-pct">47<span style="color:var(--text-3);font-size:.6em">%</span></div>
+                <div class="legend-lbl">Mulheres</div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text-3);text-align:center;max-width:340px">
+            Distribuição equilibrada — amplo potencial de alcance da marca em ambos os públicos.
+          </p>
+        </div>
+      </div>
+
+      <!-- Bars: Idade -->
+      <div class="card reveal">
+        <div class="card-title">Faixa etária com maior engajamento</div>
+        <div class="age-hl">
+          <div class="big">25–34 <span style="font-size:.5em;color:var(--text-3)">anos</span></div>
+          <div class="desc">Principal faixa responsável pelas impressões da campanha, com forte presença também entre 18–24 e 35–44 anos.</div>
+        </div>
+        <div class="bars" id="bars">
+          <div class="bar-col">
+            <div class="bar-val">24%</div>
+            <div class="bar" data-h="55"></div>
+            <div class="bar-lbl">18–24</div>
+          </div>
+          <div class="bar-col hl">
+            <div class="bar-val">42%</div>
+            <div class="bar" data-h="98"></div>
+            <div class="bar-lbl">25–34</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">23%</div>
+            <div class="bar" data-h="52"></div>
+            <div class="bar-lbl">35–44</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">8%</div>
+            <div class="bar" data-h="18"></div>
+            <div class="bar-lbl">45–54</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">3%</div>
+            <div class="bar" data-h="7"></div>
+            <div class="bar-lbl">55+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 04 Pontos positivos ───── -->
+<section id="positivos" data-screen-label="05 Pontos positivos">
+  <div class="section-head reveal">
+    <span class="section-num">04 /</span>
+    <h2 class="section-title">Pontos Positivos</h2>
+    <span class="section-kicker">Identificados na entrega</span>
+  </div>
+
+  <div class="section-body two-col reveal-stagger">
+    <div class="ptcard pos">
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 18l6-8 4 4 8-10"/><path d="M14 4h7v7"/></svg></div>
+      <div>
+        <div class="t">Excelente CPM</div>
+        <div class="d">O custo de R$ 5,51 por mil impressões mostra que a campanha conseguiu gerar visibilidade com alta eficiência.</div>
+      </div>
+    </div>
+    <div class="ptcard pos">
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.5-7-12a7 7 0 1114 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+      <div>
+        <div class="t">Forte reconhecimento local</div>
+        <div class="d">Mais de 11 mil pessoas impactadas em apenas 4 dias fortalecem significativamente a presença da marca na região.</div>
+      </div>
+    </div>
+    <div class="ptcard pos">
+      <div class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><circle cx="17" cy="8" r="2.2"/><path d="M2 19c.6-3 3-5 7-5s6.4 2 7 5"/><path d="M15 14c2.6 0 4.5 1.4 5 4"/></svg></div>
+      <div>
+        <div class="t">Público compatível com o posicionamento</div>
+        <div class="d">A maior concentração entre 25 e 34 anos demonstra alinhamento com consumidores de maior potencial para consumo recorrente.</div>
+      </div>
+    </div>
+    <div class="ptcard pos">
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 7-9"/><path d="M14 7h5v5"/></svg></div>
+      <div>
+        <div class="t">Algoritmo respondeu bem aos criativos</div>
+        <div class="d">A combinação de baixo CPM e frequência saudável indica que a plataforma encontrou audiência relevante de forma eficiente.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 05 Pontos de atenção ───── -->
+<section id="atencao" data-screen-label="06 Pontos de atenção">
+  <div class="section-head reveal">
+    <span class="section-num">05 /</span>
+    <h2 class="section-title">Pontos de Atenção</h2>
+    <span class="section-kicker">Rastreamento de conversões</span>
+  </div>
+
+  <div class="section-body">
+    <div class="att-wrap reveal">
+      <div class="att-head">
+        <span class="pill">Atenção</span>
+        <h3>Ausência de rastreamento de conversões</h3>
+      </div>
+      <p class="att-sub">Atualmente o cardápio online não possui integração com as ferramentas de mensuração da Meta:</p>
+
+      <div class="att-tools">
+        <div class="tool">
+          <div class="mark">M</div>
+          <div>
+            <div class="nm">Meta Pixel</div>
+            <div class="sub">Não instalado</div>
+          </div>
+        </div>
+        <div class="tool">
+          <div class="mark">API</div>
+          <div>
+            <div class="nm">API de Conversões (CAPI)</div>
+            <div class="sub">Não configurada</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="att-split">
+        <div class="att-col able">
+          <h4>Hoje conseguimos medir</h4>
+          <ul>
+            <li><span class="m"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></span>Alcance e impressões</li>
+            <li><span class="m"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></span>Distribuição demográfica</li>
+            <li><span class="m"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></span>Engajamento e frequência</li>
+            <li><span class="m"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></span>Custo por mil impressões</li>
+          </ul>
+        </div>
+        <div class="att-col unable">
+          <h4>Ainda não conseguimos medir</h4>
+          <ul>
+            <li><span class="m"><svg viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></span>Pedidos gerados pela campanha</li>
+            <li><span class="m"><svg viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></span>Custo por compra</li>
+            <li><span class="m"><svg viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></span>Retorno sobre investimento (ROAS)</li>
+            <li><span class="m"><svg viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></span>Anúncios com maior taxa de conversão</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 06 Recomendações ───── -->
+<section id="recomendacoes" data-screen-label="07 Recomendações">
+  <div class="section-head reveal">
+    <span class="section-num">06 /</span>
+    <h2 class="section-title">Recomendações Estratégicas</h2>
+    <span class="section-kicker">Próximo ciclo · Clique para expandir</span>
+  </div>
+
+  <div class="section-body recs reveal-stagger">
+    <div class="rec" data-rec>
+      <div class="num">01</div>
+      <div class="body">
+        <h4>Implementar Meta Pixel + API de Conversões</h4>
+        <p>Integração essencial para mensurar vendas reais e otimizar campanhas para compra, reduzindo desperdício de orçamento e permitindo escala com segurança.</p>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+      <div class="rec-detail">
+        <ul>
+          <li>Rastrear pedidos diretos</li>
+          <li>Medir vendas reais geradas</li>
+          <li>Otimizar campanhas para compra</li>
+          <li>Reduzir desperdício de orçamento</li>
+          <li>Escalar anúncios com segurança</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rec" data-rec>
+      <div class="num">02</div>
+      <div class="body">
+        <h4>Investir em vídeos curtos de produto</h4>
+        <p>Conteúdos com queijo derretendo, cortes cinematográficos, close nos ingredientes e montagem dinâmica tendem a aumentar significativamente o desempenho no segmento alimentício.</p>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+      <div class="rec-detail">
+        <ul>
+          <li>Queijo derretendo (cheese pull)</li>
+          <li>Cortes cinematográficos rápidos</li>
+          <li>Close em ingredientes premium</li>
+          <li>Montagem dinâmica · 6–15s</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rec" data-rec>
+      <div class="num">03</div>
+      <div class="body">
+        <h4>Destacar diferenciais únicos da marca</h4>
+        <p>Produtos autorais e elementos exclusivos devem ser usados como foco principal dos anúncios — eles são o que diferencia a Base Burger no mercado.</p>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+      <div class="rec-detail">
+        <ul>
+          <li>Muçarela empanada</li>
+          <li>Burgers exclusivos da casa</li>
+          <li>Identidade premium artesanal</li>
+          <li>Storytelling do produto</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 07 Conclusão ───── -->
+<section id="conclusao" data-screen-label="08 Conclusão">
+  <div class="section-head reveal">
+    <span class="section-num">07 /</span>
+    <h2 class="section-title">Conclusão</h2>
+    <span class="section-kicker">Síntese · Próximos passos</span>
+  </div>
+
+  <div class="section-body">
+    <div class="concl reveal">
+      <p class="lead" style="max-width:780px">
+        A campanha apresentou <span class="accent">excelente desempenho de distribuição</span>
+        e reconhecimento de marca. Os resultados indicam quatro vetores positivos consolidados:
+      </p>
+
+      <div class="concl-grid">
+        <div class="concl-pt">
+          <div class="ico"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></div>
+          <div class="t">Boa aceitação dos anúncios</div>
+        </div>
+        <div class="concl-pt">
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a15 15 0 010 18"/><path d="M12 3a15 15 0 000 18"/><path d="M3 12h18"/></svg></div>
+          <div class="t">Forte capacidade de alcance local</div>
+        </div>
+        <div class="concl-pt">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 100 7H14a3.5 3.5 0 110 7H6"/></svg></div>
+          <div class="t">Excelente custo de mídia</div>
+        </div>
+        <div class="concl-pt">
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="7" r="2.2"/><path d="M2 20c.6-3 3-5 7-5s6.4 2 7 5"/><path d="M15 14c2.6 0 4.5 1.4 5 4"/></svg></div>
+          <div class="t">Público alinhado ao perfil consumidor</div>
+        </div>
+      </div>
+
+      <div class="concl-final">
+        <p>
+          O <strong>principal próximo passo</strong> é a implementação de rastreamento de conversões
+          para transformar os dados atuais em métricas reais de vendas e escalabilidade.
+          Com otimização contínua e mensuração adequada, a tendência é
+          <strong>aumentar significativamente a eficiência</strong> das próximas campanhas.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ───── Footer ───── -->
+<footer>
+  <div class="wrap foot-row">
+    <div class="foot-side">
+      <img src="assets/assent-logo.png" alt="Assent">
+      <div>
+        <div class="nm">Assent Agência Digital</div>
+        <div class="sub">Estratégia · Tráfego · Mídia</div>
+      </div>
+    </div>
+    <div class="foot-sep"></div>
+    <div class="foot-side">
+      <img src="assets/base-burger-logo.png" alt="Base Burger">
+      <div>
+        <div class="nm">Base Burger</div>
+        <div class="sub">Hambúrguer artesanal premium</div>
+      </div>
+    </div>
+    <div class="foot-sep"></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);letter-spacing:.12em;text-transform:uppercase">
+      Relatório · Maio 2026
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ───── Reveal on scroll ─────
+  const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.12, rootMargin:'0px 0px -40px 0px'});
+  revealEls.forEach(el=>io.observe(el));
+
+  // Fallback: any element already in viewport on load gets revealed immediately
+  // (covers above-the-fold hero where IntersectionObserver may not fire reliably on init)
+  requestAnimationFrame(()=>{
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    revealEls.forEach(el=>{
+      const r = el.getBoundingClientRect();
+      if(r.top < vh && r.bottom > 0){
+        el.classList.add('in');
+        io.unobserve(el);
+      }
+    });
+  });
+
+  // ───── Animated counters ─────
+  function easeOutCubic(t){return 1 - Math.pow(1-t, 3)}
+  function animateCount(el){
+    const target = parseFloat(el.dataset.count);
+    const fmt = el.dataset.format;
+    const dur = 1500;
+    const t0 = performance.now();
+    function tick(now){
+      const t = Math.min(1, (now-t0)/dur);
+      const v = target * easeOutCubic(t);
+      if(fmt === 'int'){
+        el.textContent = Math.round(v).toLocaleString('pt-BR');
+      } else if (fmt === 'dec2'){
+        el.textContent = v.toFixed(2).replace('.', ',');
+      }
+      if(t<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  const counterIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        animateCount(e.target);
+        counterIO.unobserve(e.target);
+      }
+    });
+  },{threshold:0.4});
+  document.querySelectorAll('[data-count]').forEach(el=>counterIO.observe(el));
+
+  // ───── Donut chart ─────
+  // r=46, circumference = 2*PI*46 = 289.027
+  const C = 2 * Math.PI * 46;
+  const segM = document.getElementById('seg-m');
+  const segF = document.getElementById('seg-f');
+  const donutIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const mLen = C * 0.53;
+        const fLen = C * 0.47;
+        segM.style.transition = 'stroke-dasharray 1.4s cubic-bezier(.2,.7,.2,1)';
+        segF.style.transition = 'stroke-dasharray 1.4s cubic-bezier(.2,.7,.2,1) .2s';
+        segM.setAttribute('stroke-dasharray', mLen + ' ' + (C - mLen));
+        segM.setAttribute('stroke-dashoffset', 0);
+        segF.setAttribute('stroke-dasharray', fLen + ' ' + (C - fLen));
+        segF.setAttribute('stroke-dashoffset', -mLen);
+        donutIO.unobserve(e.target);
+      }
+    });
+  },{threshold:0.3});
+  donutIO.observe(document.querySelector('.donut'));
+
+  // ───── Bars animation ─────
+  const barsIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.bar').forEach((b,i)=>{
+          setTimeout(()=>{ b.style.height = b.dataset.h + '%' }, i*120);
+        });
+        barsIO.unobserve(e.target);
+      }
+    });
+  },{threshold:0.3});
+  barsIO.observe(document.getElementById('bars'));
+
+  // ───── Recommendations expand ─────
+  document.querySelectorAll('[data-rec]').forEach(el=>{
+    el.addEventListener('click', ()=>el.classList.toggle('open'));
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base Burger — Cardápio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F5A623;
+    --orange-dark: #E8951A;
+    --black: #111111;
+    --dark: #1A1A1A;
+    --card-bg: #FFFFFF;
+    --bg: #F2F2F2;
+    --text: #222222;
+    --muted: #777777;
+    --border: #E8E8E8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  /* NAV */
+  nav {
+    background: var(--orange);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,.15);
+  }
+  .nav-logo {
+    width: 44px; height: 44px;
+    background: var(--black);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--orange);
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-links a.active {
+    background: white;
+    color: var(--orange-dark);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  /* HERO STORE HEADER */
+  .store-header {
+    background: var(--orange);
+    padding: 20px 40px 0;
+  }
+  .store-info {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    background: white;
+    border-radius: 16px 16px 0 0;
+    padding: 24px 28px 0;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+  .store-logo {
+    width: 80px; height: 80px;
+    background: var(--black);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-bottom: -20px;
+  }
+  .store-logo span {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--orange);
+    font-size: 16px;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .store-details { flex: 1; padding-bottom: 16px; }
+  .store-details h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 1px;
+    color: var(--black);
+  }
+  .store-meta {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--muted); margin-top: 4px;
+  }
+  .store-meta .closed { color: #E53935; font-weight: 600; }
+  .store-meta .dot { color: var(--border); }
+
+  /* STICKY CATEGORY BAR */
+  .category-bar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 60px;
+    z-index: 90;
+  }
+  .category-bar-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    padding: 0 28px;
+    scrollbar-width: none;
+  }
+  .cat-pill {
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .cat-pill.active {
+    color: var(--orange-dark);
+    border-bottom-color: var(--orange);
+    font-weight: 600;
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 0 60px;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    align-items: start;
+    padding-top: 24px;
+  }
+  .menu-col { min-width: 0; }
+
+  /* HERO PRODUCT — BASE BURGER */
+  .hero-product {
+    background: var(--black);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    min-height: 200px;
+    position: relative;
+  }
+  .hero-badge {
+    position: absolute;
+    top: 16px; left: 16px;
+    background: var(--orange);
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .hero-content {
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+  }
+  .hero-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: white;
+    line-height: 1;
+  }
+  .hero-desc {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+    max-width: 340px;
+  }
+  .hero-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--orange);
+  }
+  .hero-img {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: .85;
+  }
+  .hero-img-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #2a2a2a, #3d3d3d);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px;
+  }
+
+  /* SECTION */
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: .5px;
+    margin-bottom: 4px;
+    color: var(--black);
+  }
+  .section-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .section-sub strong { color: var(--orange-dark); }
+
+  /* COMBO CARDS — large */
+  .combo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .combo-card {
+    background: white;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    padding: 18px;
+    cursor: pointer;
+    transition: box-shadow .2s, border-color .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .combo-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); border-color: var(--orange); }
+  .combo-card.featured {
+    border-color: var(--orange);
+    background: linear-gradient(135deg, #fffbf0 0%, #fff 100%);
+  }
+  .combo-card.featured::before {
+    content: 'MAIS PEDIDO';
+    position: absolute;
+    top: 0; right: 0;
+    background: var(--orange);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 0 12px 0 10px;
+  }
+  .combo-name {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .combo-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .combo-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--black);
+  }
+  .combo-price span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--orange);
+    font-weight: 600;
+    margin-left: 6px;
+  }
+
+  /* ITEM CARDS — standard */
+  .items-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .item-card {
+    background: white;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 80px;
+    gap: 12px;
+    cursor: pointer;
+    transition: box-shadow .2s;
+    align-items: center;
+  }
+  .item-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); border-color: #ddd; }
+  .item-card.no-img { grid-template-columns: 1fr; }
+  .item-info {}
+  .item-name { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .item-desc { font-size: 11px; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+  .item-price { font-family: 'Bebas Neue', sans-serif; font-size: 20px; }
+  .item-thumb {
+    width: 80px; height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .thumb-placeholder {
+    width: 80px; height: 80px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+
+  /* DRINK GRID */
+  .drink-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .drink-card {
+    background: white;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    padding: 14px;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .drink-card:hover { border-color: var(--orange); }
+  .drink-name { font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+  .drink-price { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--muted); }
+
+  /* SIDEBAR */
+  .sidebar { position: sticky; top: 112px; }
+  .sidebar-card {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .sidebar-delivery {
+    padding: 16px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .sidebar-delivery svg { color: var(--muted); }
+  .sidebar-bag {
+    padding: 40px 18px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .sidebar-bag svg { opacity: .25; }
+  .sidebar-bag p { font-size: 13px; color: var(--muted); }
+  .sidebar-coupon {
+    border-top: 1px solid var(--border);
+    padding: 14px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .coupon-icon { color: var(--orange); margin-right: 10px; }
+  .coupon-sub { font-size: 11px; color: var(--muted); }
+  .btn-closed {
+    margin: 14px 18px;
+    background: var(--orange);
+    opacity: .7;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    width: calc(100% - 36px);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: not-allowed;
+    margin-bottom: 18px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--orange);
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer p { color: white; font-size: 12px; }
+  footer a { color: white; font-size: 12px; }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0 24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"><span>BASE<br>BURGER</span></div>
+  <div class="nav-links">
+    <a href="#" class="active">🏠 Início</a>
+    <a href="#">⚡ Promoções</a>
+    <a href="#">📋 Pedidos</a>
+    <a href="#">👤 Entrar/Cadastrar</a>
+  </div>
+</nav>
+
+<!-- STORE HEADER -->
+<div class="store-header">
+  <div class="store-info">
+    <div class="store-logo"><span>BASE<br>BURGER</span></div>
+    <div class="store-details">
+      <h1>Base Burger</h1>
+      <div class="store-meta">
+        <span class="closed">Fechado</span>
+        <span class="dot">•</span>
+        <span>Abrimos às 18h30</span>
+        <span class="dot">•</span>
+        <span>📍 Goiânia - GO</span>
+        <span class="dot">•</span>
+        <a href="#" style="color:var(--orange-dark);font-weight:600;text-decoration:none">Mais informações</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY BAR -->
+<div class="category-bar">
+  <div class="category-bar-inner">
+    <div class="cat-pill active">🔥 Combos</div>
+    <div class="cat-pill">⭐ Autorais</div>
+    <div class="cat-pill">🍔 Clássicos</div>
+    <div class="cat-pill">🍟 Entradinhas</div>
+    <div class="cat-pill">🥤 Bebidas</div>
+    <div class="cat-pill">🥛 Milkshake</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div style="padding: 0 40px;">
+<div class="main">
+  <div class="menu-col">
+
+    <!-- HERO: BASE BURGER -->
+    <div class="section">
+      <div class="hero-product">
+        <div class="hero-badge">⭐ CARRO-CHEFE</div>
+        <div class="hero-content">
+          <div class="hero-label">Autoral exclusivo</div>
+          <div class="hero-name">Base Burger</div>
+          <div class="hero-desc">Pão de batata tostado com um suculento blend bovino de 150g grelhado, coberto por uma generosa fatia de queijo cheddar derretido, fatias de bacon e um disco de mussarela empanada...</div>
+          <div class="hero-price">R$ 40,00</div>
+        </div>
+        <div class="hero-img">
+          <div class="hero-img-placeholder">🍔</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMBOS -->
+    <div class="section" id="combos">
+      <div class="section-title">Combos</div>
+      <div class="section-sub">Lanche + fritas + refri — <strong>melhor custo-benefício</strong></div>
+      <div class="combo-grid">
+
+        <div class="combo-card featured">
+          <div class="combo-name">Combo Base</div>
+          <div class="combo-desc">Pão de batata tostado com um suculento blend bovino de 150g grelhado, coberto por uma generosa fatia de queijo cheddar derretido, fatias de bacon e um disco de mussarela empanada...</div>
+          <div class="combo-price">R$ 55,00 <span>MAIS PEDIDO</span></div>
+        </div>
+
+        <div class="combo-card">
+          <div class="combo-name">Combo Crispy</div>
+          <div class="combo-desc">Pão de batata tostado um suculento blend bovino de 150g grelhado, uma fatia generosa de queijo cheddar derretido, fatias de bacon crocante e cebola crispy artesanal...</div>
+          <div class="combo-price">R$ 53,00</div>
+        </div>
+
+        <div class="combo-card">
+          <div class="combo-name">Combo Catubacon</div>
+          <div class="combo-desc">Pão de batata tostado com uma generosa camada de catupiry, bacon picadinho e finalizado com nossa maionese artesanal, porção de fritas pequena e refri...</div>
+          <div class="combo-price">R$ 51,00</div>
+        </div>
+
+        <div class="combo-card">
+          <div class="combo-name">Combo Cheese Bacon</div>
+          <div class="combo-desc">Pão de batata tostado com um suculento blend de 150g de carne bovina grelhada, uma fatia generosa de queijo cheddar derretido, cebola caramelizada e fatias de bacon...</div>
+          <div class="combo-price">R$ 48,00</div>
+        </div>
+
+        <div class="combo-card">
+          <div class="combo-name">Combo Cheese Salada</div>
+          <div class="combo-desc">Pão de batata tostado acompanhado de um suculento blend de 150g de carne bovina grelhada, uma deliciosa fatia de queijo cheddar derretido, alface americana, tomate fresco, cebola roxa...</div>
+          <div class="combo-price">R$ 46,00</div>
+        </div>
+
+        <div class="combo-card">
+          <div class="combo-name">Combo Cheese Burger</div>
+          <div class="combo-desc">Pão de batata tostado, suculento blend de 150g de carne bovina grelhado, uma generosa fatia de queijo cheddar derretido finalizado com nossa deliciosa maionese artesanal, porção de fritas...</div>
+          <div class="combo-price">R$ 43,00</div>
+        </div>
+
+        <div class="combo-card">
+          <div class="combo-name">Combo Franguito</div>
+          <div class="combo-desc">Pão de batata tostado com coxa sobrecoxa desossada empanada, uma fatia generosa de queijo cheddar derretido, alface americana, tomate fresco, cebola roxa e maionese branca com mel para...</div>
+          <div class="combo-price">R$ 43,00</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- AUTORAIS -->
+    <div class="section" id="autorais">
+      <div class="section-title">Autorais, você só encontra aqui na base!</div>
+      <div class="section-sub">Receitas exclusivas criadas pelos nossos chefs</div>
+      <div class="items-grid">
+
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">Base</div>
+            <div class="item-desc">Pão de batata tostado com um suculento blend bovino de 150g grelhado, coberto por uma generosa fatia de queijo cheddar...</div>
+            <div class="item-price">R$ 40,00</div>
+          </div>
+          <div class="thumb-placeholder">🍔</div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">Crispy Burger</div>
+            <div class="item-desc">Pão de batata tostado um suculento blend bovino de 150g grelhado, uma fatia generosa de queijo cheddar derredido...</div>
+            <div class="item-price">R$ 38,00</div>
+          </div>
+          <div class="thumb-placeholder">🍔</div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">Catubacon</div>
+            <div class="item-desc">Pão de batata tostado com um saboroso blend de carne bovina de 150g grelhado, acompanhado de uma generosa porção d...</div>
+            <div class="item-price">R$ 36,00</div>
+          </div>
+          <div class="thumb-placeholder">🍔</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- CLÁSSICOS -->
+    <div class="section" id="classicos">
+      <div class="section-title">Clássicos</div>
+      <div class="section-sub">Os favoritos de sempre</div>
+      <div class="items-grid">
+
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">Cheese Bacon</div>
+            <div class="item-desc">Pão de batata tostado com um suculento blend de 150g de carne bovina grelhada, uma fatia generosa de queijo cheddar...</div>
+            <div class="item-price">R$ 33,00</div>
+          </div>
+          <div class="thumb-placeholder">🍔</div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">Cheese Salad</div>
+            <div class="item-desc">Pão de batata tostado acompanhado de um suculento blend de 150g de carne bovina grelhada, uma deliciosa fatia de...</div>
+            <div class="item-price">R$ 31,00</div>
+          </div>
+          <div class="thumb-placeholder">🍔</div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">Franguito</div>
+            <div class="item-desc">Pão de batata tostado com coxa sobrecoxa desossada empanada, uma fatia generosa de queijo cheddar derretid...</div>
+            <div class="item-price">R$ 28,00</div>
+          </div>
+          <div class="thumb-placeholder">🍔</div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">Cheese Burger</div>
+            <div class="item-desc">Pão de batata tostado, suculento blend de 150g de carne bovina grelhado, uma generosa fatia de queijo cheddar derretid...</div>
+            <div class="item-price">R$ 28,00</div>
+          </div>
+          <div class="thumb-placeholder">🍔</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ENTRADINHAS -->
+    <div class="section" id="entradinhas">
+      <div class="section-title">Entradinhas, não vacila e peça em...</div>
+      <div class="section-sub">Perfeito pra compartilhar</div>
+      <div class="items-grid">
+
+        <div class="item-card no-img">
+          <div class="item-info">
+            <div class="item-name">Batata Cheddar e Bacon (~300g)</div>
+            <div class="item-desc">Batata crocante, coberta com um delicioso creme de cheddar, finalizado com bacon picado.</div>
+            <div class="item-price">R$ 32,00</div>
+          </div>
+        </div>
+
+        <div class="item-card no-img">
+          <div class="item-info">
+            <div class="item-name">Coxinha Sem Massa</div>
+            <div class="item-desc">Frango desfiado, requeijão cremoso, mussarela empanado na farinha panko. (6 unidades)</div>
+            <div class="item-price">R$ 30,00</div>
+          </div>
+        </div>
+
+        <div class="item-card no-img">
+          <div class="item-info">
+            <div class="item-name">Batata Simples (~300g)</div>
+            <div class="item-desc">Batatinha ondulada extra crocante, acompanhada de molho da casa.</div>
+            <div class="item-price">R$ 20,00</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- MILKSHAKE -->
+    <div class="section" id="milkshake">
+      <div class="section-title">Milkshake</div>
+      <div class="section-sub">A sobremesa que fecha com chave de ouro</div>
+      <div class="items-grid">
+
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">Ninho c/ Morango</div>
+            <div class="item-price">R$ 27,00</div>
+          </div>
+          <div class="thumb-placeholder">🥛</div>
+        </div>
+
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-name">Ovomaltine</div>
+            <div class="item-price">R$ 27,00</div>
+          </div>
+          <div class="thumb-placeholder">🥛</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- BEBIDAS -->
+    <div class="section" id="bebidas">
+      <div class="section-title">Refrigerantes / Sucos</div>
+      <div class="section-sub">Completa seu pedido</div>
+      <div class="drink-grid">
+        <div class="drink-card"><div class="drink-name">Suco Morango/Maracujá</div><div class="drink-price">R$ 17,00</div></div>
+        <div class="drink-card"><div class="drink-name">Suco Abacaxi c/ Hortelã</div><div class="drink-price">R$ 17,00</div></div>
+        <div class="drink-card"><div class="drink-name">Suco Abacaxi 500ml</div><div class="drink-price">R$ 15,00</div></div>
+        <div class="drink-card"><div class="drink-name">Suco Morango</div><div class="drink-price">R$ 15,00</div></div>
+        <div class="drink-card"><div class="drink-name">Coca 1Lt</div><div class="drink-price">R$ 10,00</div></div>
+        <div class="drink-card"><div class="drink-name">Coca Zero 1Lt</div><div class="drink-price">R$ 10,00</div></div>
+        <div class="drink-card"><div class="drink-name">Limoneto</div><div class="drink-price">R$ 8,00</div></div>
+        <div class="drink-card"><div class="drink-name">Coca Cola Lata</div><div class="drink-price">R$ 6,90</div></div>
+        <div class="drink-card"><div class="drink-name">Coca Cola Zero Lata</div><div class="drink-price">R$ 6,90</div></div>
+        <div class="drink-card"><div class="drink-name">Fanta Laranja Lata</div><div class="drink-price">R$ 6,90</div></div>
+        <div class="drink-card"><div class="drink-name">Agua c/ Gás</div><div class="drink-price">R$ 5,00</div></div>
+        <div class="drink-card"><div class="drink-name">Agua s/ Gás</div><div class="drink-price">R$ 5,00</div></div>
+      </div>
+    </div>
+
+  </div><!-- /menu-col -->
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-delivery">
+        <span>📍 Calcular taxa e tempo de entrega</span>
+        <span>›</span>
+      </div>
+      <div class="sidebar-bag">
+        <svg width="48" height="56" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 14H40L36 48H12L8 14Z" stroke="#999" stroke-width="2" fill="none"/>
+          <path d="M16 14C16 14 16 6 24 6C32 6 32 14 32 14" stroke="#999" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <p>Sacola vazia</p>
+      </div>
+      <div class="sidebar-coupon">
+        <div style="display:flex;align-items:center;">
+          <span class="coupon-icon">🎟</span>
+          <div>
+            <div style="font-weight:600;font-size:13px;">Tem um cupom?</div>
+            <div class="coupon-sub">Clique e insira o código</div>
+          </div>
+        </div>
+        <span style="color:var(--orange)">›</span>
+      </div>
+      <button class="btn-closed">Estabelecimento fechado</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <p>Base Burger — 2026. Todos os direitos reservados</p>
+    <p style="margin-top:4px">CNPJ: 66.438.977/0001-01 | Rua J. Três, 261, Parque das Laranjeiras, Goiânia/GO | (62) 99463-0597</p>
+  </div>
+  <p>Plataforma fornecida por <strong>Cardápio Web</strong></p>
+</footer>
+
+</body>
+</html>

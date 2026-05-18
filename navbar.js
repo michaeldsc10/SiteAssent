@@ -6,7 +6,7 @@
  *  1. Define o Web Component <assent-navbar>
  *  2. Inicializa Firebase (Auth + Firestore) via ESM
  *  3. Dispara `assent:authchange` → as páginas escutam isso
- *  4. Exibe avatar + SAIR *depois* do CTA quando logado
+ *  4. Exibe avatar + nome + SAIR *depois* do CTA quando logado
  *
  * ⚙️  CONFIGURAÇÃO: troque os valores de FIREBASE_CONFIG.
  * ─────────────────────────────────────────────────────────
@@ -43,16 +43,16 @@ const _app  = getApps().length === 0 ? initializeApp(FIREBASE_CONFIG) : getApp()
 const _auth = getAuth(_app);
 const _db   = getFirestore(_app);
 
-/* ── Helpers globais (usados pelas páginas via window._*) ── */
-window._auth            = _auth;
-window._signInWithEmailAndPassword    = signInWithEmailAndPassword;
-window._createUserWithEmailAndPassword= createUserWithEmailAndPassword;
-window._sendPasswordResetEmail        = sendPasswordResetEmail;
-window._signOut                       = signOut;
-window._EmailAuthProvider             = EmailAuthProvider;
-window._reauthenticateWithCredential  = reauthenticateWithCredential;
-window._updatePassword                = updatePassword;
-window._sendEmailVerification         = sendEmailVerification;
+/* ── Helpers globais ── */
+window._auth                              = _auth;
+window._signInWithEmailAndPassword        = signInWithEmailAndPassword;
+window._createUserWithEmailAndPassword    = createUserWithEmailAndPassword;
+window._sendPasswordResetEmail            = sendPasswordResetEmail;
+window._signOut                           = signOut;
+window._EmailAuthProvider                 = EmailAuthProvider;
+window._reauthenticateWithCredential      = reauthenticateWithCredential;
+window._updatePassword                    = updatePassword;
+window._sendEmailVerification             = sendEmailVerification;
 
 window._db              = _db;
 window._doc             = doc;
@@ -82,8 +82,6 @@ class AssentNavbar extends HTMLElement {
   connectedCallback() {
     this._mount();
     this._bindEvents();
-
-    /* Escuta auth para atualizar avatar/sair */
     window.addEventListener('assent:authchange', (e) => {
       this._onAuth(e.detail.user);
     });
@@ -105,30 +103,28 @@ class AssentNavbar extends HTMLElement {
 
 .logo{
   font-family:'Montserrat',sans-serif;font-size:1.35rem;font-weight:800;
-  letter-spacing:-.01em;text-decoration:none;
-  color:#D4AF37;
+  letter-spacing:-.01em;text-decoration:none;color:#D4AF37;
 }
-@keyframes shimmer{0%{background-position:0% center}50%{background-position:100% center}100%{background-position:0% center}}
 
 nav{
   position:fixed;top:0;left:0;right:0;z-index:1000;
-  background:#1c1a14;border-bottom:1px solid rgba(255,255,255,.1);
+  background:#1c1a14;border-bottom:1px solid rgba(255,255,255,.07);
   font-family:'Inter',sans-serif;transition:background .3s,box-shadow .3s;
 }
-nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow:0 2px 24px rgba(0,0,0,.5);}
+nav.scrolled{background:rgba(20,18,12,.98);backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(212,175,55,.08),0 8px 40px rgba(0,0,0,.5);}
 .container{max-width:1200px;margin:0 auto;padding:0 28px;}
 .inner{display:flex;align-items:center;justify-content:space-between;height:68px;}
 
 .links{display:flex;align-items:center;gap:32px;list-style:none;}
 .links a,.drop-trigger{
-  color:rgba(255,255,255,.75);text-decoration:none;font-size:.84rem;font-weight:500;
-  letter-spacing:.06em;text-transform:uppercase;transition:color .2s;
+  color:rgba(255,255,255,.65);text-decoration:none;font-size:.82rem;font-weight:500;
+  letter-spacing:.07em;text-transform:uppercase;transition:color .2s;
   background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;
   padding:0;display:flex;align-items:center;gap:5px;
 }
 .links a:hover,.drop-trigger:hover{color:#fff;}
 
-/* Lado direito agrupa CTA + auth */
+/* Lado direito */
 .right{display:flex;align-items:center;gap:10px;}
 
 .cta{
@@ -141,27 +137,23 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
 }
 .cta:hover{background:#E09820;transform:translateY(-2px);box-shadow:0 0 52px rgba(245,166,35,.42);}
 
-/* Botão ENTRAR — visível quando deslogado, some quando logado */
+/* Botão ENTRAR */
 .btn-entrar{
   display:inline-flex;align-items:center;gap:7px;
   padding:9px 20px;border-radius:50px;
-  border:1px solid rgba(255,255,255,.2);background:transparent;
-  color:rgba(255,255,255,.75);
+  border:1px solid rgba(255,255,255,.15);background:transparent;
+  color:rgba(255,255,255,.65);
   font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;
   letter-spacing:.05em;text-transform:uppercase;
   text-decoration:none;white-space:nowrap;
   transition:border-color .2s,color .2s,background .2s;
 }
 .btn-entrar svg{width:14px;height:14px;flex-shrink:0;}
-.btn-entrar:hover{border-color:rgba(255,255,255,.4);color:#fff;background:rgba(255,255,255,.05);}
-/* Some e fica não-clicável quando logado */
+.btn-entrar:hover{border-color:rgba(255,255,255,.35);color:#fff;background:rgba(255,255,255,.04);}
 .right.logado .btn-entrar{opacity:0;pointer-events:none;width:0;padding:0;border:none;overflow:hidden;margin:0;}
 
-/* Separador vertical — só aparece quando logado */
-.sep{
-  width:1px;height:22px;background:rgba(255,255,255,.12);
-  opacity:0;pointer-events:none;transition:opacity .3s;
-}
+/* Separador */
+.sep{width:1px;height:22px;background:rgba(255,255,255,.1);opacity:0;pointer-events:none;transition:opacity .3s;}
 
 /* Avatar */
 .avatar{
@@ -169,18 +161,27 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
   background:linear-gradient(135deg,#D4AF37,#B8860B);
   color:#111;font-family:'Montserrat',sans-serif;font-size:.82rem;font-weight:800;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 14px rgba(212,175,55,.3);cursor:default;
+  box-shadow:0 0 14px rgba(212,175,55,.3);cursor:pointer;
   opacity:0;pointer-events:none;transform:scale(.8);
-  transition:opacity .3s,transform .3s;overflow:hidden;
+  transition:opacity .3s,transform .3s;overflow:hidden;flex-shrink:0;
 }
 .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 
-/* Botão sair — invisível E não clicável quando deslogado */
+/* Nome do usuário */
+.user-name{
+  font-family:'Inter',sans-serif;font-size:.8rem;font-weight:500;
+  color:rgba(255,255,255,.75);white-space:nowrap;
+  max-width:110px;overflow:hidden;text-overflow:ellipsis;
+  opacity:0;pointer-events:none;transform:translateX(-6px);
+  transition:opacity .35s,transform .35s;
+}
+
+/* Botão SAIR */
 .btn-sair{
   display:inline-flex;align-items:center;gap:6px;
   padding:8px 16px;border-radius:50px;
-  border:1px solid rgba(255,255,255,.15);background:transparent;
-  color:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.12);background:transparent;
+  color:rgba(255,255,255,.5);
   font-family:'Inter',sans-serif;font-size:.75rem;font-weight:600;
   letter-spacing:.05em;text-transform:uppercase;cursor:pointer;
   opacity:0;pointer-events:none;transform:translateX(-4px);
@@ -188,52 +189,146 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
   white-space:nowrap;
 }
 .btn-sair svg{width:13px;height:13px;flex-shrink:0;}
-.btn-sair:hover{border-color:rgba(224,85,85,.5);color:#ff8a80;background:rgba(224,85,85,.06);}
+.btn-sair:hover{border-color:rgba(224,85,85,.4);color:#ff8a80;background:rgba(224,85,85,.05);}
 
-/* Quando logado — revela E reativa os elementos de auth */
+/* Quando logado */
 .right.logado .sep,
 .right.logado .avatar,
+.right.logado .user-name,
 .right.logado .btn-sair{opacity:1;pointer-events:auto;transform:none;}
 
-/* Dropdown */
+/* ══════════════════════════════════════
+   DROPDOWN — redesign premium
+══════════════════════════════════════ */
 .drop-wrap{position:relative;}
-.arrow{display:inline-flex;transition:transform .25s;}
+.arrow{display:inline-flex;transition:transform .3s cubic-bezier(.4,0,.2,1);}
 .drop-wrap.open .arrow{transform:rotate(180deg);}
-.dropdown{
-  display:none;position:absolute;top:calc(100% + 20px);left:50%;
-  transform:translateX(-50%) translateY(-12px) scale(.95);background:rgba(28,26,20,.94);
-  backdrop-filter:blur(24px);border-radius:28px;padding:32px;
-  box-shadow:0 32px 96px rgba(0,0,0,.64),inset 0 0 1px rgba(212,175,55,.06);
-  min-width:440px;border:1px solid rgba(212,175,55,.14);z-index:10;
-  opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.34,.1,.64,.1);
-}
-.drop-wrap.open .dropdown{display:block;opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0) scale(1);}
-.ditem{
-  display:flex;align-items:flex-start;gap:20px;padding:24px;border-radius:20px;text-decoration:none;
-  transition:all .25s cubic-bezier(.34,.1,.64,.1);background:rgba(212,175,55,.05);
-  border:1px solid rgba(212,175,55,.1);cursor:pointer;position:relative;overflow:hidden;
-}
-.ditem::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,166,35,.15),transparent);opacity:0;transition:opacity .25s;}
-.ditem:hover{background:rgba(212,175,55,.16);border-color:rgba(212,175,55,.28);transform:translateX(8px);}
-.ditem:hover::after{opacity:1;}
-.ditem+.ditem{margin-top:12px;}
-.dicon{
-  width:48px;height:48px;flex-shrink:0;border-radius:14px;
-  background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(212,175,55,.08));
-  display:flex;align-items:center;justify-content:center;color:#D4AF37;
-}
-.dicon svg{width:26px;height:26px;}
-.dtitle{display:block;font-family:'Montserrat',sans-serif;font-size:.92rem;font-weight:700;color:#D4AF37;margin-bottom:10px;letter-spacing:.6px;position:relative;z-index:1;}
-.ddesc{font-size:.8rem;color:rgba(255,255,255,.62);line-height:1.8;position:relative;z-index:1;}
+.drop-trigger.active,.drop-wrap.open .drop-trigger{color:#fff;}
 
-/* Hamburger */
+.dropdown{
+  position:absolute;top:calc(100% + 18px);left:50%;
+  transform:translateX(-50%) translateY(-10px);
+  background:rgba(15,13,8,.97);
+  backdrop-filter:blur(40px) saturate(1.4);
+  -webkit-backdrop-filter:blur(40px) saturate(1.4);
+  border-radius:18px;
+  min-width:400px;
+  border:1px solid rgba(255,255,255,.07);
+  border-top:1px solid rgba(212,175,55,.2);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,.5),
+    0 24px 80px rgba(0,0,0,.75),
+    0 2px 0 rgba(212,175,55,.08) inset;
+  z-index:10;
+  visibility:hidden;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .28s cubic-bezier(.4,0,.2,1), transform .28s cubic-bezier(.4,0,.2,1), visibility 0s .28s;
+  overflow:hidden;
+}
+.drop-wrap.open .dropdown{
+  visibility:visible;
+  opacity:1;
+  pointer-events:auto;
+  transform:translateX(-50%) translateY(0);
+  transition:opacity .28s cubic-bezier(.4,0,.2,1), transform .28s cubic-bezier(.4,0,.2,1), visibility 0s 0s;
+}
+
+/* Indicador triangular */
+.dropdown::before{
+  content:'';
+  position:absolute;top:-5px;left:50%;transform:translateX(-50%);
+  width:10px;height:5px;
+  background:rgba(212,175,55,.25);
+  clip-path:polygon(50% 0%,0% 100%,100% 100%);
+}
+
+/* Header interno */
+.d-header{
+  padding:16px 20px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.d-header-label{
+  font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;
+  letter-spacing:.18em;color:rgba(212,175,55,.45);text-transform:uppercase;
+}
+.d-header-line{
+  flex:1;height:1px;background:linear-gradient(to right,rgba(212,175,55,.15),transparent);
+  margin-left:12px;
+}
+
+/* Lista de itens */
+.d-list{padding:0 10px 10px;}
+
+.ditem{
+  display:flex;align-items:center;gap:14px;padding:14px 12px;
+  border-radius:12px;text-decoration:none;
+  transition:background .22s ease;
+  position:relative;
+}
+.ditem:hover{background:rgba(212,175,55,.06);}
+.ditem:hover .dicon{
+  background:rgba(212,175,55,.14);
+  border-color:rgba(212,175,55,.25);
+  color:#F5C842;
+}
+.ditem:hover .dtitle{color:#fff;}
+.ditem:hover .darrow{color:rgba(212,175,55,.5);transform:translateX(2px);}
+
+/* Ícone */
+.dicon{
+  width:40px;height:40px;flex-shrink:0;border-radius:10px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(212,175,55,.6);
+  transition:background .22s,border-color .22s,color .22s;
+}
+.dicon svg{width:18px;height:18px;}
+
+/* Texto */
+.d-text{flex:1;min-width:0;}
+.dtitle{
+  display:block;font-family:'Inter',sans-serif;font-size:.875rem;font-weight:600;
+  color:rgba(255,255,255,.85);margin-bottom:3px;letter-spacing:.01em;
+  transition:color .22s;
+}
+.ddesc{
+  display:block;font-size:.75rem;color:rgba(255,255,255,.35);
+  line-height:1.55;font-weight:400;
+}
+
+/* Seta lateral */
+.darrow{
+  flex-shrink:0;color:rgba(255,255,255,.15);
+  transition:color .22s,transform .22s;
+}
+.darrow svg{width:14px;height:14px;display:block;}
+
+/* Rodapé */
+.d-footer{
+  padding:10px 20px 14px;
+  border-top:1px solid rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:center;
+}
+.d-footer a{
+  font-family:'Inter',sans-serif;font-size:.72rem;font-weight:500;
+  color:rgba(212,175,55,.45);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;
+  display:flex;align-items:center;gap:6px;
+  transition:color .2s;
+}
+.d-footer a:hover{color:#D4AF37;}
+.d-footer a svg{width:12px;height:12px;}
+
+/* ══════════════════════════════════════
+   HAMBURGER + MOBILE
+══════════════════════════════════════ */
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:8px;}
 .hamburger span{width:24px;height:2px;background:#fff;border-radius:2px;display:block;transition:all .3s;}
 .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
 .hamburger.open span:nth-child(2){opacity:0;}
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
-/* Mobile menu */
 .mob{display:none;flex-direction:column;padding:8px 28px 24px;border-top:1px solid rgba(255,255,255,.06);}
 .mob.open{display:flex;}
 .mob a{
@@ -274,19 +369,80 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
               </svg>
             </span>
           </button>
+
           <div class="dropdown">
-            <a href="/trafego" class="ditem">
-              <div class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-              <div><span class="dtitle">Gestão de Tráfego Pago</span><span class="ddesc">Anúncios estratégicos para empresas que querem resultados previsíveis.</span></div>
-            </a>
-            <a href="/aplicativos" class="ditem">
-              <div class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5"/></svg></div>
-              <div><span class="dtitle">Aplicativos</span><span class="ddesc">Soluções digitais personalizadas para escalar o seu negócio.</span></div>
-            </a>
-            <a href="/fotografia" class="ditem">
-              <div class="dicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><circle cx="12" cy="14" r="3"/></svg></div>
-              <div><span class="dtitle">Fotografia Profissional</span><span class="ddesc">Imagens que valorizam sua marca e convertem visitantes em clientes.</span></div>
-            </a>
+            <!-- Header -->
+            <div class="d-header">
+              <span class="d-header-label">O que fazemos</span>
+              <span class="d-header-line"></span>
+            </div>
+
+            <!-- Itens -->
+            <div class="d-list">
+              <a href="/trafego" class="ditem">
+                <div class="dicon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                  </svg>
+                </div>
+                <div class="d-text">
+                  <span class="dtitle">Gestão de Tráfego Pago</span>
+                  <span class="ddesc">Anúncios estratégicos para empresas que querem resultados previsíveis.</span>
+                </div>
+                <span class="darrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6"/>
+                  </svg>
+                </span>
+              </a>
+
+              <a href="/aplicativos" class="ditem">
+                <div class="dicon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2"/>
+                    <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5"/>
+                  </svg>
+                </div>
+                <div class="d-text">
+                  <span class="dtitle">Aplicativos</span>
+                  <span class="ddesc">Soluções digitais personalizadas para escalar o seu negócio.</span>
+                </div>
+                <span class="darrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6"/>
+                  </svg>
+                </span>
+              </a>
+
+              <a href="/fotografia" class="ditem">
+                <div class="dicon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2"/>
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                    <circle cx="12" cy="14" r="3"/>
+                  </svg>
+                </div>
+                <div class="d-text">
+                  <span class="dtitle">Fotografia Profissional</span>
+                  <span class="ddesc">Imagens que valorizam sua marca e convertem visitantes em clientes.</span>
+                </div>
+                <span class="darrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6"/>
+                  </svg>
+                </span>
+              </a>
+            </div>
+
+            <!-- Footer -->
+            <div class="d-footer">
+              <a href="/aplicativos">
+                Ver todos os serviços
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
           </div>
         </li>
         <li><a href="/#provas">Resultados</a></li>
@@ -294,17 +450,24 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
         <li><a href="/#faq">Dúvidas</a></li>
       </ul>
 
-      <!-- CTA + Entrar/Avatar + Sair (desktop) -->
+      <!-- CTA + Auth (desktop) -->
       <div class="right" id="rightSide">
-        <!-- Botão Entrar — visível quando deslogado -->
         <a href="/membros" class="btn-entrar" id="btnEntrar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
           Entrar
         </a>
         <div class="sep"></div>
         <div class="avatar" id="avatar" title=""></div>
+        <span class="user-name" id="userName"></span>
         <button class="btn-sair" id="btnSair">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
           Sair
         </button>
       </div>
@@ -332,68 +495,90 @@ nav.scrolled{background:rgba(28,26,20,.97);backdrop-filter:blur(16px);box-shadow
 
   _bindEvents() {
     const sr = this.shadowRoot;
+
     window.addEventListener('scroll', () => {
       sr.getElementById('nav').classList.toggle('scrolled', window.scrollY > 30);
     });
+
     const dropWrap = sr.getElementById('dropWrap');
     sr.getElementById('dropBtn').addEventListener('click', e => {
-      e.stopPropagation(); dropWrap.classList.toggle('open');
+      e.stopPropagation();
+      dropWrap.classList.toggle('open');
     });
     document.addEventListener('click', () => dropWrap.classList.remove('open'));
 
     const ham = sr.getElementById('hamburger');
     const mob = sr.getElementById('mob');
     ham.addEventListener('click', () => {
-      ham.classList.toggle('open'); mob.classList.toggle('open');
+      ham.classList.toggle('open');
+      mob.classList.toggle('open');
     });
     sr.querySelectorAll('.mob a:not(.mob-sair)').forEach(a => {
-      a.addEventListener('click', () => { ham.classList.remove('open'); mob.classList.remove('open'); });
+      a.addEventListener('click', () => {
+        ham.classList.remove('open');
+        mob.classList.remove('open');
+      });
     });
+
     sr.getElementById('btnSair').addEventListener('click', () => window._logout?.());
     sr.getElementById('mobSair').addEventListener('click', e => { e.preventDefault(); window._logout?.(); });
-    sr.getElementById('avatar').addEventListener('click', () => { window.location.href = '/membros'; });
-    sr.getElementById('avatar').style.cursor = 'pointer';
+
+    const avatar = sr.getElementById('avatar');
+    avatar.addEventListener('click', () => { window.location.href = '/membros'; });
+    avatar.style.cursor = 'pointer';
   }
 
   async _onAuth(user) {
-    const sr = this.shadowRoot;
-    const right      = sr.getElementById('rightSide');
-    const avatar     = sr.getElementById('avatar');
-    const btnEntrar  = sr.getElementById('btnEntrar');
-    const mobUser    = sr.getElementById('mobUser');
-    const mobAvatar  = sr.getElementById('mobAvatar');
-    const mobEmail   = sr.getElementById('mobEmail');
-    const mobSair    = sr.getElementById('mobSair');
-    const mobEntrar  = sr.getElementById('mobEntrar');
+    const sr        = this.shadowRoot;
+    const right     = sr.getElementById('rightSide');
+    const avatar    = sr.getElementById('avatar');
+    const userName  = sr.getElementById('userName');
+    const mobUser   = sr.getElementById('mobUser');
+    const mobAvatar = sr.getElementById('mobAvatar');
+    const mobEmail  = sr.getElementById('mobEmail');
+    const mobSair   = sr.getElementById('mobSair');
+    const mobEntrar = sr.getElementById('mobEntrar');
 
     if (user) {
       const ini = this._initial(user);
       right.classList.add('logado');
       avatar.title = user.email || '';
       mobUser.classList.add('show');
-      mobEmail.textContent  = user.email || '';
+      mobEmail.textContent = user.email || '';
       mobSair.classList.add('show');
       mobEntrar.classList.add('hide');
 
-      // Busca foto do Firestore — users/{uid}/foto/avatar → campo base64
+      /* ── Foto (users/{uid}/foto/avatar) ── */
       try {
         const snap = await getDoc(doc(_db, 'users', user.uid, 'foto', 'avatar'));
         const foto = snap.exists() ? snap.data()?.base64 : null;
         if (foto) {
-          avatar.innerHTML   = `<img src="${foto}" alt="foto"/>`;
+          avatar.innerHTML    = `<img src="${foto}" alt="foto"/>`;
           mobAvatar.innerHTML = `<img src="${foto}" alt="foto"/>`;
         } else {
-          avatar.textContent   = ini;
+          avatar.textContent    = ini;
           mobAvatar.textContent = ini;
         }
       } catch {
-        avatar.textContent   = ini;
+        avatar.textContent    = ini;
         mobAvatar.textContent = ini;
       }
+
+      /* ── Nome (licencas/{uid}) ── */
+      try {
+        const licSnap = await getDoc(doc(_db, 'licencas', user.uid));
+        if (licSnap.exists()) {
+          const fullName = licSnap.data()?.name || '';
+          /* Exibe apenas o primeiro nome */
+          userName.textContent = fullName.split(' ')[0] || '';
+        }
+      } catch {
+        /* Silencia: nome permanece oculto */
+      }
+
     } else {
-      // Desktop: modo deslogado
       right.classList.remove('logado');
-      // Mobile: esconde info + sair, mostra entrar
+      userName.textContent = '';
       mobUser.classList.remove('show');
       mobSair.classList.remove('show');
       mobEntrar.classList.remove('hide');

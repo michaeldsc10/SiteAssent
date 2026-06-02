@@ -477,8 +477,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 /* ── VERIFY EMAIL ── */
 .verify-icon{
-  font-size:3rem;margin-bottom:16px;
+  margin-bottom:16px;display:flex;justify-content:center;
+  color:var(--gold);
   animation:pulse 2s ease-in-out infinite;
+}
+.app-badge.inactive{background:rgba(255,255,255,.03);color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.08);}
+.app-badge.inactive::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.2);margin-right:5px;vertical-align:middle;}
+.app-card.locked{cursor:default;opacity:0.72;}
+.app-card.locked:hover{transform:none;border-color:rgba(255,255,255,0.10);box-shadow:0 4px 24px rgba(0,0,0,0.4),0 1px 0 rgba(255,255,255,0.08) inset;}
+.app-card.locked:hover::before{opacity:0;}
+.app-card-cta{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--heading);font-size:.67rem;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--gold);opacity:.7;
 }
 @keyframes pulse{
   0%,100%{transform:scale(1);}
@@ -531,7 +542,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <h2 class="auth-title">Bem-vindo de volta</h2>
       <p class="auth-sub">Acesse sua área de membros</p>
       <div id="login-alert" class="alert alert-error">
-        <span class="alert-icon">⚠</span><span></span>
+        <span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span></span>
       </div>
       <div class="form-group">
         <label class="form-label">E-mail</label>
@@ -555,8 +566,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div class="auth-card">
       <h2 class="auth-title">Criar conta</h2>
       <p class="auth-sub">Preencha os dados para se cadastrar</p>
-      <div id="register-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-      <div id="register-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Conta criada! Enviando e-mail de confirmação...</span></div>
+      <div id="register-alert" class="alert alert-error"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span></span></div>
+      <div id="register-success" class="alert alert-success"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Conta criada! Enviando e-mail de confirmação...</span></div>
       <div class="form-group">
         <label class="form-label">Nome completo *</label>
         <input type="text" id="reg-nome" class="form-input" placeholder="Seu nome completo"/>
@@ -604,8 +615,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <div class="auth-card">
       <h2 class="auth-title">Recuperar senha</h2>
       <p class="auth-sub">Enviaremos um link de redefinição para seu e-mail</p>
-      <div id="forgot-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-      <div id="forgot-success" class="alert alert-success" style="display:none;"><span class="alert-icon">✓</span><span>E-mail enviado! Verifique sua caixa de entrada.</span></div>
+      <div id="forgot-alert" class="alert alert-error"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span></span></div>
+      <div id="forgot-success" class="alert alert-success" style="display:none;"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>E-mail enviado! Verifique sua caixa de entrada.</span></div>
       <div class="form-group" style="margin-bottom:22px;">
         <label class="form-label">E-mail da conta</label>
         <input type="email" id="forgot-email" class="form-input" placeholder="seu@email.com"/>
@@ -622,7 +633,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <a href="https://assentagencia.com.br" class="auth-logo-link">ASSENT&nbsp;<em>AGÊNCIA</em></a>
     <div class="auth-card">
       <div style="text-align:center;">
-        <div class="verify-icon">📬</div>
+        <div class="verify-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
         <h2 class="auth-title">Confirme seu e-mail</h2>
         <p class="auth-sub" style="margin-bottom:0;">Enviamos um link para <strong id="verify-email-display" style="color:var(--white);"></strong></p>
       </div>
@@ -631,8 +642,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <div class="verify-step"><span class="verify-step-num">2</span>Clique no link "Confirmar e-mail"</div>
         <div class="verify-step"><span class="verify-step-num">3</span>Volte aqui e faça login normalmente</div>
       </div>
-      <div id="verify-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-      <div id="verify-success" class="alert alert-success"><span class="alert-icon">✓</span><span>E-mail reenviado! Verifique sua caixa de entrada.</span></div>
+      <div id="verify-alert" class="alert alert-error"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span></span></div>
+      <div id="verify-success" class="alert alert-success"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>E-mail reenviado! Verifique sua caixa de entrada.</span></div>
       <p style="font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.6;">Caso seu e-mail não tenha chegado, clique em reenviar e confira sua <strong style="color:rgba(255,255,255,.45);">caixa de spam</strong>.</p>
       <button class="btn btn-gold" id="btn-resend-verify" onclick="resendVerification()" style="margin-bottom:12px;">Reenviar e-mail de confirmação</button>
       <div class="auth-switch">
@@ -728,8 +739,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <h3 class="modal-title">Editar Perfil</h3>
       <button class="modal-close" onclick="closeModal('modal-perfil')">✕</button>
     </div>
-    <div id="modal-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-    <div id="modal-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Perfil atualizado!</span></div>
+    <div id="modal-alert" class="alert alert-error"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span></span></div>
+    <div id="modal-success" class="alert alert-success"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Perfil atualizado!</span></div>
     <p class="sec-label">Dados Pessoais</p>
     <div class="form-group">
       <label class="form-label">Nome completo *</label>
@@ -742,8 +753,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <button class="btn btn-gold" id="btn-save-profile" onclick="saveProfile()">Salvar alterações</button>
     <div class="sec-divider"></div>
     <p class="sec-label">Alterar Senha</p>
-    <div id="senha-alert" class="alert alert-error"><span class="alert-icon">⚠</span><span></span></div>
-    <div id="senha-success" class="alert alert-success"><span class="alert-icon">✓</span><span>Senha alterada!</span></div>
+    <div id="senha-alert" class="alert alert-error"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span></span></div>
+    <div id="senha-success" class="alert alert-success"><span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Senha alterada!</span></div>
     <div class="form-group">
       <label class="form-label">Senha atual</label>
       <input type="password" id="senha-atual" class="form-input" placeholder="Sua senha atual"/>
@@ -864,7 +875,9 @@ function hideAlert(id){const el=document.getElementById(id);if(el)el.classList.r
 function showToast(msg,type='success'){
   const t=document.getElementById('toast');
   t.className=`toast ${type}`;
-  document.getElementById('toast-icon').textContent=type==='success'?'✓':'⚠';
+  document.getElementById('toast-icon').innerHTML=type==='success'
+    ?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+    :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
   document.getElementById('toast-msg').textContent=msg;
   t.classList.add('show');
   clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),3500);
@@ -951,9 +964,11 @@ async function loadDashboard(user){
   // Determina plano ativo pelos subdocs
   const essAtivo=planoEss.ativo===true;
   const profAtivo=planoProf.ativo===true;
+  const trialExpira=lic.trialExpira?.toDate?lic.trialExpira.toDate():lic.trialExpira?new Date(lic.trialExpira):null;
+  const trialAtivo=lic.plano==='trial'&&lic.ativo===true&&trialExpira&&trialExpira>new Date();
   lic._planoEssencial=planoEss;
   lic._planoProfissional=planoProf;
-  lic._clienteAG=essAtivo||profAtivo;
+  lic._clienteAG=essAtivo||profAtivo||trialAtivo;
   if(profAtivo) lic.plano='profissional';
   else if(essAtivo) lic.plano='essencial';
   window._perfil=perfil;window._licenca=lic;
@@ -1017,18 +1032,15 @@ function renderApps(lic){
     {key:'_clienteAG',  name:'ASSENT Gestão',  desc:'Gestão completa do seu negócio local em um só lugar.',   logo:'/public/logo_ag.png',     logoFb:'AG', link:'https://ag.assentagencia.com.br'},
     {key:'clienteCurso',name:'ASSENT Cursos',   desc:'Acesso à plataforma de cursos e conteúdos exclusivos.', logo:'/public/logo_cursos.png', logoFb:'🎓', link:'/cursos'},
   ];
-  const temAcesso=apps.some(a=>lic[a.key]===true);
-  if(!temAcesso){
-    container.innerHTML=`<div class="no-access"><p>Você ainda não tem acesso aos nossos aplicativos.<br/>Conheça o que temos para o seu negócio crescer.</p><a href="https://assentagencia.com.br/aplicativos" target="_blank">Conhecer aplicativos →</a></div>`;
-    return;
-  }
   container.innerHTML=`<div class="apps-grid">${apps.map(a=>{
     const ok=lic[a.key]===true;
     const logoHtml=`<img class="app-card-logo" src="${a.logo}" alt="${a.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="app-card-logo-fallback" style="display:none;">${a.logoFb}</div>`;
     const actionBtn=ok&&a.link
       ?`<span class="app-access-btn">Acessar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>`
-      :``;
-    const wrapOpen=ok&&a.link?`<a href="${a.link}" target="_blank" rel="noopener noreferrer" class="app-card${ok?' active-card':''}">`:`<div class="app-card${ok?' active-card':''}">`;
+      :`<a href="https://assentagencia.com.br/aplicativos" target="_blank" rel="noopener noreferrer" class="app-card-cta">Conhecer <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>`;
+    const wrapOpen=ok&&a.link
+      ?`<a href="${a.link}" target="_blank" rel="noopener noreferrer" class="app-card active-card">`
+      :`<div class="app-card locked">`;
     const wrapClose=ok&&a.link?`</a>`:`</div>`;
     return `${wrapOpen}
       <div class="app-card-top">${logoHtml}</div>
@@ -1037,7 +1049,7 @@ function renderApps(lic){
         <div class="app-card-desc">${a.desc}</div>
       </div>
       <div class="app-card-foot">
-        <span class="app-badge ${ok?'ok':'no'}">${ok?'Ativo':'Sem acesso'}</span>
+        <span class="app-badge ${ok?'ok':'inactive'}">${ok?'Ativo':'Inativo'}</span>
         ${actionBtn}
       </div>
     ${wrapClose}`;
